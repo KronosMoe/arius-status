@@ -4,6 +4,7 @@ import { IMonitor } from '@/types/monitor'
 import { IStatus } from '@/types/status'
 import { toast } from 'sonner'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import Loading from '@/components/utils/Loading'
 
 function formatAgo(seconds: number) {
   if (seconds >= 86400) {
@@ -18,19 +19,19 @@ function formatAgo(seconds: number) {
   }
 }
 
-export default function MonitorCard({ monitor }: { monitor: IMonitor }) {
+export default function MonitorCard({ monitor, displayInterval }: { monitor: IMonitor; displayInterval: number }) {
   const { data, loading, error } = useQuery(STATUS_QUERY, {
     variables: {
       monitorId: monitor.id,
     },
-    pollInterval: monitor.interval * 1000,
+    pollInterval: displayInterval * 1000,
   })
 
   const status = (data?.getStatusByMonitorId || []) as IStatus[]
 
   if (error) toast.error(error.message)
 
-  if (loading) return <div>Loading...</div>
+  if (loading) return <Loading />
 
   const StatusRender = () => {
     const BAR_COUNT = 60

@@ -5,6 +5,8 @@ import { useLazyQuery, useMutation } from '@apollo/client'
 import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import Loading from '../Loading'
+import { useNavigate } from 'react-router-dom'
+import { BASE_PATH } from '@/constants/routes'
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<AuthUser | null>(null)
@@ -22,10 +24,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   })
   const [logoutMutation, { error: logoutError }] = useMutation(LOGOUT_MUTATION)
 
+  const navigate = useNavigate()
+
   const logout = useCallback(async () => {
     await logoutMutation()
     setUser(null)
-  }, [logoutMutation])
+    navigate(BASE_PATH, { replace: true })
+  }, [logoutMutation, navigate])
 
   useEffect(() => {
     if (logoutError) {

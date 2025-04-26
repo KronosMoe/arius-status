@@ -1,34 +1,53 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Moon, Sun } from 'lucide-react'
-import { DropdownMenuItem } from '../ui/dropdown-menu'
+import { ISetting } from '@/types/setting'
+import { UPDATE_THEME_MUTATION } from '@/gql/settings'
+import { useMutation } from '@apollo/client'
 
-export default function ThemeSwitcher() {
-  const [theme, setTheme] = useState<'light' | 'dark'>('light')
+type Props = {
+  settings: ISetting
+  setSettings: React.Dispatch<React.SetStateAction<ISetting>>
+}
+
+export default function ThemeSwitcher({ settings, setSettings }: Props) {
+  const [updateTheme] = useMutation(UPDATE_THEME_MUTATION)
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme')
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
 
-    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+    if (savedTheme === 'dark') {
       document.documentElement.classList.add('dark')
-      setTheme('dark')
+      setSettings((prev) => ({ ...prev, theme: 'dark' }))
     } else {
       document.documentElement.classList.remove('dark')
-      setTheme('light')
+      setSettings((prev) => ({ ...prev, theme: 'light' }))
     }
-  }, [])
+  }, [setSettings])
 
-  const toggleTheme = () => {
-    const isDark = theme === 'dark'
-    const newTheme = isDark ? 'light' : 'dark'
-    setTheme(newTheme)
+  const changeTheme = async (newTheme: 'light' | 'dark') => {
+    setSettings((prev) => ({ ...prev, theme: newTheme }))
+    await updateTheme({ variables: { theme: newTheme } })
     localStorage.setItem('theme', newTheme)
     document.documentElement.classList.toggle('dark', newTheme === 'dark')
   }
 
+  const isDark = settings.theme === 'dark'
+  const isLight = settings.theme === 'light'
+
   return (
-    <DropdownMenuItem onClick={toggleTheme}>
-      {theme === 'dark' ? <Sun /> : <Moon />} {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
-    </DropdownMenuItem>
+    <div className="flex flex-row">
+      <button
+        onClick={() => changeTheme('light')}
+        className={`${isLight ? 'bg-zinc-900 text-white' : 'bg-transparent hover:bg-zinc-100 dark:bg-zinc-900 dark:hover:bg-zinc-800'} flex cursor-pointer items-center gap-2 rounded-l-md border px-2 py-1 transition-colors dark:border-white/10`}
+      >
+        <Sun /> Light Mode
+      </button>
+      <button
+        onClick={() => changeTheme('dark')}
+        className={`${isDark ? 'bg-white text-black' : 'bg-transparent hover:bg-zinc-100 dark:bg-zinc-900 dark:hover:bg-zinc-800'} flex cursor-pointer items-center gap-2 rounded-r-md border px-2 py-1 transition-colors dark:border-white/10`}
+      >
+        <Moon /> Dark Mode
+      </button>
+    </div>
   )
 }

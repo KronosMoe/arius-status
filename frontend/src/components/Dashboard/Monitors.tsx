@@ -8,11 +8,14 @@ type Props = {
   monitors: IMonitor[]
   agents: IAgent[]
   setMonitors: React.Dispatch<React.SetStateAction<IMonitor[]>>
+  displayInterval: number
 }
 
-export default function Monitors({ monitors, agents, setMonitors }: Props) {
+export default function Monitors({ monitors, agents, setMonitors, displayInterval }: Props) {
   const MonitorsList = () => {
-    return monitors.map((monitor) => <MonitorCard key={monitor.id} monitor={monitor} />)
+    return monitors.map((monitor) => (
+      <MonitorCard key={monitor.id} monitor={monitor} displayInterval={displayInterval} />
+    ))
   }
 
   return (

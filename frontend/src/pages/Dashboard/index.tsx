@@ -9,13 +9,17 @@ import { AGENTS_QUERY } from '@/gql/agents'
 import { MONITORS_QUERY } from '@/gql/monitors'
 import { IAgent } from '@/types/agent'
 import { IMonitor } from '@/types/monitor'
+import { SETTINGS_QUERY } from '@/gql/settings'
 
 export default function Dashboard() {
   const { data: monitorData, loading: monitorLoading, error: monitorError } = useQuery(MONITORS_QUERY)
   const { data: agentData, loading: agentLoading, error: agentError } = useQuery(AGENTS_QUERY)
+  const { data: settingsData, loading: settingsLoading, error: settingsError } = useQuery(SETTINGS_QUERY)
 
   const [monitors, setMonitors] = useState<IMonitor[]>([])
   const [agents, setAgents] = useState<IAgent[]>([])
+
+  const settings = settingsData?.getSettingsByUserId
 
   useEffect(() => {
     if (monitorData?.findMonitorsByUserId) {
@@ -32,9 +36,10 @@ export default function Dashboard() {
   useEffect(() => {
     if (monitorError) toast.error(monitorError.message)
     if (agentError) toast.error(agentError.message)
-  }, [monitorError, agentError])
+    if (settingsError) toast.error(settingsError.message)
+  }, [monitorError, agentError, settingsError])
 
-  if (monitorLoading || agentLoading) return <Loading />
+  if (monitorLoading || agentLoading || settingsLoading) return <Loading />
 
   return (
     <div className="mx-4 w-full xl:m-auto xl:w-[1280px]">
@@ -45,7 +50,7 @@ export default function Dashboard() {
             <TabsTrigger value="agents">Agents</TabsTrigger>
           </TabsList>
           <TabsContent value="monitors">
-            <Monitors monitors={monitors} setMonitors={setMonitors} agents={agents} />
+            <Monitors monitors={monitors} setMonitors={setMonitors} agents={agents} displayInterval={settings.displayInterval} />
           </TabsContent>
           <TabsContent value="agents">
             <Agents agents={agents} setAgents={setAgents} />

@@ -102,7 +102,11 @@ export class AgentsGateway implements OnGatewayConnection, OnGatewayDisconnect {
       where: { id: data.monitorId },
     })
 
-    if (latestStatus.responseTime !== -1 && data.responseTime === -1) {
+    if (
+      latestStatus &&
+      latestStatus.responseTime !== -1 &&
+      data.responseTime === -1
+    ) {
       this.notificationService.sendDiscordNotification({
         embeds: [
           {
@@ -117,7 +121,11 @@ export class AgentsGateway implements OnGatewayConnection, OnGatewayDisconnect {
       })
     }
 
-    if (latestStatus.responseTime === -1 && data.responseTime !== -1) {
+    if (
+      latestStatus &&
+      latestStatus.responseTime === -1 &&
+      data.responseTime !== -1
+    ) {
       this.notificationService.sendDiscordNotification({
         embeds: [
           {

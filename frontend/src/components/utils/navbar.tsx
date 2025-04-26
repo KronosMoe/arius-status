@@ -1,5 +1,4 @@
 import { useAuth } from '@/hooks/useAuth'
-import ThemeSwitcher from './ThemeSwitcher'
 import { Button } from '../ui/button'
 import { Link } from 'react-router-dom'
 import { DASHBOARD_PATH, SETTING_PATH, SIGN_IN_PATH } from '@/constants/routes'
@@ -19,9 +18,9 @@ export default function Navbar() {
   return (
     <div className="sticky top-[10px] z-50 w-full px-[10px] xl:mx-auto xl:w-[1280px]">
       <div className="flex items-center justify-between rounded-md border border-black/20 bg-zinc-100/50 px-4 py-2 backdrop-blur-lg dark:border-white/10 dark:bg-zinc-900/50">
-        <div>
+        <Link to={isAuthenticated ? DASHBOARD_PATH : SIGN_IN_PATH}>
           <Logo />
-        </div>
+        </Link>
         <div className="flex items-center gap-2">
           {isAuthenticated && user ? (
             <DropdownMenu>
@@ -49,7 +48,6 @@ export default function Navbar() {
                     Settings
                   </DropdownMenuItem>
                 </Link>
-                <ThemeSwitcher />
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={logout}>
                   <LogOut />

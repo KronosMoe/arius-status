@@ -1,4 +1,37 @@
 import { Injectable } from '@nestjs/common'
+import { PrismaService } from 'src/prisma/prisma.service'
 
 @Injectable()
-export class SettingsService {}
+export class SettingsService {
+  constructor(private readonly prisma: PrismaService) {}
+
+  async getSettingsByUserId(userId: string) {
+    return this.prisma.settings.findUnique({
+      where: {
+        userId: userId,
+      },
+    })
+  }
+
+  async updateDisplayInterval(displayInterval: number, userId: string) {
+    return this.prisma.settings.update({
+      where: {
+        userId,
+      },
+      data: {
+        displayInterval,
+      },
+    })
+  }
+
+  async updateTheme(theme: string, userId: string) {
+    return this.prisma.settings.update({
+      where: {
+        userId,
+      },
+      data: {
+        theme,
+      },
+    })
+  }
+}
