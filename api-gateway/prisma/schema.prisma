@@ -15,9 +15,32 @@ model Users {
   image     String
   createdAt DateTime @default(now())
 
-  Monitors Monitors[]
-  Agents   Agents[]
-  Sessions Sessions[]
+  Monitors      Monitors[]
+  Agents        Agents[]
+  Sessions      Sessions[]
+  Notifications Notifications[]
+  Settings      Settings?
+}
+
+model Settings {
+  id              String   @id @default(uuid())
+  userId          String   @unique
+  theme           String   @default("light")
+  displayInterval Int      @default(60)
+  createdAt       DateTime @default(now())
+
+  user Users @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Notifications {
+  id        String   @id @default(uuid())
+  userId    String
+  method    String
+  message   String
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  user Users @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Sessions {

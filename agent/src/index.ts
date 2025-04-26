@@ -29,7 +29,6 @@ socket.on("connect_error", (err) => {
   console.error("🚫 Connection error:", err.message);
 });
 
-// 🆕 Updated 'run-command' event to send { monitorId, responseTime, metadata }
 socket.on("run-command", (monitor) => {
   console.log(`🏃 Received run-command for monitor:`, monitor);
 

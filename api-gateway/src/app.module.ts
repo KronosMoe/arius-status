@@ -11,9 +11,14 @@ import { AgentsModule } from './agents/agents.module'
 import { MonitorsModule } from './monitors/monitors.module'
 import { StatusModule } from './status/status.module'
 import { EventEmitterModule } from '@nestjs/event-emitter'
+import { NotificationService } from './notification/notification.service'
+import { NotificationModule } from './notification/notification.module'
+import { HttpModule } from '@nestjs/axios'
+import { SettingsModule } from './settings/settings.module'
 
 @Module({
   imports: [
+    HttpModule,
     EventEmitterModule.forRoot(),
     ConfigModule.forRoot({ isGlobal: true }),
     ScheduleModule.forRoot(),
@@ -29,8 +34,10 @@ import { EventEmitterModule } from '@nestjs/event-emitter'
     MonitorsModule,
     AgentsModule,
     StatusModule,
+    NotificationModule,
+    SettingsModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [NotificationService],
 })
 export class AppModule {}

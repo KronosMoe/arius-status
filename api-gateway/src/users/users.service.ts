@@ -41,6 +41,12 @@ export class UsersService {
       },
     })
 
+    await this.prisma.settings.create({
+      data: {
+        userId: user.id,
+      },
+    })
+
     this.logger.log(`User ${user.username} created`)
     return user
   }
