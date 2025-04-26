@@ -1,0 +1,83 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type User {
+  id: String!
+  username: String!
+  email: String!
+  image: String!
+}
+
+type Agent {
+  id: String!
+  name: String!
+  token: String!
+  isOnline: Boolean!
+}
+
+type Monitor {
+  id: String!
+  name: String!
+  address: String!
+  type: String!
+  agentId: String!
+  interval: Int!
+  createdAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Status {
+  id: String!
+  responseTime: Float!
+  metadata: JSON!
+  createdAt: DateTime!
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+type Query {
+  me: User
+  findMonitorsByUserId: [Monitor!]!
+  findAgentsByUserId: [Agent!]!
+  getStatusByMonitorId(monitorId: String!): [Status!]!
+}
+
+type Mutation {
+  register(input: RegisterInput!): String!
+  login(input: LoginInput!): String!
+  logout: Boolean!
+  createMonitor(createMonitorInput: CreateMonitorInput!): Monitor!
+  createAgent(createAgentInput: CreateAgentInput!): Agent!
+}
+
+input RegisterInput {
+  username: String!
+  email: String!
+  password: String!
+}
+
+input LoginInput {
+  username: String!
+  password: String!
+  platform: String!
+}
+
+input CreateMonitorInput {
+  name: String!
+  address: String!
+  type: String!
+  interval: Float!
+  agentId: String!
+}
+
+input CreateAgentInput {
+  name: String!
+}

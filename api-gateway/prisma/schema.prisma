@@ -7,16 +7,64 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id           Int     @id @default(autoincrement())
-  username     String  @unique
-  ping_interval Int    @default(300)
-  agents       Agent[]
+model Users {
+  id        String   @id @default(uuid())
+  username  String   @unique
+  email     String   @unique
+  password  String
+  image     String
+  createdAt DateTime @default(now())
+
+  Monitors Monitors[]
+  Agents   Agents[]
+  Sessions Sessions[]
 }
 
-model Agent {
-  id         Int     @id @default(autoincrement())
-  userId     Int     
-  user       User    @relation(fields: [userId], references: [id])
-  address    String  
+model Sessions {
+  id        String   @id @default(uuid())
+  userId    String
+  platform  String
+  token     String   @unique
+  deviceIP  String
+  expires   DateTime
+  createdAt DateTime @default(now())
+
+  user Users @relation(fields: [userId], references: [id])
+}
+
+model Monitors {
+  id        String   @id @default(uuid())
+  name      String
+  address   String
+  type      String
+  interval  Int      @default(300)
+  userId    String
+  agentId   String
+  createdAt DateTime @default(now())
+
+  user          Users           @relation(fields: [userId], references: [id])
+  agent         Agents          @relation(fields: [agentId], references: [id])
+  StatusResults StatusResults[]
+}
+
+model StatusResults {
+  id           String   @id @default(uuid())
+  monitorId    String
+  responseTime Float
+  metadata     Json?
+  createdAt    DateTime @default(now())
+
+  monitor Monitors @relation(fields: [monitorId], references: [id])
+}
+
+model Agents {
+  id        String   @id @default(uuid())
+  name      String
+  token     String   @unique
+  isOnline  Boolean  @default(false)
+  userId    String
+  createdAt DateTime @default(now())
+
+  user     Users      @relation(fields: [userId], references: [id])
+  Monitors Monitors[]
 }
