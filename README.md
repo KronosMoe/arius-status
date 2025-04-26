@@ -3,8 +3,6 @@
 
 <p align="center">An uptime status platform for your private applications across networks</p>
 
-# Getting Started
-
 ## Pre-requisites
 
 - NodeJS 20+
