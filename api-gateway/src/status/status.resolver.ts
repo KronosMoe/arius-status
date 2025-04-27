@@ -10,7 +10,16 @@ export class StatusResolver {
 
   @Query(() => [Status])
   @UseGuards(GqlAuthGuard)
-  async getStatusByMonitorId(@Args('monitorId') monitorId: string) {
-    return await this.statusService.getStatusByMonitorId(monitorId)
+  async getStatusByMonitorId(
+    @Args('monitorId') monitorId: string,
+    @Args('barCount', { defaultValue: 60 }) barCount: number = 60,
+  ) {
+    return await this.statusService.getStatusByMonitorId(monitorId, barCount)
+  }
+
+  @Query(() => [Status])
+  @UseGuards(GqlAuthGuard)
+  async getStatusByTimeRange(@Args('from') from: Date, @Args('to') to: Date) {
+    return await this.statusService.getStatusByTimeRange(from, to)
   }
 }

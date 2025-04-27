@@ -32,7 +32,7 @@ export class AgentsGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const token = client.handshake.auth.token
 
     if (!token) {
-      this.logger.log('⚠️ Client missing token, disconnecting')
+      this.logger.log('Client missing token, disconnecting')
       client.disconnect()
       return
     }
@@ -42,15 +42,14 @@ export class AgentsGateway implements OnGatewayConnection, OnGatewayDisconnect {
     })
 
     if (!agent) {
-      this.logger.log(`⚠️ Invalid agent token: ${token}, disconnecting`)
+      this.logger.log(`Invalid agent token: ${token}, disconnecting`)
       client.disconnect()
       return
     }
 
-    this.logger.log(`✅ Agent connected: ${agent.id}`)
+    this.logger.log(`Agent connected: ${agent.id}`)
     client.data.agentId = agent.id
 
-    // 🆕 JOIN room named after agent.id
     client.join(agent.id)
 
     await this.prisma.agents.update({

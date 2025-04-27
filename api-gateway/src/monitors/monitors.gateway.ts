@@ -31,7 +31,7 @@ export class MonitorGateway implements OnModuleInit {
 
   startMonitor(monitor: any) {
     if (!monitor.interval || !monitor.agentId) {
-      this.logger.warn(`⚠️ Monitor ${monitor.id} missing interval or agentId.`)
+      this.logger.warn(`Monitor ${monitor.id} missing interval or agentId.`)
       return
     }
 
@@ -41,12 +41,12 @@ export class MonitorGateway implements OnModuleInit {
       const socketServer = this.agentsGateway.server
 
       if (!socketServer) {
-        this.logger.error('🚫 Socket server not ready')
+        this.logger.error('Socket server not ready')
         return
       }
 
       this.logger.log(
-        `📤 Sending monitor ${monitor.id} to agent ${monitor.agentId}`,
+        `Sending monitor ${monitor.id} to agent ${monitor.agentId}`,
       )
       socketServer.to(monitor.agentId).emit('run-command', monitor)
     }, intervalMs)

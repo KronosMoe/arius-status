@@ -38,13 +38,22 @@ export default function ThemeSwitcher({ settings, setSettings }: Props) {
     <div className="flex flex-row">
       <button
         onClick={() => changeTheme('light')}
-        className={`${isLight ? 'bg-zinc-900 text-white' : 'bg-transparent hover:bg-zinc-100 dark:bg-zinc-900 dark:hover:bg-zinc-800'} flex cursor-pointer items-center gap-2 rounded-l-md border px-2 py-1 transition-colors dark:border-white/10`}
+        className={`flex cursor-pointer items-center gap-2 rounded-l-md border px-2 py-1 transition-colors ${
+          isLight
+            ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-black'
+            : 'bg-transparent hover:bg-zinc-100 dark:hover:bg-zinc-800'
+        } border-black/20 dark:border-white/10`}
       >
         <Sun /> Light Mode
       </button>
+
       <button
         onClick={() => changeTheme('dark')}
-        className={`${isDark ? 'bg-white text-black' : 'bg-transparent hover:bg-zinc-100 dark:bg-zinc-900 dark:hover:bg-zinc-800'} flex cursor-pointer items-center gap-2 rounded-r-md border px-2 py-1 transition-colors dark:border-white/10`}
+        className={`flex cursor-pointer items-center gap-2 rounded-r-md border px-2 py-1 transition-colors ${
+          isDark
+            ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-black'
+            : 'bg-transparent hover:bg-zinc-100 dark:hover:bg-zinc-800'
+        } border-black/20 dark:border-white/10`}
       >
         <Moon /> Dark Mode
       </button>

@@ -2,7 +2,14 @@ import { Route, Routes, useLocation } from 'react-router-dom'
 import Home from './pages/Home'
 import { AuthProvider } from './components/utils/providers/auth-provider'
 import { Toaster } from 'sonner'
-import { BASE_PATH, DASHBOARD_PATH, SETTING_PATH, SIGN_IN_PATH, SIGN_UP_PATH } from './constants/routes'
+import {
+  BASE_PATH,
+  DASHBOARD_PATH,
+  MONITOR_INFO_PATH,
+  SETTING_PATH,
+  SIGN_IN_PATH,
+  SIGN_UP_PATH,
+} from './constants/routes'
 import SignIn from './pages/Auth/SignIn'
 import SignUp from './pages/Auth/SignUp'
 import Navbar from './components/utils/Navbar'
@@ -10,6 +17,7 @@ import Protected from './components/utils/Protected'
 import Dashboard from './pages/Dashboard'
 import { TooltipProvider } from './components/ui/tooltip'
 import Setting from './pages/Setting'
+import MonitorInfo from './pages/MonitorInfo'
 
 function App() {
   const location = useLocation()
@@ -41,6 +49,7 @@ function App() {
             <Route element={<Protected />}>
               <Route path={DASHBOARD_PATH} element={<Dashboard />} />
               <Route path={SETTING_PATH} element={<Setting />} />
+              <Route path={MONITOR_INFO_PATH} element={<MonitorInfo />} />
             </Route>
           </Routes>
         </TooltipProvider>

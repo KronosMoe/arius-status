@@ -6,6 +6,7 @@ import { Me } from 'src/auth/decorators/me.decorator'
 import { UseGuards } from '@nestjs/common'
 import { User } from 'src/users/entities/user.entity'
 import { CreateMonitorInput } from './dto/create-monitor.input'
+import { MonitorAgent } from './entities/monitor-agent.entity'
 
 @Resolver()
 export class MonitorsResolver {
@@ -15,6 +16,12 @@ export class MonitorsResolver {
   @UseGuards(GqlAuthGuard)
   async findMonitorsByUserId(@Me() user: User): Promise<Monitor[]> {
     return await this.monitorsService.findMonitorsByUserId(user.id)
+  }
+
+  @Query(() => MonitorAgent)
+  @UseGuards(GqlAuthGuard)
+  async findMonitorById(@Args('id') id: string): Promise<MonitorAgent> {
+    return await this.monitorsService.findMonitorById(id)
   }
 
   @Mutation(() => Monitor)

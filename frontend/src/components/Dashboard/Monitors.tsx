@@ -3,18 +3,21 @@ import { IMonitor } from '@/types/monitor'
 import CreateMonitorForm from './components/CreateMonitorForm'
 import { IAgent } from '@/types/agent'
 import MonitorCard from './components/MonitorCard'
+import { Link } from 'react-router-dom'
+import { MONITOR_INFO_PATH } from '@/constants/routes'
 
 type Props = {
   monitors: IMonitor[]
   agents: IAgent[]
   setMonitors: React.Dispatch<React.SetStateAction<IMonitor[]>>
-  displayInterval: number
 }
 
-export default function Monitors({ monitors, agents, setMonitors, displayInterval }: Props) {
+export default function Monitors({ monitors, agents, setMonitors }: Props) {
   const MonitorsList = () => {
     return monitors.map((monitor) => (
-      <MonitorCard key={monitor.id} monitor={monitor} displayInterval={displayInterval} />
+      <Link key={monitor.id} to={MONITOR_INFO_PATH.replace(':monitorId', monitor.id)}>
+        <MonitorCard monitor={monitor} />
+      </Link>
     ))
   }
 

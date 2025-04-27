@@ -7,7 +7,7 @@ export default function Home() {
   const { isAuthenticated } = useAuth()
 
   return (
-    <div className="mx-4 w-full xl:m-auto xl:w-[1280px]">
+    <div className="px-4 w-full xl:m-auto xl:w-[1280px]">
       <div className="mt-20">
         <h1 className="text-2xl font-bold">Arius Status</h1>
         <p className="mt-2 text-zinc-500">Monitor your applications across networks</p>

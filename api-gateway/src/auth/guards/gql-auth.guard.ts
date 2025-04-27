@@ -1,5 +1,9 @@
-// src/auth/gql-auth.guard.ts
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common'
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common'
 import { GqlExecutionContext } from '@nestjs/graphql'
 import { AuthService } from '../auth.service'
 import { ACCESS_TOKEN } from 'src/constants/cookies'
@@ -14,12 +18,12 @@ export class GqlAuthGuard implements CanActivate {
     const token = ctx.req.cookies[ACCESS_TOKEN]
 
     if (!token) {
-      return false
+      throw new UnauthorizedException()
     }
 
     const user = await this.authService.getUserFromToken(token)
     if (!user) {
-      return false
+      throw new UnauthorizedException('Invalid or expired token')
     }
 
     ctx.req.user = user

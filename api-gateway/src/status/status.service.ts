@@ -8,7 +8,7 @@ export class StatusService {
 
   constructor(private readonly prisma: PrismaService) {}
 
-  async getStatusByMonitorId(monitorId: string) {
+  async getStatusByMonitorId(monitorId: string, barCount: number = 60) {
     const monitor = await this.prisma.monitors.findUnique({
       where: { id: monitorId },
       select: { interval: true },
@@ -18,8 +18,8 @@ export class StatusService {
       throw new NotFoundException('Monitor not found')
     }
 
-    const BAR_COUNT = 60
-    const timeWindowMs = monitor.interval * BAR_COUNT * 1000
+    const barMultiplier = 1.2
+    const timeWindowMs = monitor.interval * barCount * barMultiplier * 1000
     const fromDate = new Date(Date.now() - timeWindowMs)
 
     return await this.prisma.statusResults.findMany({
@@ -27,6 +27,20 @@ export class StatusService {
         monitorId: monitorId,
         createdAt: {
           gte: fromDate,
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    })
+  }
+
+  async getStatusByTimeRange(from: Date, to: Date) {
+    return await this.prisma.statusResults.findMany({
+      where: {
+        createdAt: {
+          gte: from,
+          lte: to,
         },
       },
       orderBy: {

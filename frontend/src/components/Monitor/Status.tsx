@@ -5,9 +5,9 @@ import { IStatus } from '@/types/status'
 import { toast } from 'sonner'
 import Loading from '@/components/utils/Loading'
 import { useEffect, useState } from 'react'
-import PingLine from './PingLine'
+import PingLine from '../Dashboard/components/PingLine'
 
-export default function MonitorCard({ monitor, showTitle = true }: { monitor: IMonitor; showTitle?: boolean }) {
+export default function Status({ monitor }: { monitor: IMonitor }) {
   const [barCount, setBarCount] = useState(60)
   const [statusHistory, setStatusHistory] = useState<IStatus[]>([])
 
@@ -54,9 +54,8 @@ export default function MonitorCard({ monitor, showTitle = true }: { monitor: IM
 
   return (
     <div
-      className={`flex cursor-pointer flex-col rounded-md border border-black/20 p-4 transition-colors ${showTitle && 'hover:bg-zinc-100 dark:hover:bg-zinc-800'} dark:border-white/10 dark:bg-zinc-900`}
+      className={`flex cursor-pointer flex-col rounded-md border border-black/20 p-4 dark:border-white/10 dark:bg-zinc-900`}
     >
-      {showTitle && <div className="mb-4 text-xl font-bold">{monitor.name}</div>}
       <PingLine monitor={monitor} barCount={barCount} statusHistory={statusHistory} />
       <div className="mt-2 text-sm text-zinc-400">Check every {monitor.interval} seconds</div>
     </div>
