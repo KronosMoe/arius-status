@@ -6,6 +6,7 @@ export const MONITORS_QUERY = gql`
       id
       name
       type
+      status
       address
       agentId
       interval
@@ -20,6 +21,7 @@ export const FIND_MONITOR_BY_ID_QUERY = gql`
       id
       name
       type
+      status
       interval
       address
       createdAt

@@ -16,7 +16,7 @@ export default function Status({ monitor }: { monitor: IMonitor }) {
       monitorId: monitor.id,
       barCount: barCount,
     },
-    pollInterval: 5000,
+    pollInterval: 60 * 1000,
     fetchPolicy: 'network-only',
   })
 

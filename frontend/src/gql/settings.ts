@@ -4,7 +4,6 @@ export const SETTINGS_QUERY = gql`
   query GetSettingsByUserId {
     getSettingsByUserId {
       theme
-      displayInterval
     }
   }
 `

@@ -10,7 +10,6 @@ import { toast } from 'sonner'
 export default function Setting() {
   const [settings, setSettings] = useState<ISetting>({
     theme: 'light',
-    displayInterval: 60,
   })
   const { data, error, loading } = useQuery(SETTINGS_QUERY)
 

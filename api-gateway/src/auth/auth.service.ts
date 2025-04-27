@@ -4,7 +4,7 @@ import { RegisterInput } from './dto/register.input'
 import * as bcrypt from 'bcrypt'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { generateToken } from 'src/libs/token'
-import { addHours } from 'date-fns'
+import { addMilliseconds } from 'date-fns'
 import { LoginInput } from './dto/login.input'
 
 @Injectable()
@@ -48,7 +48,7 @@ export class AuthService {
     }
 
     const token = generateToken()
-    const expires = addHours(new Date(), 24)
+    const expires = addMilliseconds(new Date(), 604800000)
 
     await this.prisma.sessions.create({
       data: {

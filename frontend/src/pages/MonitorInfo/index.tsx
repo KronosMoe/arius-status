@@ -1,3 +1,4 @@
+import PingChart from '@/components/Monitor/PingChart'
 import Status from '@/components/Monitor/Status'
 import Loading from '@/components/utils/Loading'
 import { FIND_MONITOR_BY_ID_QUERY } from '@/gql/monitors'
@@ -17,6 +18,8 @@ export default function MonitorInfo() {
     error: monitorError,
   } = useQuery(FIND_MONITOR_BY_ID_QUERY, {
     variables: { findMonitorByIdId: monitorId },
+    pollInterval: 60 * 1000,
+    fetchPolicy: 'network-only',
   })
 
   useEffect(() => {
@@ -33,10 +36,24 @@ export default function MonitorInfo() {
 
   return (
     <div className="w-full px-4 xl:m-auto xl:w-[1280px]">
-      <div className="mt-10"></div>
-      <h1 className="my-4 text-4xl font-bold">{monitor.name}</h1>
+      <div className="mt-10" />
+      <div className="flex flex-row items-center gap-4">
+        <h1 className="my-4 text-4xl font-bold">{monitor.name}</h1>
+        {monitor.status === 'UP' && (
+          <div className="relative">
+            <div className="absolute inset-0 -top-[10px] size-[24px] rounded-full bg-green-500" />
+            <div className="absolute inset-0 -top-[10px] size-[24px] animate-ping rounded-full border-2 border-green-500 bg-green-500 opacity-75" />
+          </div>
+        )}
+        {monitor.status === 'DOWN' && (
+          <div className="relative">
+            <div className="absolute inset-0 -top-[10px] size-[24px] rounded-full bg-red-500" />
+            <div className="absolute inset-0 -top-[10px] size-[24px] animate-ping rounded-full border-2 border-red-500 bg-red-500 opacity-75" />
+          </div>
+        )}
+      </div>
       <Status monitor={monitor} />
-      {/* <PingChart statusHistory={statusData.getStatusByMonitorId} /> */}
+      <PingChart monitor={monitor} />
     </div>
   )
 }

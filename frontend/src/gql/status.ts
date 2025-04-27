@@ -10,3 +10,14 @@ export const STATUS_QUERY = gql`
     }
   }
 `
+
+export const STATUS_BY_TIME_RANGE_QUERY = gql`
+  query GetStatusByTimeRange($from: DateTime!, $to: DateTime!, $monitorId: String!) {
+    getStatusByTimeRange(from: $from, to: $to, monitorId: $monitorId) {
+      id
+      metadata
+      responseTime
+      createdAt
+    }
+  }
+`

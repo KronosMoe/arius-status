@@ -35,9 +35,10 @@ export class StatusService {
     })
   }
 
-  async getStatusByTimeRange(from: Date, to: Date) {
+  async getStatusByTimeRange(monitorId: string, from: Date, to: Date) {
     return await this.prisma.statusResults.findMany({
       where: {
+        monitorId: monitorId,
         createdAt: {
           gte: from,
           lte: to,

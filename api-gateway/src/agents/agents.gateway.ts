@@ -101,12 +101,17 @@ export class AgentsGateway implements OnGatewayConnection, OnGatewayDisconnect {
       where: { id: data.monitorId },
     })
 
+    await this.prisma.monitors.update({
+      where: { id: data.monitorId },
+      data: { status: data.responseTime === -1 ? 'DOWN' : 'UP' },
+    })
+
     if (
       latestStatus &&
       latestStatus.responseTime !== -1 &&
       data.responseTime === -1
     ) {
-      this.notificationService.sendDiscordNotification({
+      await this.notificationService.sendDiscordNotification({
         embeds: [
           {
             title: `Your service ${monitor.name} is down`,
@@ -125,7 +130,7 @@ export class AgentsGateway implements OnGatewayConnection, OnGatewayDisconnect {
       latestStatus.responseTime === -1 &&
       data.responseTime !== -1
     ) {
-      this.notificationService.sendDiscordNotification({
+      await this.notificationService.sendDiscordNotification({
         embeds: [
           {
             title: `Your service ${monitor.name} is up`,

@@ -13,17 +13,6 @@ export class SettingsService {
     })
   }
 
-  async updateDisplayInterval(displayInterval: number, userId: string) {
-    return this.prisma.settings.update({
-      where: {
-        userId,
-      },
-      data: {
-        displayInterval,
-      },
-    })
-  }
-
   async updateTheme(theme: string, userId: string) {
     return this.prisma.settings.update({
       where: {

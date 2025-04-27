@@ -22,6 +22,7 @@ type Monitor {
   address: String!
   type: String!
   agentId: String!
+  status: String!
   interval: Int!
   createdAt: DateTime!
 }
@@ -37,6 +38,7 @@ type MonitorAgent {
   address: String!
   type: String!
   agentId: String!
+  status: String!
   interval: Int!
   createdAt: DateTime!
   agent: Agent!
@@ -57,7 +59,6 @@ scalar JSON
 type Setting {
   id: String!
   theme: String!
-  displayInterval: Int!
 }
 
 type Query {
@@ -66,7 +67,7 @@ type Query {
   findMonitorById(id: String!): MonitorAgent!
   findAgentsByUserId: [Agent!]!
   getStatusByMonitorId(monitorId: String!, barCount: Float! = 60): [Status!]!
-  getStatusByTimeRange(from: DateTime!, to: DateTime!): [Status!]!
+  getStatusByTimeRange(from: DateTime!, to: DateTime!, monitorId: String!): [Status!]!
   getSettingsByUserId: Setting!
 }
 
@@ -76,7 +77,6 @@ type Mutation {
   logout: Boolean!
   createMonitor(createMonitorInput: CreateMonitorInput!): Monitor!
   createAgent(createAgentInput: CreateAgentInput!): Agent!
-  updateDisplayInterval(displayInterval: Float!): Setting!
   updateTheme(theme: String!): Setting!
 }
 

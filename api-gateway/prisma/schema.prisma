@@ -23,11 +23,10 @@ model Users {
 }
 
 model Settings {
-  id              String   @id @default(uuid())
-  userId          String   @unique
-  theme           String   @default("light")
-  displayInterval Int      @default(60)
-  createdAt       DateTime @default(now())
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  theme     String   @default("light")
+  createdAt DateTime @default(now())
 
   user Users @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
@@ -60,6 +59,7 @@ model Monitors {
   name      String
   address   String
   type      String
+  status    String   @default("UNKNOWN")
   interval  Int      @default(300)
   userId    String
   agentId   String

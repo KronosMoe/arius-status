@@ -19,7 +19,11 @@ export class StatusResolver {
 
   @Query(() => [Status])
   @UseGuards(GqlAuthGuard)
-  async getStatusByTimeRange(@Args('from') from: Date, @Args('to') to: Date) {
-    return await this.statusService.getStatusByTimeRange(from, to)
+  async getStatusByTimeRange(
+    @Args('from') from: Date,
+    @Args('to') to: Date,
+    @Args('monitorId') monitorId: string,
+  ) {
+    return await this.statusService.getStatusByTimeRange(monitorId, from, to)
   }
 }

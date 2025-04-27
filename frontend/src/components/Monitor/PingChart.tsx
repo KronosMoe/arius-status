@@ -1,16 +1,70 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState, useMemo } from 'react'
+import { useQuery } from '@apollo/client'
 import { Line } from 'react-chartjs-2'
 import { Chart as ChartJS, LineElement, PointElement, CategoryScale, LinearScale, Tooltip } from 'chart.js'
 import annotationPlugin from 'chartjs-plugin-annotation'
+import { IMonitor } from '@/types/monitor'
+import { STATUS_BY_TIME_RANGE_QUERY } from '@/gql/status'
+import Loading from '../utils/Loading'
+import { toast } from 'sonner'
 import { IStatus } from '@/types/status'
+import { Button } from '@/components/ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { ChevronDown } from 'lucide-react'
 
 ChartJS.register(LineElement, PointElement, CategoryScale, LinearScale, Tooltip, annotationPlugin)
 
-interface PingChartProps {
-  statusHistory: IStatus[]
+type Props = {
+  monitor: IMonitor
 }
 
-export default function PingChart({ statusHistory }: PingChartProps) {
+const timeRanges = [
+  { label: '1h', value: 1 * 60 * 60 * 1000 },
+  { label: '3h', value: 3 * 60 * 60 * 1000 },
+  { label: '6h', value: 6 * 60 * 60 * 1000 },
+  { label: '12h', value: 12 * 60 * 60 * 1000 },
+  { label: '24h', value: 24 * 60 * 60 * 1000 },
+]
+
+export default function PingChart({ monitor }: Props) {
+  const [selectedTimeRange, setSelectedTimeRange] = useState(timeRanges[0])
+  const from = useMemo(() => new Date(Date.now() - selectedTimeRange.value), [selectedTimeRange])
+  const to = useMemo(() => new Date(), [])
+
+  const {
+    data: statusData,
+    loading,
+    error,
+  } = useQuery(STATUS_BY_TIME_RANGE_QUERY, {
+    variables: { monitorId: monitor.id, from, to },
+    fetchPolicy: 'network-only',
+    skip: !monitor.id || !selectedTimeRange,
+    pollInterval: 60 * 1000,
+  })
+
+  if (error) {
+    toast.error(error.message)
+    return null
+  }
+
+  if (loading) return <Loading />
+
+  const statusHistory = statusData?.getStatusByTimeRange as IStatus[]
+  if (!statusHistory || statusHistory.length === 0) {
+    return (
+      <div className="my-4 flex h-[250px] w-full items-center justify-center rounded-md border border-black/20 bg-zinc-900 p-4 text-zinc-500 dark:border-white/10">
+        No data available for this time range
+      </div>
+    )
+  }
+
   const reversedHistory = [...statusHistory].reverse()
 
   const labels = reversedHistory.map((s) => {
@@ -101,7 +155,7 @@ export default function PingChart({ statusHistory }: PingChartProps) {
           font: {
             size: 10,
           },
-          display: false,
+          display: true,
         },
         grid: {
           color: 'rgba(113, 113, 122, 0.2)',
@@ -153,8 +207,29 @@ export default function PingChart({ statusHistory }: PingChartProps) {
   }
 
   return (
-    <div className="my-4 w-full rounded-md border border-black/20 bg-zinc-900 p-4 dark:border-white/10">
-      <Line data={data} options={options} />
+    <div>
+      <div className="my-4 w-full rounded-md border border-black/20 bg-zinc-900 p-4 dark:border-white/10">
+        <div className="text-right">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost">
+                {selectedTimeRange.label} <ChevronDown />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56">
+              <DropdownMenuLabel>Select Time Range</DropdownMenuLabel>
+              {timeRanges.map((range) => (
+                <DropdownMenuItem key={range.label} onClick={() => setSelectedTimeRange(range)}>
+                  {range.label}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+        <div>
+          <Line data={data} options={options} />
+        </div>
+      </div>
     </div>
   )
 }

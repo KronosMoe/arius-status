@@ -18,18 +18,6 @@ export class SettingsResolver {
 
   @Mutation(() => Setting)
   @UseGuards(GqlAuthGuard)
-  async updateDisplayInterval(
-    @Args('displayInterval') displayInterval: number,
-    @Me() user: User,
-  ) {
-    return await this.settingsService.updateDisplayInterval(
-      displayInterval,
-      user.id,
-    )
-  }
-
-  @Mutation(() => Setting)
-  @UseGuards(GqlAuthGuard)
   async updateTheme(@Args('theme') theme: string, @Me() user: User) {
     return await this.settingsService.updateTheme(theme, user.id)
   }

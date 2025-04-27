@@ -17,6 +17,9 @@ export class Monitor {
   @Field(() => String)
   agentId: string
 
+  @Field(() => String)
+  status: string
+
   @Field(() => Int)
   interval: number
 
