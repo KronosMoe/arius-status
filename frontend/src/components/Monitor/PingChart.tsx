@@ -45,7 +45,7 @@ export default function PingChart({ monitor }: Props) {
   } = useQuery(STATUS_BY_TIME_RANGE_QUERY, {
     variables: { monitorId: monitor.id, from, to },
     fetchPolicy: 'network-only',
-    skip: !monitor.id || !selectedTimeRange,
+    skip: !monitor.id || !selectedTimeRange || monitor.status === 'PAUSED',
     pollInterval: 60 * 1000,
   })
 
@@ -57,6 +57,15 @@ export default function PingChart({ monitor }: Props) {
   if (loading) return <Loading />
 
   const statusHistory = statusData?.getStatusByTimeRange as IStatus[]
+
+  if (monitor.status === 'PAUSED') {
+    return (
+      <div className="my-4 flex h-[250px] w-full items-center justify-center rounded-md border border-black/20 bg-yellow-400/10 p-4 text-yellow-500 dark:border-white/10">
+        Monitor is paused
+      </div>
+    )
+  }
+
   if (!statusHistory || statusHistory.length === 0) {
     return (
       <div className="my-4 flex h-[250px] w-full items-center justify-center rounded-md border border-black/20 bg-zinc-900 p-4 text-zinc-500 dark:border-white/10">
@@ -208,7 +217,7 @@ export default function PingChart({ monitor }: Props) {
 
   return (
     <div>
-      <div className="my-4 w-full rounded-md border border-black/20 bg-zinc-900 p-4 dark:border-white/10">
+      <div className="my-4 w-full rounded-md border border-black/20 p-4 dark:border-white/10 dark:bg-zinc-900">
         <div className="text-right">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

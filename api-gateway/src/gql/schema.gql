@@ -14,7 +14,13 @@ type Agent {
   name: String!
   token: String!
   isOnline: Boolean!
+  createdAt: DateTime!
 }
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
 
 type Monitor {
   id: String!
@@ -26,11 +32,6 @@ type Monitor {
   interval: Int!
   createdAt: DateTime!
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 type MonitorAgent {
   id: String!
@@ -75,6 +76,10 @@ type Mutation {
   register(input: RegisterInput!): String!
   login(input: LoginInput!): String!
   logout: Boolean!
+  pauseMonitorById(id: String!): MonitorAgent!
+  resumeMonitorById(id: String!): MonitorAgent!
+  deleteMonitorById(id: String!): Monitor!
+  updateMonitorById(id: String!, updateMonitorInput: UpdateMonitorInput!): Monitor!
   createMonitor(createMonitorInput: CreateMonitorInput!): Monitor!
   createAgent(createAgentInput: CreateAgentInput!): Agent!
   updateTheme(theme: String!): Setting!
@@ -90,6 +95,13 @@ input LoginInput {
   username: String!
   password: String!
   platform: String!
+}
+
+input UpdateMonitorInput {
+  name: String!
+  address: String!
+  type: String!
+  interval: Float!
 }
 
 input CreateMonitorInput {

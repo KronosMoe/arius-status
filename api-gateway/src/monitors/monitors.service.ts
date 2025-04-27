@@ -4,6 +4,7 @@ import { Monitor } from './entities/monitor.entity'
 import { CreateMonitorInput } from './dto/create-monitor.input'
 import { MonitorGateway } from './monitors.gateway'
 import { MonitorAgent } from './entities/monitor-agent.entity'
+import { UpdateMonitorInput } from './dto/update-monitor.input'
 
 @Injectable()
 export class MonitorsService {
@@ -33,6 +34,40 @@ export class MonitorsService {
     })
   }
 
+  async pauseMonitorById(id: string) {
+    const monitor = await this.prisma.monitors.update({
+      where: {
+        id,
+      },
+      data: {
+        status: 'PAUSED',
+      },
+      include: {
+        agent: true,
+      },
+    })
+    this.monitorGateway.stopMonitor(monitor.id)
+    this.logger.log(`Monitor ${monitor.id} paused`)
+    return monitor
+  }
+
+  async resumeMonitorById(id: string) {
+    const monitor = await this.prisma.monitors.update({
+      where: {
+        id,
+      },
+      data: {
+        status: 'UNKNOWN',
+      },
+      include: {
+        agent: true,
+      },
+    })
+    this.monitorGateway.startMonitor(monitor)
+    this.logger.log(`Monitor ${monitor.id} resumed`)
+    return monitor
+  }
+
   async deleteMonitorById(id: string) {
     const monitor = await this.prisma.monitors.delete({
       where: {
@@ -41,6 +76,25 @@ export class MonitorsService {
     })
     this.monitorGateway.stopMonitor(monitor.id)
     this.logger.log(`Monitor ${monitor.id} deleted`)
+    return monitor
+  }
+
+  async updateMonitorById(id: string, updateMonitorInput: UpdateMonitorInput) {
+    this.monitorGateway.stopMonitor(id)
+    const monitor = await this.prisma.monitors.update({
+      where: {
+        id,
+      },
+      data: {
+        name: updateMonitorInput.name,
+        address: updateMonitorInput.address,
+        type: updateMonitorInput.type,
+        interval: updateMonitorInput.interval,
+        status: 'UNKNOWN',
+      },
+    })
+    this.monitorGateway.startMonitor(monitor)
+    this.logger.log(`Monitor ${monitor.id} updated`)
     return monitor
   }
 

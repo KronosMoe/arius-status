@@ -18,6 +18,7 @@ export default function Status({ monitor }: { monitor: IMonitor }) {
     },
     pollInterval: 60 * 1000,
     fetchPolicy: 'network-only',
+    skip: monitor.status === 'PAUSED',
   })
 
   useEffect(() => {

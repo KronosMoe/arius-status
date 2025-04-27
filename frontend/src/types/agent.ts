@@ -3,4 +3,5 @@ export interface IAgent {
     name: string
     token: string
     isOnline: boolean
+    createdAt: Date
 }

@@ -11,8 +11,22 @@ import { IAgent } from '@/types/agent'
 import { IMonitor } from '@/types/monitor'
 
 export default function Dashboard() {
-  const { data: monitorData, loading: monitorLoading, error: monitorError } = useQuery(MONITORS_QUERY)
-  const { data: agentData, loading: agentLoading, error: agentError } = useQuery(AGENTS_QUERY)
+  const {
+    data: monitorData,
+    loading: monitorLoading,
+    error: monitorError,
+  } = useQuery(MONITORS_QUERY, {
+    pollInterval: 60 * 1000,
+    fetchPolicy: 'network-only',
+  })
+  const {
+    data: agentData,
+    loading: agentLoading,
+    error: agentError,
+  } = useQuery(AGENTS_QUERY, {
+    pollInterval: 60 * 1000,
+    fetchPolicy: 'network-only',
+  })
 
   const [monitors, setMonitors] = useState<IMonitor[]>([])
   const [agents, setAgents] = useState<IAgent[]>([])
@@ -37,7 +51,7 @@ export default function Dashboard() {
   if (monitorLoading || agentLoading) return <Loading />
 
   return (
-    <div className="px-4 w-full xl:m-auto xl:w-[1280px]">
+    <div className="w-full px-4 xl:m-auto xl:w-[1280px]">
       <div className="mt-10">
         <Tabs defaultValue="monitors">
           <TabsList>

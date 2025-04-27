@@ -13,4 +13,7 @@ export class Agent {
 
   @Field(() => Boolean)
   isOnline: boolean
+
+  @Field(() => Date)
+  createdAt: Date
 }

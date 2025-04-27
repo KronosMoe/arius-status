@@ -7,6 +7,7 @@ export const AGENTS_QUERY = gql`
       name
       token
       isOnline
+      createdAt
     }
   }
 `
@@ -18,6 +19,7 @@ export const CREATE_AGENT_MUTATION = gql`
       name
       token
       isOnline
+      createdAt
     }
   }
 `

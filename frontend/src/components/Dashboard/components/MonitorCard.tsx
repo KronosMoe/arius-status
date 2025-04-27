@@ -18,6 +18,7 @@ export default function MonitorCard({ monitor, showTitle = true }: { monitor: IM
     },
     pollInterval: 60 * 1000,
     fetchPolicy: 'network-only',
+    skip: monitor.status === 'PAUSED',
   })
 
   useEffect(() => {

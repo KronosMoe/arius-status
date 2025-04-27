@@ -1,5 +1,6 @@
 import { IAgent } from './agent'
 
+export type MonitorType = 'HTTP' | 'TCP' | 'PING'
 export interface IMonitor {
   id: string
   name: string

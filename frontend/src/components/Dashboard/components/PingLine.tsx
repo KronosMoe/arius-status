@@ -1,12 +1,12 @@
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
-import { formatAgo } from "@/lib/date"
-import { IMonitor } from "@/types/monitor"
-import { IStatus } from "@/types/status"
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import { formatAgo } from '@/lib/date'
+import { IMonitor } from '@/types/monitor'
+import { IStatus } from '@/types/status'
 
 type Props = {
-    monitor: IMonitor
-    barCount: number
-    statusHistory: IStatus[]
+  monitor: IMonitor
+  barCount: number
+  statusHistory: IStatus[]
 }
 
 export default function PingLine({ monitor, barCount, statusHistory }: Props) {
@@ -33,7 +33,10 @@ export default function PingLine({ monitor, barCount, statusHistory }: Props) {
             let bgColor = 'bg-zinc-300 dark:bg-zinc-500'
             let tooltip = 'No Data'
 
-            if (statusItem) {
+            if (monitor.status === 'PAUSED') {
+              bgColor = 'bg-yellow-400'
+              tooltip = 'Paused'
+            } else if (statusItem) {
               if (statusItem.responseTime === -1) {
                 bgColor = 'bg-red-500'
                 tooltip = 'Down'

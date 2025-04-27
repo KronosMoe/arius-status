@@ -59,13 +59,13 @@ export class AgentsGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     setInterval(() => {
       client.emit('health-check')
-    }, 30000)
+    }, 3600000)
   }
 
   async handleDisconnect(client: Socket) {
     const agentId = client.data.agentId
     if (agentId) {
-      this.logger.log(`❌ Agent disconnected: ${agentId}`)
+      this.logger.log(`Agent disconnected: ${agentId}`)
 
       await this.prisma.agents.update({
         where: { id: agentId },
