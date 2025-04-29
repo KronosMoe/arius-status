@@ -33,6 +33,7 @@ model Settings {
 
 model Notifications {
   id        String   @id @default(uuid())
+  title     String
   userId    String
   method    String
   message   String

@@ -1,6 +1,10 @@
-export default function Logo() {
+type Props = {
+  size?: number
+}
+
+export default function Logo({ size = 32 }: Props) {
   return (
-    <svg width="32" height="32" viewBox="0 0 381 381" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width={String(size)} height={String(size)} viewBox="0 0 381 381" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M0 228V151.688L76.688 75H229.5V151.5H153V151.304L76.3043 228H0Z" fill="currentColor" />
       <path d="M229.5 151.5H306V304.237L229.5 380.737V151.5Z" fill="currentColor" />
       <path d="M0 381V304.688L76.688 228H153V304.304L76.3043 381H0Z" fill="currentColor" />

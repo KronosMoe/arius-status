@@ -41,6 +41,7 @@ export default function SignIn() {
         },
       },
     })
+    form.reset()
     navigate(DASHBOARD_PATH, { replace: true })
     navigate(0)
   }

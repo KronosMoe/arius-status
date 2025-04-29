@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common'
+import { Injectable, Logger, NotFoundException } from '@nestjs/common'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { Monitor } from './entities/monitor.entity'
 import { CreateMonitorInput } from './dto/create-monitor.input'
@@ -24,7 +24,7 @@ export class MonitorsService {
   }
 
   async findMonitorById(id: string): Promise<MonitorAgent> {
-    return await this.prisma.monitors.findUnique({
+    const monitor = await this.prisma.monitors.findUnique({
       where: {
         id,
       },
@@ -32,6 +32,12 @@ export class MonitorsService {
         agent: true,
       },
     })
+
+    if (!monitor) {
+      throw new NotFoundException('Monitor not found')
+    }
+
+    return monitor
   }
 
   async pauseMonitorById(id: string) {

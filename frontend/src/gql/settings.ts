@@ -15,3 +15,29 @@ export const UPDATE_THEME_MUTATION = gql`
     }
   }
 `
+
+export const NOTIFICATION_QUERY = gql`
+  query GetNotificationSettingsByUserId {
+    getNotificationSettingsByUserId {
+      id
+      title
+      method
+      message
+      metadata
+      createdAt
+    }
+  }
+`
+
+export const CREATE_NOTIFICATION_MUTATION = gql`
+  mutation CreateNotificationSetting($createNotificationInput: CreateNotificationInput!) {
+    createNotificationSetting(createNotificationInput: $createNotificationInput) {
+      id
+      title
+      method
+      message
+      metadata
+      createdAt
+    }
+  }
+`

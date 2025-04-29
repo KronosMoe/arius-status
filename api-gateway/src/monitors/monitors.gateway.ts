@@ -20,7 +20,6 @@ export class MonitorGateway implements OnModuleInit {
   async startAllMonitors() {
     const monitors = await this.prisma.monitors.findMany({
       where: {
-        type: 'PING',
         NOT: {
           status: 'PAUSED',
         },

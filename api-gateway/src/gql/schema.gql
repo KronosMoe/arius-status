@@ -57,6 +57,15 @@ The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://
 """
 scalar JSON
 
+type Notification {
+  id: String!
+  title: String!
+  method: String!
+  message: String!
+  metadata: JSON!
+  createdAt: DateTime!
+}
+
 type Setting {
   id: String!
   theme: String!
@@ -69,6 +78,7 @@ type Query {
   findAgentsByUserId: [Agent!]!
   getStatusByMonitorId(monitorId: String!, barCount: Float! = 60): [Status!]!
   getStatusByTimeRange(from: DateTime!, to: DateTime!, monitorId: String!): [Status!]!
+  getNotificationSettingsByUserId: [Notification!]!
   getSettingsByUserId: Setting!
 }
 
@@ -82,6 +92,7 @@ type Mutation {
   updateMonitorById(id: String!, updateMonitorInput: UpdateMonitorInput!): Monitor!
   createMonitor(createMonitorInput: CreateMonitorInput!): Monitor!
   createAgent(createAgentInput: CreateAgentInput!): Agent!
+  createNotificationSetting(createNotificationInput: CreateNotificationInput!): Notification!
   updateTheme(theme: String!): Setting!
 }
 
@@ -114,4 +125,11 @@ input CreateMonitorInput {
 
 input CreateAgentInput {
   name: String!
+}
+
+input CreateNotificationInput {
+  title: String!
+  method: String!
+  message: String!
+  metadata: JSON!
 }

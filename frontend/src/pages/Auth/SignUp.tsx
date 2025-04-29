@@ -49,6 +49,7 @@ export default function SignUp() {
         },
       },
     })
+    form.reset()
     navigate(SIGN_IN_PATH, { replace: true })
   }
 
