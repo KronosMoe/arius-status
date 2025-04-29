@@ -75,12 +75,18 @@ export class MonitorsService {
   }
 
   async deleteMonitorById(id: string) {
+    this.monitorGateway.stopMonitor(id)
+    await this.prisma.statusResults.deleteMany({
+      where: {
+        monitorId: id,
+      },
+    })
+
     const monitor = await this.prisma.monitors.delete({
       where: {
         id,
       },
     })
-    this.monitorGateway.stopMonitor(monitor.id)
     this.logger.log(`Monitor ${monitor.id} deleted`)
     return monitor
   }

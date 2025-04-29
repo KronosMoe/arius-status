@@ -16,7 +16,6 @@ export default function Dashboard() {
     loading: monitorLoading,
     error: monitorError,
   } = useQuery(MONITORS_QUERY, {
-    pollInterval: 60 * 1000,
     fetchPolicy: 'network-only',
   })
   const {
@@ -52,7 +51,7 @@ export default function Dashboard() {
 
   return (
     <div className="w-full px-4 xl:m-auto xl:w-[1280px]">
-      <div className="mt-10">
+      <div className="mt-10 mb-20">
         <Tabs defaultValue="monitors">
           <TabsList>
             <TabsTrigger value="monitors">Monitors</TabsTrigger>

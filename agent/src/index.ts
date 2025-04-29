@@ -2,6 +2,7 @@ import { io } from "socket.io-client";
 import ping from "ping";
 import http from "http";
 import https from "https";
+import { URL } from "url";
 import net from "net";
 
 const SERVER_URL = "http://localhost:4001";
@@ -75,45 +76,48 @@ socket.on("run-command", (monitor) => {
       break;
 
     case "HTTP":
-    case "HTTPS":
-      const client = monitor.type === "HTTPS" ? https : http;
+    case "HTTPS": {
+      let url: URL;
       try {
-        const req = client.get(monitor.address, (res) => {
-          const responseTime = Date.now() - startTime;
-          res.resume(); // Discard response body
-          sendResult(true, responseTime, {
-            address: monitor.address,
-            statusCode: res.statusCode,
-            headers: res.headers,
-            timestamp: new Date().toISOString(),
-          });
+        url = new URL(monitor.address);
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : String(err);
+        sendResult(false, -1, {
+          error: `Invalid URL: ${errorMessage}`,
+          address: monitor.address,
+          timestamp: new Date().toISOString(),
         });
+        break;
+      }
 
-        req.on("error", (err) => {
-          sendResult(false, -1, {
-            error: err.message,
-            address: monitor.address,
-            timestamp: new Date().toISOString(),
-          });
-        });
+      const client = url.protocol === "https:" ? https : http;
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 5000);
 
-        req.setTimeout(5000, () => {
-          req.abort();
-          sendResult(false, -1, {
-            error: "Request timeout",
-            address: monitor.address,
-            timestamp: new Date().toISOString(),
-          });
+      const req = client.get(url, { signal: controller.signal }, (res) => {
+        clearTimeout(timeout);
+        const responseTime = Date.now() - startTime;
+        res.resume(); // discard body
+        sendResult(true, responseTime, {
+          address: monitor.address,
+          statusCode: res.statusCode,
+          headers: res.headers,
+          timestamp: new Date().toISOString(),
         });
-      } catch (err: unknown) {
+      });
+
+      req.on("error", (err: unknown) => {
+        clearTimeout(timeout);
         const errorMessage = err instanceof Error ? err.message : String(err);
         sendResult(false, -1, {
           error: errorMessage,
           address: monitor.address,
           timestamp: new Date().toISOString(),
         });
-      }
+      });
+
       break;
+    }
 
     case "TCP":
       const [host, portStr] = monitor.address.split(":");
