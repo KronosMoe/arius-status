@@ -1,10 +1,7 @@
-import { Field, ObjectType } from '@nestjs/graphql'
+import { Field, InputType } from '@nestjs/graphql'
 
-@ObjectType()
-export class Notification {
-  @Field(() => String)
-  id: string
-
+@InputType()
+export class UpdateNotificationInput {
   @Field(() => String)
   title: string
 
@@ -14,15 +11,12 @@ export class Notification {
   @Field(() => String)
   message: string
 
-  @Field(() => Date)
-  createdAt: Date
-
-  @Field(() => Boolean)
-  isDefault: boolean
-
   @Field(() => String, { nullable: true })
   webhookUrl?: string
 
   @Field(() => String, { nullable: true })
   content?: string
+
+  @Field(() => Boolean)
+  isDefault: boolean
 }

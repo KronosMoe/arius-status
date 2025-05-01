@@ -11,6 +11,32 @@ CREATE TABLE "Users" (
 );
 
 -- CreateTable
+CREATE TABLE "Settings" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "theme" TEXT NOT NULL DEFAULT 'light',
+    "timezone" TEXT NOT NULL DEFAULT 'Asia/Bangkok',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Settings_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Notifications" (
+    "id" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "webhookUrl" TEXT,
+    "method" TEXT NOT NULL,
+    "message" TEXT NOT NULL,
+    "content" TEXT,
+    "isDefault" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Notifications_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "Sessions" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
@@ -29,6 +55,7 @@ CREATE TABLE "Monitors" (
     "name" TEXT NOT NULL,
     "address" TEXT NOT NULL,
     "type" TEXT NOT NULL,
+    "status" TEXT NOT NULL DEFAULT 'UNKNOWN',
     "interval" INTEGER NOT NULL DEFAULT 300,
     "userId" TEXT NOT NULL,
     "agentId" TEXT NOT NULL,
@@ -67,10 +94,19 @@ CREATE UNIQUE INDEX "Users_username_key" ON "Users"("username");
 CREATE UNIQUE INDEX "Users_email_key" ON "Users"("email");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Settings_userId_key" ON "Settings"("userId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Sessions_token_key" ON "Sessions"("token");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Agents_token_key" ON "Agents"("token");
+
+-- AddForeignKey
+ALTER TABLE "Settings" ADD CONSTRAINT "Settings_userId_fkey" FOREIGN KEY ("userId") REFERENCES "Users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Notifications" ADD CONSTRAINT "Notifications_userId_fkey" FOREIGN KEY ("userId") REFERENCES "Users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Sessions" ADD CONSTRAINT "Sessions_userId_fkey" FOREIGN KEY ("userId") REFERENCES "Users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

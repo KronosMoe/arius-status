@@ -6,7 +6,7 @@ import { URL } from "url";
 import net from "net";
 
 const SERVER_URL = "http://localhost:4001";
-const AGENT_TOKEN = "f5c86a80-b97e-4edd-b52d-1bb719c89029";
+const AGENT_TOKEN = "5022773e-cb88-4d6c-9456-4a367385f37e";
 
 const socket = io(SERVER_URL, {
   auth: {

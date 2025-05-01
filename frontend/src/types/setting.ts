@@ -1,5 +1,6 @@
 export interface ISetting {
   theme: 'light' | 'dark'
+  timezone: string
 }
 
 export interface INotification {
@@ -7,6 +8,8 @@ export interface INotification {
   title: string
   message: string
   method: string
-  metadata: any
+  webhookUrl?: string
+  content?: string
   createdAt: Date
+  isDefault: boolean
 }

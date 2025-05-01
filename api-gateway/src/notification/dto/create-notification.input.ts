@@ -1,5 +1,4 @@
 import { Field, InputType } from '@nestjs/graphql'
-import GraphQLJSON from 'graphql-type-json'
 
 @InputType()
 export class CreateNotificationInput {
@@ -12,6 +11,9 @@ export class CreateNotificationInput {
   @Field(() => String)
   message: string
 
-  @Field(() => GraphQLJSON)
-  metadata: any
+  @Field(() => String, { nullable: true })
+  webhookUrl?: string
+
+  @Field(() => String, { nullable: true })
+  content?: string
 }

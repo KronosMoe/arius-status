@@ -2,11 +2,16 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type User {
+type Setting {
   id: String!
+  theme: String!
+  timezone: String!
+}
+
+type Auth {
   username: String!
-  email: String!
   image: String!
+  settings: Setting!
 }
 
 type Agent {
@@ -62,17 +67,14 @@ type Notification {
   title: String!
   method: String!
   message: String!
-  metadata: JSON!
   createdAt: DateTime!
-}
-
-type Setting {
-  id: String!
-  theme: String!
+  isDefault: Boolean!
+  webhookUrl: String
+  content: String
 }
 
 type Query {
-  me: User
+  me: Auth
   findMonitorsByUserId: [Monitor!]!
   findMonitorById(id: String!): MonitorAgent!
   findAgentsByUserId: [Agent!]!
@@ -93,6 +95,8 @@ type Mutation {
   createMonitor(createMonitorInput: CreateMonitorInput!): Monitor!
   createAgent(createAgentInput: CreateAgentInput!): Agent!
   createNotificationSetting(createNotificationInput: CreateNotificationInput!): Notification!
+  updateNotificationSetting(updateNotificationInput: UpdateNotificationInput!, id: String!): Notification!
+  deleteNotificationSetting(id: String!): Notification!
   updateTheme(theme: String!): Setting!
 }
 
@@ -100,6 +104,7 @@ input RegisterInput {
   username: String!
   email: String!
   password: String!
+  timezone: String!
 }
 
 input LoginInput {
@@ -131,5 +136,15 @@ input CreateNotificationInput {
   title: String!
   method: String!
   message: String!
-  metadata: JSON!
+  webhookUrl: String
+  content: String
+}
+
+input UpdateNotificationInput {
+  title: String!
+  method: String!
+  message: String!
+  webhookUrl: String
+  content: String
+  isDefault: Boolean!
 }

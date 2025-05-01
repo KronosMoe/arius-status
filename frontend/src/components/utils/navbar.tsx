@@ -13,7 +13,7 @@ import { ChevronDown, LayoutDashboard, LayoutPanelTop, LogIn, LogOut, Settings }
 import Logo from './Logo'
 
 export default function Navbar() {
-  const { user, isAuthenticated, logout } = useAuth()
+  const { auth, isAuthenticated, logout } = useAuth()
 
   return (
     <div className="sticky top-[10px] z-50 w-full px-[10px] xl:mx-auto xl:w-[1280px]">
@@ -22,12 +22,12 @@ export default function Navbar() {
           <Logo />
         </Link>
         <div className="flex items-center gap-2">
-          {isAuthenticated && user ? (
+          {isAuthenticated && auth ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="flex items-center gap-1">
-                  <img src={user.image} alt="avatar" className="mr-1 h-6 w-6 rounded-full" />
-                  {user.username} <ChevronDown className="h-4 w-4" />
+                  <img src={auth.image as string} alt="avatar" className="mr-1 h-6 w-6 rounded-full" />
+                  {auth.username} <ChevronDown className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">

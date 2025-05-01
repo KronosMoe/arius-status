@@ -46,6 +46,7 @@ export default function SignUp() {
           username: data.username,
           email: data.email,
           password: data.password,
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         },
       },
     })

@@ -23,7 +23,9 @@ export const NOTIFICATION_QUERY = gql`
       title
       method
       message
-      metadata
+      webhookUrl
+      isDefault
+      content
       createdAt
     }
   }
@@ -35,9 +37,44 @@ export const CREATE_NOTIFICATION_MUTATION = gql`
       id
       title
       method
+      webhookUrl
+      content
+      isDefault
       message
-      metadata
       createdAt
+    }
+  }
+`
+
+export const UPDATE_NOTIFICATION_MUTATION = gql`
+  mutation UpdateNotificationSetting(
+    $updateNotificationInput: UpdateNotificationInput!
+    $updateNotificationSettingId: String!
+  ) {
+    updateNotificationSetting(updateNotificationInput: $updateNotificationInput, id: $updateNotificationSettingId) {
+      content
+      createdAt
+      id
+      isDefault
+      message
+      method
+      title
+      webhookUrl
+    }
+  }
+`
+
+export const DELETE_NOTIFICATION_MUTATION = gql`
+  mutation DeleteNotificationSetting($deleteNotificationSettingId: String!) {
+    deleteNotificationSetting(id: $deleteNotificationSettingId) {
+      content
+      createdAt
+      id
+      isDefault
+      message
+      method
+      title
+      webhookUrl
     }
   }
 `

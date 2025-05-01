@@ -5,6 +5,10 @@ export const ME_QUERY = gql`
     me {
       username
       image
+      settings {
+        theme
+        timezone
+      }
     }
   }
 `

@@ -10,4 +10,7 @@ export class RegisterInput {
 
   @Field(() => String)
   password: string
+
+  @Field(() => String)
+  timezone: string
 }

@@ -6,6 +6,7 @@ import { Me } from 'src/auth/decorators/me.decorator'
 import { User } from 'src/users/entities/user.entity'
 import { GqlAuthGuard } from 'src/auth/guards/gql-auth.guard'
 import { CreateNotificationInput } from './dto/create-notification.input'
+import { UpdateNotificationInput } from './dto/update-notification.input'
 
 @Resolver()
 export class NotificationResolver {
@@ -28,5 +29,24 @@ export class NotificationResolver {
       createNotificationInput,
       user.id,
     )
+  }
+
+  @Mutation(() => Notification)
+  @UseGuards(GqlAuthGuard)
+  async updateNotificationSetting(
+    @Args('updateNotificationInput')
+    updateNotificationInput: UpdateNotificationInput,
+    @Args('id') id: string,
+  ) {
+    return this.notificationService.updateNotificationSetting(
+      updateNotificationInput,
+      id,
+    )
+  }
+
+  @Mutation(() => Notification)
+  @UseGuards(GqlAuthGuard)
+  async deleteNotificationSetting(@Args('id') id: string) {
+    return this.notificationService.deleteNotificationSetting(id)
   }
 }

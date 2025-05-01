@@ -8,6 +8,7 @@ import { GqlAuthGuard } from './guards/gql-auth.guard'
 import { Me } from './decorators/me.decorator'
 import { Response } from 'express'
 import { ACCESS_TOKEN } from 'src/constants/cookies'
+import { Auth } from './entities/auth.entity'
 
 @Resolver()
 export class AuthResolver {
@@ -39,9 +40,9 @@ export class AuthResolver {
     return user.id
   }
 
-  @Query(() => User, { nullable: true })
+  @Query(() => Auth, { nullable: true })
   @UseGuards(GqlAuthGuard)
-  async me(@Me() user: User): Promise<User> {
+  async me(@Me() user: User): Promise<Auth> {
     return await this.authService.getCurrentUser(user.id)
   }
 

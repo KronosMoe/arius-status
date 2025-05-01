@@ -1,3 +1,7 @@
-import { IUser } from './user'
+import { ISetting } from './setting'
 
-export type AuthUser = Pick<IUser, 'username' | 'image'>
+export type Auth = {
+  username: string | null
+  image: string | null
+  settings: ISetting
+}

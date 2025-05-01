@@ -26,19 +26,22 @@ model Settings {
   id        String   @id @default(uuid())
   userId    String   @unique
   theme     String   @default("light")
+  timezone  String   @default("Asia/Bangkok")
   createdAt DateTime @default(now())
 
   user Users @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Notifications {
-  id        String   @id @default(uuid())
-  title     String
-  userId    String
-  method    String
-  message   String
-  metadata  Json?
-  createdAt DateTime @default(now())
+  id         String   @id @default(uuid())
+  title      String
+  userId     String
+  webhookUrl String?
+  method     String
+  message    String
+  content    String?
+  isDefault  Boolean  @default(false)
+  createdAt  DateTime @default(now())
 
   user Users @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

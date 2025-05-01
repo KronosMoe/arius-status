@@ -6,6 +6,7 @@ import { PrismaService } from 'src/prisma/prisma.service'
 import { generateToken } from 'src/libs/token'
 import { addMilliseconds } from 'date-fns'
 import { LoginInput } from './dto/login.input'
+import { Auth } from './entities/auth.entity'
 
 @Injectable()
 export class AuthService {
@@ -20,6 +21,7 @@ export class AuthService {
       username: createUserInput.username,
       email: createUserInput.email,
       password: hash,
+      timezone: createUserInput.timezone,
     })
 
     return user
@@ -81,7 +83,19 @@ export class AuthService {
     return true
   }
 
-  async getCurrentUser(userId: string) {
-    return this.userService.findUserById(userId)
+  async getCurrentUser(userId: string): Promise<Auth> {
+    const user = await this.prisma.users.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        username: true,
+        image: true,
+      },
+    })
+    const settings = await this.prisma.settings.findUnique({
+      where: { userId },
+    })
+
+    return { ...user, settings } as Auth
   }
 }

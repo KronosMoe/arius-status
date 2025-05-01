@@ -111,18 +111,8 @@ export class AgentsGateway implements OnGatewayConnection, OnGatewayDisconnect {
       latestStatus.responseTime !== -1 &&
       data.responseTime === -1
     ) {
-      await this.notificationService.sendDiscordNotification({
-        embeds: [
-          {
-            title: `Your service ${monitor.name} is down`,
-            description: `**Service Name**\n${monitor.name}\n\n**Service Address**\n${monitor.address}\n\n**Time**\n${new Date()}`,
-            color: 16726072,
-            footer: {
-              text: '©2025 Arius Statuspage',
-            },
-          },
-        ],
-      })
+      await this.notificationService.sendNotification(monitor, true)
+      this.logger.log(`Monitor ${monitor.id} is down, notifying...`)
     }
 
     if (
@@ -130,18 +120,8 @@ export class AgentsGateway implements OnGatewayConnection, OnGatewayDisconnect {
       latestStatus.responseTime === -1 &&
       data.responseTime !== -1
     ) {
-      await this.notificationService.sendDiscordNotification({
-        embeds: [
-          {
-            title: `Your service ${monitor.name} is up`,
-            description: `**Service Name**\n${monitor.name}\n\n**Service Address**\n${monitor.address}\n\n**Time**\n${new Date()}`,
-            color: 9240460,
-            footer: {
-              text: '©2025 Arius Statuspage',
-            },
-          },
-        ],
-      })
+      await this.notificationService.sendNotification(monitor, false)
+      this.logger.log(`Monitor ${monitor.id} is up, notifying...`)
     }
 
     await this.prisma.statusResults.create({
