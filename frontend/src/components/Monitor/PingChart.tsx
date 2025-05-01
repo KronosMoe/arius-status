@@ -18,6 +18,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { ChevronDown } from 'lucide-react'
+import { useAuth } from '@/hooks/useAuth'
 
 ChartJS.register(LineElement, PointElement, CategoryScale, LinearScale, Tooltip, annotationPlugin)
 
@@ -34,6 +35,9 @@ const timeRanges = [
 ]
 
 export default function PingChart({ monitor }: Props) {
+  const { auth } = useAuth()
+  const timezone = auth?.settings?.timezone || 'UTC'
+
   const [selectedTimeRange, setSelectedTimeRange] = useState(timeRanges[0])
   const from = useMemo(() => new Date(Date.now() - selectedTimeRange.value), [selectedTimeRange])
   const to = useMemo(() => new Date(), [])
@@ -78,7 +82,11 @@ export default function PingChart({ monitor }: Props) {
 
   const labels = reversedHistory.map((s) => {
     const date = new Date(s.createdAt)
-    return `${date.getHours()}:${String(date.getMinutes()).padStart(2, '0')}`
+    return new Intl.DateTimeFormat('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      timeZone: timezone,
+    }).format(date)
   })
 
   const chartData = reversedHistory.map((s) => (s.responseTime === -1 ? null : s.responseTime))

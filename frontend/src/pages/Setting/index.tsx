@@ -1,17 +1,22 @@
 import NotificationSetting from '@/components/Setting/Notification'
+import Timezone from '@/components/Setting/Timezone'
 import { Separator } from '@/components/ui/separator'
 import Loading from '@/components/utils/Loading'
 import Logo from '@/components/utils/Logo'
 import ThemeSwitcher from '@/components/utils/ThemeSwitcher'
 import { SETTINGS_QUERY } from '@/gql/settings'
+import { useAuth } from '@/hooks/useAuth'
 import { ISetting } from '@/types/setting'
 import { useQuery } from '@apollo/client'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 export default function Setting() {
+  const { auth } = useAuth()
+
   const [settings, setSettings] = useState<ISetting>({
-    theme: 'light',
+    theme: auth?.settings.theme || 'light',
+    timezone: auth?.settings.timezone || 'Asia/Bangkok',
   })
   const { data, error, loading } = useQuery(SETTINGS_QUERY)
 
@@ -35,6 +40,10 @@ export default function Setting() {
         <div className="my-4">
           <h2 className="my-4 text-xl font-bold">Appearance</h2>
           <ThemeSwitcher settings={data.getSettingsByUserId} setSettings={setSettings} />
+        </div>
+        <div className="my-4">
+          <h2 className="my-4 text-xl font-bold">Timezone</h2>
+          <Timezone timezone={settings.timezone} setSettings={setSettings} />
         </div>
         <Separator />
         <div className="my-4">

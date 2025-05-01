@@ -23,4 +23,15 @@ export class SettingsService {
       },
     })
   }
+
+  async updateTimezone(timezone: string, userId: string) {
+    return this.prisma.settings.update({
+      where: {
+        userId,
+      },
+      data: {
+        timezone,
+      },
+    })
+  }
 }

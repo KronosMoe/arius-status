@@ -98,6 +98,7 @@ type Mutation {
   updateNotificationSetting(updateNotificationInput: UpdateNotificationInput!, id: String!): Notification!
   deleteNotificationSetting(id: String!): Notification!
   updateTheme(theme: String!): Setting!
+  updateTimezone(timezone: String!): Setting!
 }
 
 input RegisterInput {
