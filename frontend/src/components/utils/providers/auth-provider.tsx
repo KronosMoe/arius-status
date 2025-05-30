@@ -7,46 +7,58 @@ import { toast } from 'sonner'
 import Loading from '../Loading'
 import { useNavigate } from 'react-router-dom'
 import { BASE_PATH } from '@/constants/routes'
+import { ApolloError } from '@apollo/client'
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [auth, setAuth] = useState<Auth | null>(null)
   const [loading, setLoading] = useState(true)
+  const [hasFetchedMe, setHasFetchedMe] = useState(false)
+
   const [fetchMe] = useLazyQuery(ME_QUERY, {
+    fetchPolicy: 'network-only',
     onCompleted: (data) => {
-      if (data?.me) setAuth(data.me)
+      if (data?.me) {
+        setAuth(data.me)
+      } else {
+        setAuth(null)
+      }
       setLoading(false)
     },
-    onError: (error) => {
-      toast.error(error.message)
-      logout()
+    onError: (err: ApolloError) => {
+      toast.error(`Session error: ${err.message}`)
+      setAuth(null)
       setLoading(false)
     },
   })
-  const [logoutMutation, { error: logoutError }] = useMutation(LOGOUT_MUTATION)
 
+  const [logoutMutation] = useMutation(LOGOUT_MUTATION)
   const navigate = useNavigate()
 
   const logout = useCallback(async () => {
-    await logoutMutation()
-    setAuth(null)
-    navigate(BASE_PATH, { replace: true })
-    navigate(0)
+    try {
+      await logoutMutation()
+    } catch (err) {
+      if (err instanceof ApolloError) {
+        toast.error(err.message || 'Logout failed')
+      } else {
+        toast.error('Unexpected logout error')
+      }
+    } finally {
+      setAuth(null)
+      setHasFetchedMe(false)
+      navigate(BASE_PATH, { replace: true })
+    }
   }, [logoutMutation, navigate])
 
   useEffect(() => {
-    if (logoutError) {
-      toast.error(logoutError.message)
-    }
-  }, [logoutError])
-
-  useEffect(() => {
-    if (!auth) {
+    if (!auth && !hasFetchedMe) {
       setLoading(true)
+      setHasFetchedMe(true)
       fetchMe()
     }
-  }, [fetchMe, auth])
+  }, [auth, fetchMe, hasFetchedMe])
 
-  if (loading && !auth) return <Loading />
+  if (loading) return <Loading />
 
   return (
     <AuthContext.Provider value={{ loading, auth, isAuthenticated: !!auth, logout }}>{children}</AuthContext.Provider>

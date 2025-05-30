@@ -26,7 +26,6 @@ model Settings {
   id        String   @id @default(uuid())
   userId    String   @unique
   theme     String   @default("light")
-  timezone  String   @default("Asia/Bangkok")
   createdAt DateTime @default(now())
 
   user Users @relation(fields: [userId], references: [id], onDelete: Cascade)

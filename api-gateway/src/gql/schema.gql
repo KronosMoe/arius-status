@@ -5,7 +5,6 @@
 type Setting {
   id: String!
   theme: String!
-  timezone: String!
 }
 
 type Auth {
@@ -79,6 +78,8 @@ type Query {
   findMonitorById(id: String!): MonitorAgent!
   findAgentsByUserId: [Agent!]!
   getStatusByMonitorId(monitorId: String!, barCount: Float! = 60): [Status!]!
+  getLatestStatusByMonitorId(monitorId: String!): Status!
+  getOverallStatus(monitorIds: [String!]!): String!
   getStatusByTimeRange(from: DateTime!, to: DateTime!, monitorId: String!): [Status!]!
   getNotificationSettingsByUserId: [Notification!]!
   getSettingsByUserId: Setting!
@@ -98,14 +99,12 @@ type Mutation {
   updateNotificationSetting(updateNotificationInput: UpdateNotificationInput!, id: String!): Notification!
   deleteNotificationSetting(id: String!): Notification!
   updateTheme(theme: String!): Setting!
-  updateTimezone(timezone: String!): Setting!
 }
 
 input RegisterInput {
   username: String!
   email: String!
   password: String!
-  timezone: String!
 }
 
 input LoginInput {

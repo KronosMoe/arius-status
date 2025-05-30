@@ -7,7 +7,4 @@ export class Setting {
 
   @Field(() => String)
   theme: string
-
-  @Field(() => String)
-  timezone: string
 }

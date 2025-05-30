@@ -6,9 +6,8 @@ import { toast } from 'sonner'
 import Loading from '@/components/utils/Loading'
 import { useEffect, useState } from 'react'
 import PingLine from './PingLine'
-import { Badge } from '@/components/ui/badge'
 
-export default function MonitorCard({ monitor }: { monitor: IMonitor }) {
+export default function StatusLine({ monitor }: { monitor: IMonitor }) {
   const [barCount, setBarCount] = useState(60)
   const [statusHistory, setStatusHistory] = useState<IStatus[]>([])
 
@@ -56,14 +55,10 @@ export default function MonitorCard({ monitor }: { monitor: IMonitor }) {
 
   return (
     <div
-      className={`flex cursor-pointer flex-col rounded-md border border-black/20 p-4 transition-colors hover:bg-zinc-100 dark:border-white/10 dark:bg-zinc-900 dark:hover:bg-zinc-800`}
+      className={`flex cursor-pointer flex-col rounded-md border border-black/20 p-4 transition-colors dark:border-white/10 dark:bg-zinc-900`}
     >
-      <div className="mb-4 flex flex-row items-center gap-2 text-xl font-bold">
-        {monitor.name}
-        <Badge variant="outline">{monitor.type}</Badge>
-      </div>
+      <div className="mb-4 text-xl font-bold">{monitor.name}</div>
       <PingLine monitor={monitor} barCount={barCount} statusHistory={statusHistory} />
-      <div className="mt-2 text-sm text-zinc-400">Check every {monitor.interval} seconds</div>
     </div>
   )
 }

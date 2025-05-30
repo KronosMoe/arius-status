@@ -2,13 +2,22 @@
 import { useState, useMemo } from 'react'
 import { useQuery } from '@apollo/client'
 import { Line } from 'react-chartjs-2'
-import { Chart as ChartJS, LineElement, PointElement, CategoryScale, LinearScale, Tooltip } from 'chart.js'
+import {
+  Chart as ChartJS,
+  LineElement,
+  PointElement,
+  TimeScale,
+  LinearScale,
+  Tooltip,
+  type ChartOptions,
+} from 'chart.js'
+import 'chartjs-adapter-date-fns'
 import annotationPlugin from 'chartjs-plugin-annotation'
-import { IMonitor } from '@/types/monitor'
+import type { IMonitor } from '@/types/monitor'
 import { STATUS_BY_TIME_RANGE_QUERY } from '@/gql/status'
 import Loading from '../utils/Loading'
 import { toast } from 'sonner'
-import { IStatus } from '@/types/status'
+import type { IStatus } from '@/types/status'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -18,9 +27,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { ChevronDown } from 'lucide-react'
-import { useAuth } from '@/hooks/useAuth'
 
-ChartJS.register(LineElement, PointElement, CategoryScale, LinearScale, Tooltip, annotationPlugin)
+ChartJS.register(LineElement, PointElement, TimeScale, LinearScale, Tooltip, annotationPlugin)
 
 type Props = {
   monitor: IMonitor
@@ -35,9 +43,6 @@ const timeRanges = [
 ]
 
 export default function PingChart({ monitor }: Props) {
-  const { auth } = useAuth()
-  const timezone = auth?.settings?.timezone || 'UTC'
-
   const [selectedTimeRange, setSelectedTimeRange] = useState(timeRanges[0])
   const from = useMemo(() => new Date(Date.now() - selectedTimeRange.value), [selectedTimeRange])
   const to = useMemo(() => new Date(), [])
@@ -80,58 +85,47 @@ export default function PingChart({ monitor }: Props) {
 
   const reversedHistory = [...statusHistory].reverse()
 
-  const labels = reversedHistory.map((s) => {
-    const date = new Date(s.createdAt)
-    return new Intl.DateTimeFormat('en-US', {
-      hour: '2-digit',
-      minute: '2-digit',
-      timeZone: timezone,
-    }).format(date)
-  })
+  const generateCompleteTimeseries = (history: IStatus[], timeRange: number) => {
+    if (history.length === 0) return []
 
-  const chartData = reversedHistory.map((s) => (s.responseTime === -1 ? null : s.responseTime))
-
-  type AnnotationType = {
-    [key: string]: {
-      type: 'line'
-      xMin: number
-      xMax: number
-      yMin: 0
-      yMax: 'max'
-      borderColor: string
-      borderWidth: number
-      borderDash?: number[]
-      label?: {
-        display: boolean
-      }
+    let intervalMs = 15 * 60 * 1000
+    if (history.length < 50) {
+      intervalMs = 5 * 60 * 1000
+    } else if (timeRange <= 3 * 60 * 60 * 1000) {
+      intervalMs = 60 * 1000
+    } else if (timeRange <= 12 * 60 * 60 * 1000) {
+      intervalMs = 5 * 60 * 1000
     }
+
+    const startTime = from.getTime()
+    const endTime = to.getTime()
+
+    const dataMap = new Map<number, number | null>()
+    history.forEach((status) => {
+      const timestamp = new Date(status.createdAt).getTime()
+      const roundedTimestamp = Math.round(timestamp / intervalMs) * intervalMs
+      dataMap.set(roundedTimestamp, status.responseTime === -1 ? null : status.responseTime)
+    })
+
+    const completeTimeseries = []
+    for (let time = startTime; time <= endTime; time += intervalMs) {
+      const roundedTime = Math.round(time / intervalMs) * intervalMs
+      completeTimeseries.push({
+        x: roundedTime,
+        y: dataMap.get(roundedTime) ?? null,
+      })
+    }
+
+    return completeTimeseries
   }
 
-  const annotations: AnnotationType = {}
-
-  reversedHistory.forEach((status, index) => {
-    if (status.responseTime === -1) {
-      annotations[`line-${index}`] = {
-        type: 'line',
-        xMin: index,
-        xMax: index,
-        yMin: 0,
-        yMax: 'max',
-        borderColor: 'rgba(220, 38, 38, 0.5)',
-        borderWidth: 10,
-        label: {
-          display: false,
-        },
-      }
-    }
-  })
+  const timeseriesData = generateCompleteTimeseries(reversedHistory, selectedTimeRange.value)
 
   const data = {
-    labels,
     datasets: [
       {
         label: 'Ping (ms)',
-        data: chartData,
+        data: timeseriesData,
         borderColor: '#38F77D',
         backgroundColor: 'rgba(56, 247, 125, 0.5)',
         borderWidth: 2,
@@ -139,19 +133,48 @@ export default function PingChart({ monitor }: Props) {
         pointRadius: 0,
         fill: true,
         cubicInterpolationMode: 'monotone' as const,
-        spanGaps: true,
+        spanGaps: selectedTimeRange.value <= 3 * 60 * 60 * 1000,
       },
     ],
   }
 
-  const options = {
+  const annotations = reversedHistory.reduce(
+    (acc, status, index) => {
+      if (status.responseTime === -1) {
+        const timestamp = new Date(status.createdAt).getTime()
+        acc[`line-${index}`] = {
+          type: 'line',
+          xMin: timestamp,
+          xMax: timestamp,
+          yMin: 0,
+          yMax: 'max',
+          borderColor: 'rgba(220, 38, 38, 0.5)',
+          borderWidth: 10,
+          label: { display: false },
+        }
+      }
+      return acc
+    },
+    {} as Record<string, any>,
+  )
+
+  const options: ChartOptions<'line'> = {
     responsive: true,
     maintainAspectRatio: false,
     scales: {
       x: {
+        type: 'time',
+        time: {
+          unit: 'minute',
+          displayFormats: {
+            minute: 'HH:mm',
+            hour: 'HH:mm',
+          },
+          tooltipFormat: 'MMM d, HH:mm:ss',
+        },
         display: true,
         ticks: {
-          maxTicksLimit: 3,
+          maxTicksLimit: 6,
           color: '#71717A',
           font: {
             size: 10,
@@ -189,7 +212,7 @@ export default function PingChart({ monitor }: Props) {
         annotations,
       },
       tooltip: {
-        mode: 'index' as const,
+        mode: 'index',
         intersect: false,
         backgroundColor: '#18181B',
         titleColor: '#FFF',
@@ -197,14 +220,12 @@ export default function PingChart({ monitor }: Props) {
         borderColor: 'rgba(255, 255, 255, 0.1)',
         borderWidth: 1,
         callbacks: {
-          label: (context: any) => {
-            const index = context.dataIndex
-            const status = reversedHistory[index]
-
-            if (status.responseTime === -1) {
+          label: (context) => {
+            const dataPoint = timeseriesData[context.dataIndex]
+            if (dataPoint.y === null) {
               return 'Status: Down'
             }
-            return `Ping: ${status.responseTime} ms`
+            return `Ping: ${dataPoint.y} ms`
           },
         },
       },

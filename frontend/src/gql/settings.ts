@@ -16,16 +16,6 @@ export const UPDATE_THEME_MUTATION = gql`
   }
 `
 
-export const UPDATE_TIMEZONE_MUTATION = gql`
-  mutation UpdateTimezone($timezone: String!) {
-    updateTimezone(timezone: $timezone) {
-      id
-      theme
-      timezone
-    }
-  }
-`
-
 export const NOTIFICATION_QUERY = gql`
   query GetNotificationSettingsByUserId {
     getNotificationSettingsByUserId {

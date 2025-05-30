@@ -17,6 +17,20 @@ export class StatusResolver {
     return await this.statusService.getStatusByMonitorId(monitorId, barCount)
   }
 
+  @Query(() => Status)
+  @UseGuards(GqlAuthGuard)
+  async getLatestStatusByMonitorId(@Args('monitorId') monitorId: string) {
+    return await this.statusService.getLatestStatusByMonitorId(monitorId)
+  }
+
+  @Query(() => String)
+  @UseGuards(GqlAuthGuard)
+  async getOverallStatus(
+    @Args('monitorIds', { type: () => [String] }) monitorIds: string[],
+  ) {
+    return await this.statusService.getOverallStatus(monitorIds)
+  }
+
   @Query(() => [Status])
   @UseGuards(GqlAuthGuard)
   async getStatusByTimeRange(

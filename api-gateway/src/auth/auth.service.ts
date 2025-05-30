@@ -21,7 +21,6 @@ export class AuthService {
       username: createUserInput.username,
       email: createUserInput.email,
       password: hash,
-      timezone: createUserInput.timezone,
     })
 
     return user

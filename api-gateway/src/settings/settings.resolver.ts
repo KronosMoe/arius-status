@@ -21,10 +21,4 @@ export class SettingsResolver {
   async updateTheme(@Args('theme') theme: string, @Me() user: User) {
     return await this.settingsService.updateTheme(theme, user.id)
   }
-
-  @Mutation(() => Setting)
-  @UseGuards(GqlAuthGuard)
-  async updateTimezone(@Args('timezone') timezone: string, @Me() user: User) {
-    return await this.settingsService.updateTimezone(timezone, user.id)
-  }
 }

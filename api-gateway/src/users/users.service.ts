@@ -44,7 +44,6 @@ export class UsersService {
     await this.prisma.settings.create({
       data: {
         userId: user.id,
-        timezone: createUserInput.timezone,
       },
     })
 

@@ -14,7 +14,6 @@ export const AuthContext = createContext<AuthContextType>({
     image: null,
     settings: {
       theme: 'light',
-      timezone: 'Asia/Bangkok',
     },
   },
   loading: true,

@@ -1,6 +1,5 @@
 export interface ISetting {
   theme: 'light' | 'dark'
-  timezone: string
 }
 
 export interface INotification {

@@ -7,7 +7,6 @@ export const ME_QUERY = gql`
       image
       settings {
         theme
-        timezone
       }
     }
   }

@@ -35,6 +35,42 @@ export class StatusService {
     })
   }
 
+  async getLatestStatusByMonitorId(monitorId: string) {
+    return await this.prisma.statusResults.findFirst({
+      where: {
+        monitorId: monitorId,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    })
+  }
+
+  async getOverallStatus(monitorIds: string[]) {
+    const latestStatuses = await Promise.all(
+      monitorIds.map(async (monitorId) => {
+        const [latest] = await this.prisma.statusResults.findMany({
+          where: { monitorId },
+          orderBy: { createdAt: 'desc' },
+          take: 1,
+        })
+        return latest
+      }),
+    )
+
+    const allStatuses = latestStatuses.filter(Boolean)
+
+    if (allStatuses.every((status) => status.responseTime !== -1)) {
+      return 'All Systems Operational'
+    }
+
+    if (allStatuses.every((status) => status.responseTime === -1)) {
+      return 'Degraded'
+    }
+
+    return 'Partially Degraded'
+  }
+
   async getStatusByTimeRange(monitorId: string, from: Date, to: Date) {
     return await this.prisma.statusResults.findMany({
       where: {

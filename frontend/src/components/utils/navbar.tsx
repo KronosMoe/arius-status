@@ -1,7 +1,7 @@
 import { useAuth } from '@/hooks/useAuth'
 import { Button } from '../ui/button'
 import { Link } from 'react-router-dom'
-import { DASHBOARD_PATH, SETTING_PATH, SIGN_IN_PATH } from '@/constants/routes'
+import { DASHBOARD_PATH, SETTING_PATH, SIGN_IN_PATH, STATUS_PATH } from '@/constants/routes'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -37,10 +37,12 @@ export default function Navbar() {
                     Dashboard
                   </DropdownMenuItem>
                 </Link>
-                <DropdownMenuItem onClick={logout}>
-                  <LayoutPanelTop />
-                  Status page
-                </DropdownMenuItem>
+                <Link to={STATUS_PATH}>
+                  <DropdownMenuItem>
+                    <LayoutPanelTop />
+                    Status page
+                  </DropdownMenuItem>
+                </Link>
                 <DropdownMenuSeparator />
                 <Link to={SETTING_PATH}>
                   <DropdownMenuItem>
