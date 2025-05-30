@@ -2,7 +2,7 @@ import { Injectable, Logger, NotFoundException } from '@nestjs/common'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { Monitor } from './entities/monitor.entity'
 import { CreateMonitorInput } from './dto/create-monitor.input'
-import { MonitorGateway } from './monitors.gateway'
+import { MonitorGateway } from '../gateway/monitors.gateway'
 import { MonitorAgent } from './entities/monitor-agent.entity'
 import { UpdateMonitorInput } from './dto/update-monitor.input'
 
@@ -93,10 +93,9 @@ export class MonitorsService {
 
   async updateMonitorById(id: string, updateMonitorInput: UpdateMonitorInput) {
     this.monitorGateway.stopMonitor(id)
+
     const monitor = await this.prisma.monitors.update({
-      where: {
-        id,
-      },
+      where: { id },
       data: {
         name: updateMonitorInput.name,
         address: updateMonitorInput.address,
@@ -105,6 +104,7 @@ export class MonitorsService {
         status: 'UNKNOWN',
       },
     })
+
     this.monitorGateway.startMonitor(monitor)
     this.logger.log(`Monitor ${monitor.id} updated`)
     return monitor

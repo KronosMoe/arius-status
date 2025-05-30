@@ -49,6 +49,17 @@ type MonitorAgent {
   agent: Agent!
 }
 
+type Notification {
+  id: String!
+  title: String!
+  method: String!
+  message: String!
+  createdAt: DateTime!
+  isDefault: Boolean!
+  webhookUrl: String
+  content: String
+}
+
 type Status {
   id: String!
   responseTime: Float!
@@ -61,27 +72,16 @@ The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://
 """
 scalar JSON
 
-type Notification {
-  id: String!
-  title: String!
-  method: String!
-  message: String!
-  createdAt: DateTime!
-  isDefault: Boolean!
-  webhookUrl: String
-  content: String
-}
-
 type Query {
   me: Auth
   findMonitorsByUserId: [Monitor!]!
   findMonitorById(id: String!): MonitorAgent!
+  getNotificationSettingsByUserId: [Notification!]!
   findAgentsByUserId: [Agent!]!
   getStatusByMonitorId(monitorId: String!, barCount: Float! = 60): [Status!]!
   getLatestStatusByMonitorId(monitorId: String!): Status!
   getOverallStatus(monitorIds: [String!]!): String!
   getStatusByTimeRange(from: DateTime!, to: DateTime!, monitorId: String!): [Status!]!
-  getNotificationSettingsByUserId: [Notification!]!
   getSettingsByUserId: Setting!
 }
 
@@ -94,10 +94,10 @@ type Mutation {
   deleteMonitorById(id: String!): Monitor!
   updateMonitorById(id: String!, updateMonitorInput: UpdateMonitorInput!): Monitor!
   createMonitor(createMonitorInput: CreateMonitorInput!): Monitor!
-  createAgent(createAgentInput: CreateAgentInput!): Agent!
   createNotificationSetting(createNotificationInput: CreateNotificationInput!): Notification!
   updateNotificationSetting(updateNotificationInput: UpdateNotificationInput!, id: String!): Notification!
   deleteNotificationSetting(id: String!): Notification!
+  createAgent(createAgentInput: CreateAgentInput!): Agent!
   updateTheme(theme: String!): Setting!
 }
 
@@ -128,10 +128,6 @@ input CreateMonitorInput {
   agentId: String!
 }
 
-input CreateAgentInput {
-  name: String!
-}
-
 input CreateNotificationInput {
   title: String!
   method: String!
@@ -147,4 +143,8 @@ input UpdateNotificationInput {
   webhookUrl: String
   content: String
   isDefault: Boolean!
+}
+
+input CreateAgentInput {
+  name: String!
 }

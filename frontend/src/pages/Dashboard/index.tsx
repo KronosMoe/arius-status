@@ -49,6 +49,9 @@ export default function Dashboard() {
 
   if (monitorLoading || agentLoading) return <Loading />
 
+  const sortedMonitors = [...monitors].sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+  const sortedAgents = [...agents].sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+
   return (
     <div className="w-full px-4 xl:m-auto xl:w-[1280px]">
       <div className="mt-10 mb-20">
@@ -58,10 +61,10 @@ export default function Dashboard() {
             <TabsTrigger value="agents">Agents</TabsTrigger>
           </TabsList>
           <TabsContent value="monitors">
-            <Monitors monitors={monitors} setMonitors={setMonitors} agents={agents} />
+            <Monitors monitors={sortedMonitors} setMonitors={setMonitors} agents={agents} />
           </TabsContent>
           <TabsContent value="agents">
-            <Agents agents={agents} setAgents={setAgents} />
+            <Agents agents={sortedAgents} setAgents={setAgents} />
           </TabsContent>
         </Tabs>
       </div>

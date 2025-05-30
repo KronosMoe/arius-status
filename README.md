@@ -8,6 +8,7 @@
 - NodeJS 20+
 - pnpm
 - PostgreSQL
+- RabbitMQ
 
 ## Setup 
 
@@ -18,11 +19,13 @@ pnpm install
 create a `.env` file in `backend/` directory
 
 ```bash
-DATABASE_URL="postgresql://postgres:postgres@localhost:5432/arius?schema=public"
-SESSION_SECRET=""
+PORT=4000
+SESSION_SECRET="secret"
+DATABASE_URL="postgresql://user:password@localhost:5432/mydb?schema=public"
+AMQP_URL="amqp://user:password@localhost:5672"
 ```
 
-In `agent/src/index.ts` directory, replace `SERVER_URL` and `AGENT_TOKEN` (after you created in postgresql database)
+In `agent/src/index.ts` directory, replace `SERVER_URL` and `AGENT_TOKEN` (after you create an agent through the website)
 
 apply database migrations to your database and generate prisma client
 

@@ -16,6 +16,7 @@ import { NotificationModule } from './notification/notification.module'
 import { HttpModule } from '@nestjs/axios'
 import { SettingsModule } from './settings/settings.module'
 import { PrismaService } from './prisma/prisma.service'
+import { GatewayModule } from './gateway/gateway.module'
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { PrismaService } from './prisma/prisma.service'
     StatusModule,
     NotificationModule,
     SettingsModule,
+    GatewayModule,
   ],
   controllers: [],
   providers: [NotificationService, PrismaService],

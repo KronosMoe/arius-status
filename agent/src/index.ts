@@ -4,6 +4,7 @@ import http from "http";
 import https from "https";
 import { URL } from "url";
 import net from "net";
+import { logger } from "./lib/logger";
 
 const SERVER_URL = "http://localhost:4001";
 const AGENT_TOKEN = "5022773e-cb88-4d6c-9456-4a367385f37e";
@@ -17,27 +18,27 @@ const socket = io(SERVER_URL, {
 });
 
 socket.on("connect", () => {
-  console.log("✅ Connected to server with id:", socket.id);
+  logger.info("🚀 Connected to server");
 });
 
 socket.on("disconnect", (reason) => {
-  console.log("❌ Disconnected:", reason);
+  logger.error("❌ Disconnected: " + reason);
 });
 
 socket.on("health-check", () => {
-  console.log("🩺 Health check received, responding...");
+  logger.info("🩺 Health check received, responding...");
   socket.emit("health-response", { status: "healthy" });
 });
 
 socket.on("connect_error", (err) => {
-  console.error("🚫 Connection error:", err.message);
+  logger.error("🚫 Connection error: " + err.message);
 });
 
 socket.on("run-command", (monitor) => {
-  console.log(`🏃 Received run-command for monitor:`, monitor);
+  logger.log(`🏃 Received run-command for monitor:`, monitor);
 
   if (!monitor.type || !monitor.address || !monitor.id) {
-    console.error(`❗ Invalid monitor data:`, monitor);
+    logger.error(`❗ Invalid monitor data: ${monitor}`);
     socket.emit("command-result", {
       monitorId: monitor.id ?? null,
       responseTime: -1,
@@ -54,6 +55,15 @@ socket.on("run-command", (monitor) => {
     responseTime: number,
     metadata: Record<string, any>
   ): void => {
+    const status = success ? "SUCCESS" : "FAILURE";
+    logger.info(
+      `[${status}] Monitor result for ${monitor.type} (${monitor.address})`,
+      {
+        responseTime,
+        metadata,
+      }
+    );
+
     socket.emit("command-result", {
       monitorId: monitor.id,
       responseTime: success ? responseTime : -1,
@@ -64,7 +74,8 @@ socket.on("run-command", (monitor) => {
   const startTime = Date.now();
 
   switch (monitor.type) {
-    case "PING":
+    case "PING": {
+      logger.debug("Pinging: " + monitor.address);
       ping.sys.probe(monitor.address, (isAlive) => {
         const responseTime = Date.now() - startTime;
         sendResult(!!isAlive, responseTime, {
@@ -74,9 +85,11 @@ socket.on("run-command", (monitor) => {
         });
       });
       break;
+    }
 
     case "HTTP":
     case "HTTPS": {
+      logger.debug(`Performing ${monitor.type} request: ${monitor.address}`);
       let url: URL;
       try {
         url = new URL(monitor.address);
@@ -120,6 +133,7 @@ socket.on("run-command", (monitor) => {
     }
 
     case "TCP":
+      logger.debug("Attempting TCP connection to: " + monitor.address);
       const [host, portStr] = monitor.address.split(":");
       const port = parseInt(portStr, 10);
 
@@ -165,6 +179,7 @@ socket.on("run-command", (monitor) => {
       break;
 
     default:
+      logger.error("Unknown monitor type received: " + monitor.type);
       sendResult(false, -1, {
         error: `Unknown monitor type: ${monitor.type}`,
         address: monitor.address,
