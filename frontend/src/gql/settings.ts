@@ -78,3 +78,39 @@ export const DELETE_NOTIFICATION_MUTATION = gql`
     }
   }
 `
+
+export const SESSIONS_QUERY = gql`
+  query GetSessionsByUserId {
+    getSessionsByUserId {
+      id
+      platform
+      deviceIP
+      expires
+      createdAt
+    }
+  }
+`
+
+export const CLEAR_SESSIONS_MUTATION = gql`
+  mutation ClearSessionsByUserId {
+    clearSessionsByUserId {
+      id
+      platform
+      deviceIP
+      expires
+      createdAt
+    }
+  }
+`
+
+export const CLEAR_SESSION_BY_ID_MUTATION = gql`
+  mutation ClearSessionById($clearSessionByIdId: String!) {
+    clearSessionById(id: $clearSessionByIdId) {
+      id
+      platform
+      deviceIP
+      expires
+      createdAt
+    }
+  }
+`

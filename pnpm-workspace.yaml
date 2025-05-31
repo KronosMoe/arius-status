@@ -1,4 +1,4 @@
 packages:
   - agent
-  - api-gateway
+  - backend
   - frontend

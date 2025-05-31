@@ -14,6 +14,6 @@ import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq'
       connectionInitOptions: { wait: false },
     }),
   ],
-  exports: [RabbitMQModule], // ✅ export it so others can use it
+  exports: [RabbitMQModule],
 })
 export class RabbitMQSharedModule {}

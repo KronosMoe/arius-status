@@ -39,9 +39,9 @@ export default function MonitorInfo() {
   return (
     <div className="w-full px-4 xl:m-auto xl:w-[1280px]">
       <div className="mt-10" />
-      <div className="flex flex-row items-center justify-between">
+      <div className="mt-4 flex flex-row items-center justify-between">
         <div className="flex flex-row items-center gap-4">
-          <h1 className="my-4 text-4xl font-bold">{monitor.name}</h1>
+          <h1 className="text-4xl font-bold">{monitor.name}</h1>
           {monitor.status === 'PAUSED' && (
             <div className="relative">
               <div className="absolute inset-0 -top-[10px] size-[24px] rounded-full bg-yellow-500" />
@@ -62,6 +62,7 @@ export default function MonitorInfo() {
         </div>
         <ActionDropdown monitor={monitor} refetchMonitor={refetchMonitor} />
       </div>
+      <div className="text-sm mt-2 mb-4 text-zinc-500">{monitor.address}</div>
       <Status monitor={monitor} />
       <PingChart monitor={monitor} />
     </div>

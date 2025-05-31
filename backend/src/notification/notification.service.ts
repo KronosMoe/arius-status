@@ -64,7 +64,7 @@ export class NotificationService {
     const settings = await this.getNotificationSettingsByUserId(monitor.userId)
 
     for (const setting of settings) {
-      if (setting.method === 'DISCORD' && setting.webhookUrl) {
+      if (setting.method === 'Discord' && setting.webhookUrl) {
         const payload = {
           content: setting.message || undefined,
           embeds: getDiscordEmbed(monitor, isDown),

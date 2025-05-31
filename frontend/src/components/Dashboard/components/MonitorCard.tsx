@@ -1,10 +1,10 @@
 import { useQuery } from '@apollo/client'
 import { STATUS_QUERY } from '@/gql/status'
-import { IMonitor } from '@/types/monitor'
-import { IStatus } from '@/types/status'
+import type { IMonitor } from '@/types/monitor'
+import type { IStatus } from '@/types/status'
 import { toast } from 'sonner'
 import Loading from '@/components/utils/Loading'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import PingLine from './PingLine'
 import { Badge } from '@/components/ui/badge'
 
@@ -18,37 +18,49 @@ export default function MonitorCard({ monitor }: { monitor: IMonitor }) {
       barCount: barCount,
     },
     pollInterval: 60 * 1000,
-    fetchPolicy: 'network-only',
-    skip: monitor.status === 'PAUSED',
+    fetchPolicy: 'cache-and-network',
+    skip: !monitor || monitor.status === 'PAUSED', // Add monitor check here too
+    errorPolicy: 'all',
   })
 
-  useEffect(() => {
-    function handleResize() {
-      if (window.innerWidth < 500) {
-        setBarCount(30)
-      } else {
-        setBarCount(60)
-      }
-    }
-
-    handleResize()
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
+  const handleResize = useCallback(() => {
+    const newBarCount = window.innerWidth < 500 ? 30 : 60
+    setBarCount(newBarCount)
   }, [])
 
   useEffect(() => {
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [handleResize])
+
+  useEffect(() => {
     if (data?.getStatusByMonitorId) {
-      const newStatus = data.getStatusByMonitorId as IStatus[]
+      const newStatusData = data.getStatusByMonitorId as IStatus[]
 
-      setStatusHistory((prev) => {
-        const merged = [...prev, ...newStatus]
-          .filter((item, index, self) => index === self.findIndex((t) => t.id === item.id))
-          .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+      if (newStatusData.length > 0) {
+        setStatusHistory((prev) => {
+          const existingIds = new Set(prev.map((item) => item.id))
+          const actuallyNewItems = newStatusData.filter((item) => !existingIds.has(item.id))
+          if (actuallyNewItems.length === 0 && prev.length > 0) {
+            return prev
+          }
+          const merged = [...prev, ...actuallyNewItems].sort(
+            (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+          )
+          const result = merged.slice(-barCount)
 
-        return merged.slice(-barCount)
-      })
+          return result
+        })
+      }
     }
   }, [data, barCount])
+
+  useEffect(() => {
+    if (statusHistory.length > barCount) {
+      setStatusHistory((prev) => prev.slice(-barCount))
+    }
+  }, [barCount, statusHistory.length])
 
   if (error) toast.error(error.message)
 
@@ -63,7 +75,10 @@ export default function MonitorCard({ monitor }: { monitor: IMonitor }) {
         <Badge variant="outline">{monitor.type}</Badge>
       </div>
       <PingLine monitor={monitor} barCount={barCount} statusHistory={statusHistory} />
-      <div className="mt-2 text-sm text-zinc-400">Check every {monitor.interval} seconds</div>
+      <div className="mt-2 text-sm text-zinc-400">
+        Check every {monitor.interval} seconds
+        {statusHistory.length > 0 && <span className="ml-2">({statusHistory.length} data points)</span>}
+      </div>
     </div>
   )
 }

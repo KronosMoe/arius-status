@@ -12,3 +12,11 @@ export interface INotification {
   createdAt: Date
   isDefault: boolean
 }
+
+export interface ISession {
+  id: string
+  platform: string
+  deviceIP: string
+  expires: Date
+  createdAt: Date
+}

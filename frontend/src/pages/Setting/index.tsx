@@ -1,14 +1,66 @@
+import type React from 'react'
+
+import { useEffect, useState } from 'react'
+import { useQuery } from '@apollo/client'
+import { toast } from 'sonner'
+import { Settings, Palette, Bell, Smartphone } from 'lucide-react'
+
+import Credit from '@/components/Setting/Credit'
+import DeviceManager from '@/components/Setting/DeviceManager'
 import NotificationSetting from '@/components/Setting/Notification'
-import { Separator } from '@/components/ui/separator'
-import Loading from '@/components/utils/Loading'
-import Logo from '@/components/utils/Logo'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import ThemeSwitcher from '@/components/utils/ThemeSwitcher'
 import { SETTINGS_QUERY } from '@/gql/settings'
 import { useAuth } from '@/hooks/useAuth'
-import { ISetting } from '@/types/setting'
-import { useQuery } from '@apollo/client'
-import { useEffect, useState } from 'react'
-import { toast } from 'sonner'
+import type { ISetting } from '@/types/setting'
+import { Skeleton } from '@/components/ui/skeleton'
+
+interface SettingsSectionProps {
+  icon: React.ReactNode
+  title: string
+  description: string
+  children: React.ReactNode
+}
+
+function SettingsSection({ icon, title, description, children }: SettingsSectionProps) {
+  return (
+    <Card className="w-full">
+      <CardHeader className="pb-4">
+        <div className="flex items-center gap-3">
+          <div className="bg-primary/10 text-primary flex h-10 w-10 items-center justify-center rounded-lg">{icon}</div>
+          <div className="flex-1">
+            <CardTitle className="text-lg">{title}</CardTitle>
+            <CardDescription className="text-sm">{description}</CardDescription>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent className="pt-0">{children}</CardContent>
+    </Card>
+  )
+}
+
+function SettingsSkeleton() {
+  return (
+    <div className="space-y-6">
+      {[...Array(4)].map((_, i) => (
+        <Card key={i} className="w-full">
+          <CardHeader className="pb-4">
+            <div className="flex items-center gap-3">
+              <Skeleton className="h-10 w-10 rounded-lg" />
+              <div className="flex-1 space-y-2">
+                <Skeleton className="h-5 w-32" />
+                <Skeleton className="h-4 w-48" />
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="pt-0">
+            <Skeleton className="h-20 w-full" />
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  )
+}
 
 export default function Setting() {
   const { auth } = useAuth()
@@ -16,48 +68,68 @@ export default function Setting() {
   const [settings, setSettings] = useState<ISetting>({
     theme: auth?.settings.theme || 'light',
   })
-  const { data, error, loading } = useQuery(SETTINGS_QUERY)
+
+  const { data, error, loading } = useQuery(SETTINGS_QUERY, {
+    errorPolicy: 'all',
+  })
 
   useEffect(() => {
     if (data?.getSettingsByUserId) {
-      setSettings(settings)
+      setSettings(data.getSettingsByUserId)
     }
-  }, [data, settings])
+  }, [data])
 
-  if (loading) return <Loading />
-  if (error) {
-    toast.error(error.message)
-    return null
+  useEffect(() => {
+    if (error) toast.error(error.message)
+  }, [error])
+
+  if (loading) {
+    return (
+      <div className="container mx-auto max-w-4xl px-4 py-8">
+        <div className="mb-8">
+          <div className="mb-2 flex items-center gap-3">
+            <Settings className="h-8 w-8" />
+            <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
+          </div>
+          <p className="text-muted-foreground">Manage your account settings and preferences</p>
+        </div>
+        <SettingsSkeleton />
+      </div>
+    )
   }
 
   return (
-    <div className="w-full px-4 xl:m-auto xl:w-[1280px]">
-      <div className="mt-10">
-        <h1 className="my-4 text-4xl font-bold">Settings</h1>
-        <Separator />
-        <div className="my-4">
-          <h2 className="my-4 text-xl font-bold">Appearance</h2>
-          <ThemeSwitcher settings={data.getSettingsByUserId} setSettings={setSettings} />
+    <div className="container mx-auto max-w-4xl px-4 py-8">
+      <div className="mb-8">
+        <div className="mb-2 flex items-center gap-3">
+          <Settings className="h-8 w-8" />
+          <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
         </div>
-        <Separator />
-        <div className="my-4">
+        <p className="text-muted-foreground">Manage your account settings and preferences</p>
+      </div>
+      <div className="space-y-6">
+        <SettingsSection
+          icon={<Palette className="h-5 w-5" />}
+          title="Appearance"
+          description="Customize how the interface looks and feels"
+        >
+          <ThemeSwitcher settings={settings} setSettings={setSettings} />
+        </SettingsSection>
+        <SettingsSection
+          icon={<Bell className="h-5 w-5" />}
+          title="Notifications"
+          description="Configure how and when you receive notifications"
+        >
           <NotificationSetting />
-        </div>
-        <Separator />
-        <div className="my-4">
-          <h2 className="my-4 text-xl font-bold">About</h2>
-          <div className="flex flex-col items-center justify-center">
-            <Logo size={128} />
-            <h3 className="mt-4 text-2xl font-bold">Arius Statuspage</h3>
-            <p className="text-sm text-zinc-500">Version: {import.meta.env.VITE_APP_VERSION || 'In Development'}</p>
-            <a
-              href="https://github.com/KronosMoe/arius-status"
-              className="mt-2 text-xs text-zinc-500 underline dark:text-zinc-400"
-            >
-              Check Update On GitHub
-            </a>
-          </div>
-        </div>
+        </SettingsSection>
+        <SettingsSection
+          icon={<Smartphone className="h-5 w-5" />}
+          title="Devices"
+          description="Manage devices where you're currently signed in"
+        >
+          <DeviceManager />
+        </SettingsSection>
+        <Credit />
       </div>
     </div>
   )
