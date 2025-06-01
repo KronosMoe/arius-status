@@ -1,3 +1,5 @@
+import { format, isToday } from "date-fns"
+
 export function formatAgo(seconds: number) {
   if (seconds >= 86400) {
     const days = Math.floor(seconds / 86400)
@@ -9,4 +11,9 @@ export function formatAgo(seconds: number) {
     const minutes = Math.floor(seconds / 60)
     return `${minutes} minute${minutes > 1 ? 's' : ''} ago`
   }
+}
+
+export const formatDate = (date: Date) => {
+  if (isToday(date)) return format(date, 'hh:mm a')
+  return format(date, 'MMM d')
 }

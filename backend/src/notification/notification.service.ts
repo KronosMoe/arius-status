@@ -1,10 +1,10 @@
 import { HttpService } from '@nestjs/axios'
-import { Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import { firstValueFrom } from 'rxjs'
 import { CreateNotificationInput } from './dto/create-notification.input'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { Monitor } from 'src/monitors/entities/monitor.entity'
-import { getDiscordEmbed } from 'src/constants/notification'
+import { getDiscordEmbed } from 'src/libs/notification'
 import { UpdateNotificationInput } from './dto/update-notification.input'
 
 @Injectable()
@@ -64,7 +64,11 @@ export class NotificationService {
     const settings = await this.getNotificationSettingsByUserId(monitor.userId)
 
     for (const setting of settings) {
-      if (setting.method === 'Discord' && setting.webhookUrl) {
+      if (setting.method === 'Discord') {
+        if (!setting.webhookUrl) {
+          throw new BadRequestException('Webhook URL is required for Discord')
+        }
+
         const payload = {
           content: setting.message || undefined,
           embeds: getDiscordEmbed(monitor, isDown),

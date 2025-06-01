@@ -3,9 +3,10 @@ CREATE TABLE "Users" (
     "id" TEXT NOT NULL,
     "username" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "password" TEXT NOT NULL,
+    "password" TEXT,
     "image" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "provider" TEXT NOT NULL DEFAULT 'local',
 
     CONSTRAINT "Users_pkey" PRIMARY KEY ("id")
 );
@@ -15,7 +16,6 @@ CREATE TABLE "Settings" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "theme" TEXT NOT NULL DEFAULT 'light',
-    "timezone" TEXT NOT NULL DEFAULT 'Asia/Bangkok',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Settings_pkey" PRIMARY KEY ("id")

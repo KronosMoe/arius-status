@@ -156,7 +156,7 @@ export default function UpdateMonitorForm({ monitor, openEdit, setOpenEdit, refe
             />
 
             <Button type="submit" className="w-full" disabled={loading}>
-              Create Monitor
+              Save
             </Button>
           </form>
         </Form>

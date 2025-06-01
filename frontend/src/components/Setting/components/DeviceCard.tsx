@@ -11,8 +11,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import { formatDate } from '@/lib/date'
 import { ISession } from '@/types/setting'
-import { addDays, format, isBefore, isToday } from 'date-fns'
+import { addDays, isBefore } from 'date-fns'
 import { Calendar, Clock, MapPin, Monitor, Shield, Smartphone, X } from 'lucide-react'
 
 export default function DeviceCard({
@@ -26,11 +27,6 @@ export default function DeviceCard({
 }) {
   const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(session.platform)
 
-  const formatDate = (date: Date) => {
-    if (isToday(date)) return format(date, 'hh:mm a')
-    return format(date, 'MMM d')
-  }
-
   const isExpiringSoon = isBefore(session.expires, addDays(new Date(), 1))
 
   return (
@@ -43,7 +39,6 @@ export default function DeviceCard({
             >
               {isMobile ? <Smartphone className="h-5 w-5" /> : <Monitor className="h-5 w-5" />}
             </div>
-
             <div className="min-w-0 flex-1">
               <div className="mb-1 flex items-center gap-2">
                 <h3 className="text-sm font-semibold">{isMobile ? 'Mobile Device' : 'Desktop'}</h3>
@@ -54,9 +49,6 @@ export default function DeviceCard({
                   </Badge>
                 )}
               </div>
-
-              <p className="text-muted-foreground mb-2 truncate text-xs">{session.platform}</p>
-
               <div className="text-muted-foreground grid grid-cols-1 gap-2 text-xs sm:grid-cols-2">
                 <div className="flex items-center gap-1">
                   <MapPin className="h-3 w-3" />
@@ -73,7 +65,6 @@ export default function DeviceCard({
               </div>
             </div>
           </div>
-
           <Dialog>
             <DialogTrigger asChild>
               <Button

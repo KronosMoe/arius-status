@@ -7,6 +7,7 @@ import { generateToken } from 'src/libs/token'
 import { addMilliseconds } from 'date-fns'
 import { LoginInput } from './dto/login.input'
 import { Auth } from './entities/auth.entity'
+import { User } from 'src/users/entities/user.entity'
 
 @Injectable()
 export class AuthService {
@@ -21,6 +22,7 @@ export class AuthService {
       username: createUserInput.username,
       email: createUserInput.email,
       password: hash,
+      provider: 'local',
     })
 
     return user
@@ -31,6 +33,10 @@ export class AuthService {
 
     if (!user || !(await bcrypt.compare(loginInput.password, user.password))) {
       throw new UnauthorizedException('Incorrect username or password')
+    }
+
+    if (user.provider !== 'local') {
+      throw new UnauthorizedException('Invalid provider')
     }
 
     const existingSession = await this.prisma.sessions.findFirst({
@@ -96,5 +102,52 @@ export class AuthService {
     })
 
     return { ...user, settings } as Auth
+  }
+
+  async validateOAuthLogin(githubUser: {
+    username: string
+    email: string
+    image: string
+  }): Promise<User> {
+    const existingUser = await this.prisma.users.findUnique({
+      where: { email: githubUser.email },
+    })
+
+    if (existingUser) {
+      return existingUser
+    }
+
+    const user = await this.userService.createUser({
+      username: githubUser.username,
+      email: githubUser.email,
+      password: '',
+      provider: 'github',
+    })
+
+    return user
+  }
+
+  async createSession(userId: string, ip: string, platform: string) {
+    const existing = await this.prisma.sessions.findFirst({
+      where: {
+        userId,
+        deviceIP: ip,
+        platform,
+        expires: { gt: new Date() },
+      },
+    })
+
+    if (existing) {
+      return existing.token
+    }
+
+    const token = generateToken()
+    const expires = addMilliseconds(new Date(), 604800000)
+
+    await this.prisma.sessions.create({
+      data: { userId, deviceIP: ip, platform, token, expires },
+    })
+
+    return token
   }
 }

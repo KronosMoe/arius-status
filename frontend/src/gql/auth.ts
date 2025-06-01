@@ -29,3 +29,10 @@ export const REGISTER_MUTATION = gql`
     register(input: $input)
   }
 `
+
+// Github OAuth
+export const GITHUB_OAUTH_URL_QUERY = gql`
+  query GithubOauthUrl {
+    getGithubOAuthUrl
+  }
+`

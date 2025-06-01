@@ -104,7 +104,7 @@ export default function DeviceManager() {
       )}
 
       {activeSessions.length > 0 && (
-        <Card className="border-destructive/20">
+        <Card className="border-destructive/20 gap-0">
           <CardHeader className="pb-4">
             <CardTitle className="text-destructive text-lg">Danger Zone</CardTitle>
             <CardDescription>

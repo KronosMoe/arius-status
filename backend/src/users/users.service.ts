@@ -13,7 +13,7 @@ export class UsersService {
     return this.prisma.users.findMany()
   }
 
-  async createUser(createUserInput: RegisterInput) {
+  async createUser(createUserInput: RegisterInput & { provider: string }) {
     const exists = await this.prisma.users.findMany({
       where: {
         OR: [
@@ -37,6 +37,7 @@ export class UsersService {
         username: createUserInput.username,
         email: createUserInput.email,
         password: createUserInput.password,
+        provider: createUserInput.provider,
         image,
       },
     })

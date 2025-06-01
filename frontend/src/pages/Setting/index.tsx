@@ -85,7 +85,7 @@ export default function Setting() {
 
   if (loading) {
     return (
-      <div className="container mx-auto max-w-4xl px-4 py-8">
+      <div className="w-full px-4 xl:m-auto xl:w-[1280px] py-8">
         <div className="mb-8">
           <div className="mb-2 flex items-center gap-3">
             <Settings className="h-8 w-8" />
@@ -99,7 +99,7 @@ export default function Setting() {
   }
 
   return (
-    <div className="container mx-auto max-w-4xl px-4 py-8">
+    <div className="w-full px-4 xl:m-auto xl:w-[1280px] py-8">
       <div className="mb-8">
         <div className="mb-2 flex items-center gap-3">
           <Settings className="h-8 w-8" />

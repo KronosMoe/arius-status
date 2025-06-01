@@ -7,7 +7,7 @@ import net from "net";
 import { logger } from "./lib/logger";
 
 const SERVER_URL = "http://localhost:4001";
-const AGENT_TOKEN = "5022773e-cb88-4d6c-9456-4a367385f37e";
+const AGENT_TOKEN = "231cad7f-53a7-4981-929d-76266a9ad4ad";
 
 const socket = io(SERVER_URL, {
   auth: {

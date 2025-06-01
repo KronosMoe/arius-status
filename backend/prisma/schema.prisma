@@ -11,9 +11,10 @@ model Users {
   id        String   @id @default(uuid())
   username  String   @unique
   email     String   @unique
-  password  String
+  password  String?
   image     String
   createdAt DateTime @default(now())
+  provider  String   @default("local")
 
   Monitors      Monitors[]
   Agents        Agents[]

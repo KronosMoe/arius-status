@@ -12,6 +12,8 @@ import { LOGIN_MUTATION } from '@/gql/auth'
 import { useEffect } from 'react'
 import { toast } from 'sonner'
 import { useAuth } from '@/hooks/useAuth'
+import SignInWithGithub from '@/components/utils/auth/SignInWithGithub'
+import { Separator } from '@/components/ui/separator'
 
 const formSchema = z.object({
   username: z.string().min(1, { message: 'Username is required' }),
@@ -55,12 +57,23 @@ export default function SignIn() {
   if (isAuthenticated) return <Navigate to={BASE_PATH} replace />
 
   return (
-    <div className="h-screen flex justify-center items-center">
+    <div className="flex h-screen items-center justify-center">
       <Card className="w-96">
         <CardHeader>
           <h1 className="text-3xl font-bold">Sign In</h1>
         </CardHeader>
         <CardContent>
+          <div className="mb-8">
+            <div className="flex w-full justify-center">
+              <SignInWithGithub />
+            </div>
+
+            <div className="text-muted-foreground my-6 flex items-center space-x-4 text-sm">
+              <Separator className="flex-1" />
+              <span>Or Sign In With</span>
+              <Separator className="flex-1" />
+            </div>
+          </div>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               <FormField

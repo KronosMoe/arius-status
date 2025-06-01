@@ -123,7 +123,7 @@ export default function NotificationSetting() {
 
       {/* Info Card */}
       {notifications.length > 0 && (
-        <Card className="bg-muted/50">
+        <Card className="bg-muted/50 gap-0">
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-sm">
               <Settings className="h-4 w-4" />

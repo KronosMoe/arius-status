@@ -52,4 +52,17 @@ export class AuthResolver {
     res.clearCookie(ACCESS_TOKEN)
     return true
   }
+
+  // Github OAuth
+
+  @Query(() => String)
+  getGithubOAuthUrl(): string {
+    const clientId = process.env.GITHUB_CLIENT_ID
+    const redirectUri = process.env.GITHUB_CALLBACK_URL
+    const scope = 'user:email'
+
+    const githubUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}`
+
+    return githubUrl
+  }
 }

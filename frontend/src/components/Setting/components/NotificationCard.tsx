@@ -1,10 +1,11 @@
-import { Webhook, Bell } from 'lucide-react'
+import { Webhook, Bell, Calendar } from 'lucide-react'
 
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import type { INotification } from '@/types/setting'
 import UpdateNotificationForm from './UpdateNotificationForm'
 import DeleteNotificationDialog from './DeleteNotificationDialog'
+import { formatDate } from '@/lib/date'
 
 export default function NotificationCard({
   notification,
@@ -39,20 +40,17 @@ export default function NotificationCard({
   return (
     <Card className="transition-all duration-200 hover:shadow-md">
       <CardContent className="px-4">
-        <div className="flex items-start justify-between">
+        <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:gap-0">
           <div className="flex flex-1 items-start gap-3">
-            <div className={`rounded-lg p-2 ${getMethodColor(notification.method)}`}>
+            <div className={`rounded-lg p-2 ${getMethodColor(notification.method)} hidden md:block`}>
               {getMethodIcon(notification.method)}
             </div>
 
             <div className="min-w-0 flex-1">
               <div className="mb-1 flex items-center gap-2">
                 <h3 className="truncate text-sm font-semibold">{notification.title}</h3>
-                <Badge variant="secondary" className="text-xs">
-                  {notification.method}
-                </Badge>
                 {notification.isDefault && (
-                  <Badge variant="outline" className="text-xs text-blue-600">
+                  <Badge variant="outline" className="hidden text-xs text-blue-600 sm:block">
                     Default
                   </Badge>
                 )}
@@ -68,19 +66,22 @@ export default function NotificationCard({
                 </p>
               )}
 
-              <div className="text-muted-foreground flex items-center gap-4 text-xs">
+              <div className="text-muted-foreground mt-4 flex flex-col gap-2 text-xs md:mt-auto md:flex-row md:items-center md:gap-4">
                 {notification.webhookUrl && (
                   <span className="flex items-center gap-1 truncate">
                     <Webhook className="h-3 w-3" />
                     <span className="max-w-32 truncate">{notification.webhookUrl}</span>
                   </span>
                 )}
-                <span>Created {new Date(notification.createdAt).toLocaleDateString()}</span>
+                <div className="flex items-center gap-1">
+                  <Calendar className="h-3 w-3" />
+                  <span>Created {formatDate(notification.createdAt)}</span>
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="ml-2 flex items-center gap-1">
+          <div className="flex w-full items-center justify-end gap-2 md:ml-2 md:w-auto md:justify-normal">
             <UpdateNotificationForm notification={notification} refetch={refetch} />
             <DeleteNotificationDialog notification={notification} refetch={refetch} />
           </div>

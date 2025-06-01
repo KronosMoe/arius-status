@@ -82,6 +82,7 @@ type Session {
 
 type Query {
   me: Auth
+  getGithubOAuthUrl: String!
   findMonitorsByUserId: [Monitor!]!
   findMonitorById(id: String!): MonitorAgent!
   getNotificationSettingsByUserId: [Notification!]!
