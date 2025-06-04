@@ -9,7 +9,6 @@ export class StatusResolver {
   constructor(private readonly statusService: StatusService) {}
 
   @Query(() => [Status])
-  @UseGuards(GqlAuthGuard)
   async getStatusByMonitorId(
     @Args('monitorId') monitorId: string,
     @Args('barCount', { defaultValue: 60 }) barCount: number = 60,
@@ -18,13 +17,11 @@ export class StatusResolver {
   }
 
   @Query(() => Status)
-  @UseGuards(GqlAuthGuard)
   async getLatestStatusByMonitorId(@Args('monitorId') monitorId: string) {
     return await this.statusService.getLatestStatusByMonitorId(monitorId)
   }
 
   @Query(() => String)
-  @UseGuards(GqlAuthGuard)
   async getOverallStatus(
     @Args('monitorIds', { type: () => [String] }) monitorIds: string[],
   ) {

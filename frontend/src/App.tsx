@@ -9,7 +9,9 @@ import {
   SETTING_PATH,
   SIGN_IN_PATH,
   SIGN_UP_PATH,
-  STATUS_PATH,
+  STATUS_PAGE_CREATION_PATH,
+  STATUS_PAGE_FULL_PATH,
+  STATUS_PAGE_PATH,
 } from './constants/routes'
 import SignIn from './pages/Auth/SignIn'
 import SignUp from './pages/Auth/SignUp'
@@ -18,27 +20,26 @@ import Protected from './components/utils/Protected'
 import Dashboard from './pages/Dashboard'
 import { TooltipProvider } from './components/ui/tooltip'
 import Setting from './pages/Setting'
-import MonitorInfo from './pages/MonitorInfo'
-import StatusPage from './pages/Status'
+import MonitorInfo from './pages/Monitor/_id'
 import { DndProvider } from 'react-dnd'
-import { HTML5Backend } from "react-dnd-html5-backend";
+import { HTML5Backend } from 'react-dnd-html5-backend'
+import StatusPages from './pages/StatusPage'
+import StatusCreation from './pages/StatusPage/create'
+import StatusPage from './pages/StatusPage/_id'
 
 function App() {
   const location = useLocation()
   const navbarRender = () => {
-    switch (location.pathname) {
-      case SIGN_IN_PATH:
-        return <></>
-
-      case SIGN_UP_PATH:
-        return <></>
-
-      case STATUS_PATH:
-        return <></>
-
-      default:
-        return <Navbar />
+    if (
+      location.pathname === SIGN_IN_PATH ||
+      location.pathname === SIGN_UP_PATH ||
+      location.pathname === STATUS_PAGE_CREATION_PATH ||
+      location.pathname.startsWith('/page/')
+    ) {
+      return <></>
     }
+
+    return <Navbar />
   }
 
   return (
@@ -53,11 +54,14 @@ function App() {
             <Route path={SIGN_IN_PATH} element={<SignIn />} />
             <Route path={SIGN_UP_PATH} element={<SignUp />} />
 
+            <Route path={STATUS_PAGE_FULL_PATH} element={<StatusPage />} />
+
             <Route element={<Protected />}>
               <Route path={DASHBOARD_PATH} element={<Dashboard />} />
               <Route path={SETTING_PATH} element={<Setting />} />
               <Route path={MONITOR_INFO_PATH} element={<MonitorInfo />} />
-              <Route path={STATUS_PATH} element={<StatusPage/>}/>
+              <Route path={STATUS_PAGE_PATH} element={<StatusPages />} />
+              <Route path={STATUS_PAGE_CREATION_PATH} element={<StatusCreation />} />
             </Route>
           </Routes>
         </TooltipProvider>

@@ -87,11 +87,43 @@ CREATE TABLE "Agents" (
     CONSTRAINT "Agents_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "StatusPages" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "logo" TEXT NOT NULL,
+    "footerText" TEXT NOT NULL,
+    "slug" TEXT NOT NULL,
+    "isFullWidth" BOOLEAN NOT NULL DEFAULT false,
+    "showOverallStatus" BOOLEAN NOT NULL DEFAULT true,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "userId" TEXT NOT NULL,
+
+    CONSTRAINT "StatusPages_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "StatusPageMonitor" (
+    "id" TEXT NOT NULL,
+    "statusPageId" TEXT NOT NULL,
+    "monitorId" TEXT NOT NULL,
+    "type" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "StatusPageMonitor_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "Users_username_key" ON "Users"("username");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Users_email_key" ON "Users"("email");
+
+-- CreateIndex
+CREATE INDEX "Users_provider_idx" ON "Users"("provider");
+
+-- CreateIndex
+CREATE INDEX "Users_createdAt_idx" ON "Users"("createdAt");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Settings_userId_key" ON "Settings"("userId");
@@ -101,6 +133,15 @@ CREATE UNIQUE INDEX "Sessions_token_key" ON "Sessions"("token");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Agents_token_key" ON "Agents"("token");
+
+-- CreateIndex
+CREATE INDEX "StatusPages_userId_idx" ON "StatusPages"("userId");
+
+-- CreateIndex
+CREATE INDEX "StatusPageMonitor_statusPageId_idx" ON "StatusPageMonitor"("statusPageId");
+
+-- CreateIndex
+CREATE INDEX "StatusPageMonitor_monitorId_idx" ON "StatusPageMonitor"("monitorId");
 
 -- AddForeignKey
 ALTER TABLE "Settings" ADD CONSTRAINT "Settings_userId_fkey" FOREIGN KEY ("userId") REFERENCES "Users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -122,3 +163,12 @@ ALTER TABLE "StatusResults" ADD CONSTRAINT "StatusResults_monitorId_fkey" FOREIG
 
 -- AddForeignKey
 ALTER TABLE "Agents" ADD CONSTRAINT "Agents_userId_fkey" FOREIGN KEY ("userId") REFERENCES "Users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "StatusPages" ADD CONSTRAINT "StatusPages_userId_fkey" FOREIGN KEY ("userId") REFERENCES "Users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "StatusPageMonitor" ADD CONSTRAINT "StatusPageMonitor_statusPageId_fkey" FOREIGN KEY ("statusPageId") REFERENCES "StatusPages"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "StatusPageMonitor" ADD CONSTRAINT "StatusPageMonitor_monitorId_fkey" FOREIGN KEY ("monitorId") REFERENCES "Monitors"("id") ON DELETE CASCADE ON UPDATE CASCADE;

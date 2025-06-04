@@ -1,4 +1,4 @@
 packages:
-  - agent
   - backend
   - frontend
+  - agent

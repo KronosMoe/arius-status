@@ -4,7 +4,7 @@ import { IMonitor } from '@/types/monitor'
 import { IStatus } from '@/types/status'
 import { toast } from 'sonner'
 import Loading from '@/components/utils/Loading'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import PingLine from './PingLine'
 
 export default function StatusLine({ monitor }: { monitor: IMonitor }) {
@@ -17,37 +17,49 @@ export default function StatusLine({ monitor }: { monitor: IMonitor }) {
       barCount: barCount,
     },
     pollInterval: 60 * 1000,
-    fetchPolicy: 'network-only',
-    skip: monitor.status === 'PAUSED',
+    fetchPolicy: 'cache-and-network',
+    skip: !monitor || monitor.status === 'PAUSED',
+    errorPolicy: 'all',
   })
 
-  useEffect(() => {
-    function handleResize() {
-      if (window.innerWidth < 500) {
-        setBarCount(30)
-      } else {
-        setBarCount(60)
-      }
-    }
-
-    handleResize()
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
+  const handleResize = useCallback(() => {
+    const newBarCount = window.innerWidth < 500 ? 30 : 60
+    setBarCount(newBarCount)
   }, [])
 
   useEffect(() => {
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [handleResize])
+
+  useEffect(() => {
     if (data?.getStatusByMonitorId) {
-      const newStatus = data.getStatusByMonitorId as IStatus[]
+      const newStatusData = data.getStatusByMonitorId as IStatus[]
 
-      setStatusHistory((prev) => {
-        const merged = [...prev, ...newStatus]
-          .filter((item, index, self) => index === self.findIndex((t) => t.id === item.id))
-          .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+      if (newStatusData.length > 0) {
+        setStatusHistory((prev) => {
+          const existingIds = new Set(prev.map((item) => item.id))
+          const actuallyNewItems = newStatusData.filter((item) => !existingIds.has(item.id))
+          if (actuallyNewItems.length === 0 && prev.length > 0) {
+            return prev
+          }
+          const merged = [...prev, ...actuallyNewItems].sort(
+            (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+          )
+          const result = merged.slice(-barCount)
 
-        return merged.slice(-barCount)
-      })
+          return result
+        })
+      }
     }
   }, [data, barCount])
+
+  useEffect(() => {
+    if (statusHistory.length > barCount) {
+      setStatusHistory((prev) => prev.slice(-barCount))
+    }
+  }, [barCount, statusHistory.length])
 
   if (error) toast.error(error.message)
 
@@ -55,7 +67,7 @@ export default function StatusLine({ monitor }: { monitor: IMonitor }) {
 
   return (
     <div
-      className={`flex cursor-pointer flex-col rounded-md border border-black/20 p-4 transition-colors dark:border-white/10 dark:bg-zinc-900`}
+      className={`flex flex-col rounded-md border border-black/20 p-4 transition-colors dark:border-white/10 dark:bg-zinc-900`}
     >
       <div className="mb-4 text-xl font-bold">{monitor.name}</div>
       <PingLine monitor={monitor} barCount={barCount} statusHistory={statusHistory} />

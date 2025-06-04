@@ -20,7 +20,6 @@ export class MonitorsResolver {
   }
 
   @Query(() => MonitorAgent)
-  @UseGuards(GqlAuthGuard)
   async findMonitorById(@Args('id') id: string): Promise<MonitorAgent> {
     return await this.monitorsService.findMonitorById(id)
   }

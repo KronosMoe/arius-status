@@ -1,5 +1,5 @@
 {
-  "name": "agent",
+  "name": "arius-status-agent",
   "version": "1.0.0",
   "description": "",
   "scripts": {
@@ -10,14 +10,15 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "packageManager": "pnpm@10.11.1",
   "devDependencies": {
     "@types/node": "^22.14.1",
     "@types/ping": "^0.4.4",
-    "tsc": "^2.0.4",
     "tsx": "^4.19.3",
     "typescript": "^5.8.3"
   },
   "dependencies": {
+    "dotenv": "^16.5.0",
     "ping": "^0.4.4",
     "socket.io-client": "^4.8.1",
     "winston": "^3.17.0"

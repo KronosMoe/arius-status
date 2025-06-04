@@ -80,6 +80,39 @@ type Session {
   createdAt: DateTime!
 }
 
+type StatusPageMonitor {
+  id: String!
+  monitorId: String!
+  type: String!
+  createdAt: DateTime!
+}
+
+type StatusPage {
+  id: String!
+  name: String!
+  slug: String!
+  logo: String!
+  footerText: String!
+  isFullWidth: Boolean!
+  showOverallStatus: Boolean!
+  createdAt: DateTime!
+  selectedMonitors: [StatusPageMonitor!]!
+}
+
+type StatusPageExtended {
+  id: String!
+  name: String!
+  slug: String!
+  logo: String!
+  footerText: String!
+  isFullWidth: Boolean!
+  showOverallStatus: Boolean!
+  createdAt: DateTime!
+  selectedMonitors: [StatusPageMonitor!]!
+  statusCards: [Monitor!]!
+  statusLines: [Monitor!]!
+}
+
 type Query {
   me: Auth
   getGithubOAuthUrl: String!
@@ -93,6 +126,8 @@ type Query {
   getStatusByTimeRange(from: DateTime!, to: DateTime!, monitorId: String!): [Status!]!
   getSettingsByUserId: Setting!
   getSessionsByUserId: [Session!]!
+  getStatusPagesByUserId: [StatusPageExtended!]!
+  getStatusPageBySlug(slug: String!): StatusPageExtended!
 }
 
 type Mutation {
@@ -111,6 +146,7 @@ type Mutation {
   updateTheme(theme: String!): Setting!
   clearSessionsByUserId: [Session!]!
   clearSessionById(id: String!): Session!
+  createStatusPage(input: CreateStatusPageInput!): StatusPage!
 }
 
 input RegisterInput {
@@ -159,4 +195,19 @@ input UpdateNotificationInput {
 
 input CreateAgentInput {
   name: String!
+}
+
+input CreateStatusPageInput {
+  name: String!
+  logo: String!
+  footerText: String!
+  isFullWidth: Boolean!
+  showOverallStatus: Boolean!
+  slug: String!
+  selectedMonitors: [StatusPageMonitorInput!]!
+}
+
+input StatusPageMonitorInput {
+  id: String!
+  type: String!
 }

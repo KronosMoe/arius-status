@@ -21,6 +21,10 @@ model Users {
   Sessions      Sessions[]
   Notifications Notifications[]
   Settings      Settings?
+  StatusPages   StatusPages[]
+
+  @@index([provider])
+  @@index([createdAt])
 }
 
 model Settings {
@@ -69,9 +73,10 @@ model Monitors {
   agentId   String
   createdAt DateTime @default(now())
 
-  user          Users           @relation(fields: [userId], references: [id])
-  agent         Agents          @relation(fields: [agentId], references: [id])
-  StatusResults StatusResults[]
+  user              Users               @relation(fields: [userId], references: [id])
+  agent             Agents              @relation(fields: [agentId], references: [id])
+  StatusResults     StatusResults[]
+  StatusPageMonitor StatusPageMonitor[]
 }
 
 model StatusResults {
@@ -94,4 +99,35 @@ model Agents {
 
   user     Users      @relation(fields: [userId], references: [id])
   Monitors Monitors[]
+}
+
+model StatusPages {
+  id                String   @id @default(uuid())
+  name              String
+  logo              String
+  footerText        String
+  slug              String   @unique
+  isFullWidth       Boolean  @default(false)
+  showOverallStatus Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  userId            String
+
+  user             Users               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  selectedMonitors StatusPageMonitor[]
+
+  @@index([userId])
+}
+
+model StatusPageMonitor {
+  id           String   @id @default(uuid())
+  statusPageId String
+  monitorId    String
+  type         String
+  createdAt    DateTime @default(now())
+
+  statusPage StatusPages @relation(fields: [statusPageId], references: [id], onDelete: Cascade)
+  monitor    Monitors    @relation(fields: [monitorId], references: [id], onDelete: Cascade)
+
+  @@index([statusPageId])
+  @@index([monitorId])
 }

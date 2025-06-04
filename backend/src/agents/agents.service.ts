@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common'
+import { BadRequestException, Injectable, Logger } from '@nestjs/common'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { CreateAgentInput } from './dto/create-agent.input'
 import { generateToken } from 'src/libs/token'
@@ -25,6 +25,20 @@ export class AgentsService {
 
     this.logger.log(`Agent ${agent.name} created`)
 
+    return agent
+  }
+
+  async deleteAgentById(agentId: string) {
+    const monitors = await this.prisma.monitors.findMany({
+      where: { agentId },
+    })
+
+    if (monitors.length > 0) {
+      throw new BadRequestException('This agent has monitors assigned')
+    }
+
+    const agent = await this.prisma.agents.delete({ where: { id: agentId } })
+    this.logger.log(`Agent ${agentId} deleted`)
     return agent
   }
 }

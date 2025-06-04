@@ -13,6 +13,7 @@ import { NotificationService } from 'src/notification/notification.service'
 import { PrismaService } from 'src/prisma/prisma.service'
 
 @WebSocketGateway({
+  path: '/api/agents',
   cors: {
     origin: '*',
   },

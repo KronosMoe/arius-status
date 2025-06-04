@@ -1,0 +1,15 @@
+version: "3.9"
+
+networks:
+  app:
+    driver: bridge
+
+services:
+  agent:
+    build: .
+    container_name: monitor-agent
+    environment:
+      - TOKEN
+    restart: unless-stopped
+    networks:
+      - app

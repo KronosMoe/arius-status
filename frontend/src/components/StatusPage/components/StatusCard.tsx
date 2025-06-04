@@ -17,8 +17,9 @@ export default function StatusCard({ monitor }: Props) {
       monitorId: monitor.id,
     },
     pollInterval: 60 * 1000,
-    fetchPolicy: 'network-only',
-    skip: monitor.status === 'PAUSED',
+    fetchPolicy: 'cache-and-network',
+    skip: !monitor || monitor.status === 'PAUSED',
+    errorPolicy: 'all',
   })
   const status: IStatus = data?.getLatestStatusByMonitorId
 
@@ -31,9 +32,9 @@ export default function StatusCard({ monitor }: Props) {
   const statusIcon = () => {
     switch (status.responseTime) {
       case -1:
-        return <CircleX className='text-red-500' />
+        return <CircleX className="text-red-500" />
       default:
-        return <CircleCheck className='text-green-500' />
+        return <CircleCheck className="text-green-500" />
     }
   }
 
@@ -50,7 +51,7 @@ export default function StatusCard({ monitor }: Props) {
     <div className="rounded-md border border-black/20 p-4 dark:border-white/10 dark:bg-zinc-900">
       <div className="flex flex-row items-center justify-between">
         <div className="text-lg">{monitor.name}</div>
-        {monitor.status === 'PAUSED' ? <CirclePause className='text-yellow-500' /> : statusIcon()}
+        {monitor.status === 'PAUSED' ? <CirclePause className="text-yellow-500" /> : statusIcon()}
       </div>
       <div className="text-sm font-light text-zinc-500 dark:text-zinc-400">
         {monitor.status === 'PAUSED' ? 'Paused' : statusText()}

@@ -5,11 +5,20 @@ import https from "https";
 import { URL } from "url";
 import net from "net";
 import { logger } from "./lib/logger";
+import * as dotenv from "dotenv";
 
-const SERVER_URL = "http://localhost:4001";
-const AGENT_TOKEN = "231cad7f-53a7-4981-929d-76266a9ad4ad";
+dotenv.config();
+
+const SERVER_URL = "http://host.docker.internal:4001";
+const AGENT_TOKEN = process.env.TOKEN;
+
+if (!AGENT_TOKEN) {
+  logger.error("❗ AGENT_TOKEN is not set");
+  process.exit(1);
+}
 
 const socket = io(SERVER_URL, {
+  path: "/api/agents",
   auth: {
     token: AGENT_TOKEN,
   },
