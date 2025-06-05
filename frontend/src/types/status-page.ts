@@ -21,5 +21,6 @@ export interface IStatusPageMonitor {
   id: string
   monitorId: string
   type: string
+  index: number
   createdAt: Date
 }

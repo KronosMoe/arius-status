@@ -31,14 +31,15 @@ import {
   Save,
   RotateCcw,
 } from 'lucide-react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { STATUS_PAGE_PATH } from '@/constants/routes'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Alert, AlertDescription } from '../ui/alert'
-import { CREATE_STATUS_PAGE_MUTATION } from '@/gql/status-page'
+import { UPDATE_STATUS_PAGE_MUTATION } from '@/gql/status-page'
+import { IStatusPageExtended } from '@/types/status-page'
 
 const formSchema = z.object({
   name: z.string().min(1, 'Title is required').max(100, 'Title must be less than 100 characters'),
@@ -55,9 +56,12 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>
 
-export default function StatusPageCreation() {
-  const navigate = useNavigate()
+type Props = {
+  statusPage: IStatusPageExtended
+  refetch: () => void
+}
 
+export default function StatusPageEditor({ statusPage, refetch }: Props) {
   const {
     data: monitorData,
     loading: monitorLoading,
@@ -66,26 +70,32 @@ export default function StatusPageCreation() {
     fetchPolicy: 'network-only',
   })
 
-  const [createStatusPage, { loading: createStatusPageLoading }] = useMutation(CREATE_STATUS_PAGE_MUTATION, {
+  const [updateStatusPage, { loading: updating }] = useMutation(UPDATE_STATUS_PAGE_MUTATION, {
     onError: (error) => toast.error(error.message),
     onCompleted: () => {
       toast.success('Status page saved successfully!')
       setHasUnsavedChanges(false)
-      navigate(STATUS_PAGE_PATH, { replace: true })
+      refetch()
     },
   })
 
   const [isEditorCollapsed, setEditorCollapsed] = useState(false)
-  const [statusCards, setStatusCards] = useState<IMonitor[]>([])
-  const [statusLines, setStatusLines] = useState<IMonitor[]>([])
+  const [statusCards, setStatusCards] = useState<IMonitor[]>(statusPage.statusCards)
+  const [statusLines, setStatusLines] = useState<IMonitor[]>(statusPage.statusLines)
   const [monitors, setMonitors] = useState<IMonitor[]>([])
-  const [logo, setLogo] = useState<string>('')
+  const [logo, setLogo] = useState<string>(statusPage.logo)
   const [selectedMonitor, setSelectedMonitor] = useState<{ id: string; type: 'card' | 'line'; index: number }[]>([])
   const [activeTab, setActiveTab] = useState('editor')
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
   const [hasManuallyEditedSlug, setHasManuallyEditedSlug] = useState(false)
 
   const selectedIds = useMemo(() => Array.from(new Set(selectedMonitor.map((m) => m.id))), [selectedMonitor])
+
+  useEffect(() => {
+    setSelectedMonitor(
+      statusPage.selectedMonitors.map((m) => ({ id: m.id, type: m.type as 'card' | 'line', index: m.index })),
+    )
+  }, [statusPage])
 
   const {
     register,
@@ -97,11 +107,11 @@ export default function StatusPageCreation() {
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: 'Arius Statuspage',
-      slug: 'my-status-page',
-      footerText: '© 2025 Arius Statuspage. All rights reserved.',
-      showOverallStatus: true,
-      isFullWidth: false,
+      name: statusPage.name,
+      slug: statusPage.slug,
+      footerText: statusPage.footerText,
+      showOverallStatus: statusPage.showOverallStatus,
+      isFullWidth: statusPage.isFullWidth,
     },
   })
 
@@ -195,8 +205,9 @@ export default function StatusPageCreation() {
       logo,
     }
 
-    await createStatusPage({
+    await updateStatusPage({
       variables: {
+        id: statusPage.id,
         input: {
           ...payload,
         },
@@ -211,6 +222,7 @@ export default function StatusPageCreation() {
 
       if (file.size > maxSizeInBytes) {
         toast.error('File size should not exceed 50MB.')
+        return
       }
 
       const reader = new FileReader()
@@ -330,7 +342,13 @@ export default function StatusPageCreation() {
                         <div className="space-y-2">
                           <Label htmlFor="logo">Logo</Label>
                           <div className="flex items-center gap-3">
-                            {logo && <img src={logo} alt="Logo" className="h-10 w-10 rounded-md object-cover" />}
+                            {logo && (
+                              <img
+                                src={logo || '/placeholder.svg'}
+                                alt="Logo"
+                                className="h-10 w-10 rounded-md object-cover"
+                              />
+                            )}
                             <div className="flex-1">
                               <Input
                                 type="file"
@@ -516,7 +534,7 @@ export default function StatusPageCreation() {
                           <Eye className="mr-2 h-4 w-4" />
                           Preview
                         </Button>
-                        <Button type="submit" disabled={createStatusPageLoading}>
+                        <Button type="submit" disabled={updating || !hasUnsavedChanges}>
                           <Save className="mr-2 h-4 w-4" />
                           Save Status Page
                         </Button>

@@ -89,7 +89,7 @@ export default function CreateMonitorForm({ monitors, agents, setMonitors }: Pro
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>
-          <CirclePlus/>
+          <CirclePlus className="h-4 w-4"/>
           <span className="hidden sm:inline">Add New Monitor</span>
         </Button>
       </DialogTrigger>

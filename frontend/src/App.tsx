@@ -10,6 +10,7 @@ import {
   SIGN_IN_PATH,
   SIGN_UP_PATH,
   STATUS_PAGE_CREATION_PATH,
+  STATUS_PAGE_EDIT_PATH,
   STATUS_PAGE_FULL_PATH,
   STATUS_PAGE_PATH,
 } from './constants/routes'
@@ -26,6 +27,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 import StatusPages from './pages/StatusPage'
 import StatusCreation from './pages/StatusPage/create'
 import StatusPage from './pages/StatusPage/_id'
+import StatusEditor from './pages/StatusPage/edit'
 
 function App() {
   const location = useLocation()
@@ -62,6 +64,7 @@ function App() {
               <Route path={MONITOR_INFO_PATH} element={<MonitorInfo />} />
               <Route path={STATUS_PAGE_PATH} element={<StatusPages />} />
               <Route path={STATUS_PAGE_CREATION_PATH} element={<StatusCreation />} />
+              <Route path={STATUS_PAGE_EDIT_PATH} element={<StatusEditor />} />
             </Route>
           </Routes>
         </TooltipProvider>

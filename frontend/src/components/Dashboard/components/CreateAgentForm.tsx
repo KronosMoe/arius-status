@@ -42,7 +42,7 @@ export default function CreateAgentForm({ agents, setAgents }: Props) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>
-          <CirclePlus className="mr-2 h-4 w-4" />
+          <CirclePlus className="h-4 w-4" />
           <span className="hidden sm:inline">Add New Agent</span>
         </Button>
       </DialogTrigger>

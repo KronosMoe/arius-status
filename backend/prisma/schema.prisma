@@ -123,6 +123,7 @@ model StatusPageMonitor {
   statusPageId String
   monitorId    String
   type         String
+  index        Int
   createdAt    DateTime @default(now())
 
   statusPage StatusPages @relation(fields: [statusPageId], references: [id], onDelete: Cascade)

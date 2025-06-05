@@ -128,6 +128,7 @@ type Query {
   getSessionsByUserId: [Session!]!
   getStatusPagesByUserId: [StatusPageExtended!]!
   getStatusPageBySlug(slug: String!): StatusPageExtended!
+  getStatusPageById(id: String!): StatusPageExtended!
 }
 
 type Mutation {
@@ -147,6 +148,8 @@ type Mutation {
   clearSessionsByUserId: [Session!]!
   clearSessionById(id: String!): Session!
   createStatusPage(input: CreateStatusPageInput!): StatusPage!
+  updateStatusPage(id: String!, input: CreateStatusPageInput!): StatusPage!
+  deleteStatusPage(id: String!): StatusPage!
 }
 
 input RegisterInput {
@@ -210,4 +213,5 @@ input CreateStatusPageInput {
 input StatusPageMonitorInput {
   id: String!
   type: String!
+  index: Int!
 }

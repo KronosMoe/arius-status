@@ -36,7 +36,16 @@ export class StatusService {
   }
 
   async getLatestStatusByMonitorId(monitorId: string) {
-    return await this.prisma.statusResults.findFirst({
+    const monitor = await this.prisma.monitors.findUnique({
+      where: { id: monitorId },
+      select: { interval: true },
+    })
+
+    if (!monitor) {
+      throw new NotFoundException('Monitor not found')
+    }
+
+    const latest = await this.prisma.statusResults.findFirst({
       where: {
         monitorId: monitorId,
       },
@@ -44,6 +53,17 @@ export class StatusService {
         createdAt: 'desc',
       },
     })
+
+    if (!latest) {
+      return {
+        id: 'unknown',
+        createdAt: new Date(),
+        responseTime: -999,
+        metadata: {},
+      }
+    }
+
+    return latest
   }
 
   async getOverallStatus(monitorIds: string[]) {

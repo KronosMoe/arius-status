@@ -1,4 +1,4 @@
-import { Field, InputType } from '@nestjs/graphql'
+import { Field, InputType, Int } from '@nestjs/graphql'
 
 @InputType()
 export class StatusPageMonitorInput {
@@ -7,4 +7,7 @@ export class StatusPageMonitorInput {
 
   @Field(() => String)
   type: string
+
+  @Field(() => Int)
+  index: number
 }

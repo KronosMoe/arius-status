@@ -13,7 +13,7 @@ const SERVER_URL = "http://host.docker.internal:4001";
 const AGENT_TOKEN = process.env.TOKEN;
 
 if (!AGENT_TOKEN) {
-  logger.error("❗ AGENT_TOKEN is not set");
+  logger.error("AGENT_TOKEN is not set");
   process.exit(1);
 }
 
@@ -27,11 +27,11 @@ const socket = io(SERVER_URL, {
 });
 
 socket.on("connect", () => {
-  logger.info("🚀 Connected to server");
+  logger.info("Connected to server");
 });
 
 socket.on("disconnect", (reason) => {
-  logger.error("❌ Disconnected: " + reason);
+  logger.error("Disconnected: " + reason);
 });
 
 socket.on("health-check", () => {
@@ -40,14 +40,14 @@ socket.on("health-check", () => {
 });
 
 socket.on("connect_error", (err) => {
-  logger.error("🚫 Connection error: " + err.message);
+  logger.error("Connection error: " + err.message);
 });
 
 socket.on("run-command", (monitor) => {
-  logger.log(`🏃 Received run-command for monitor:`, monitor);
+  logger.info(`Received run-command for monitor:`, monitor);
 
   if (!monitor.type || !monitor.address || !monitor.id) {
-    logger.error(`❗ Invalid monitor data: ${monitor}`);
+    logger.error(`Invalid monitor data: ${monitor}`);
     socket.emit("command-result", {
       monitorId: monitor.id ?? null,
       responseTime: -1,

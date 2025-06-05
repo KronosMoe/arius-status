@@ -1,10 +1,11 @@
+import DeleteStatusPageDialog from '@/components/StatusPage/components/DeleteStatusPageDialog'
 import { Button } from '@/components/ui/button'
 import Loading from '@/components/utils/Loading'
-import { STATUS_PAGE_CREATION_PATH, STATUS_PAGE_FULL_PATH } from '@/constants/routes'
+import { STATUS_PAGE_CREATION_PATH, STATUS_PAGE_EDIT_PATH, STATUS_PAGE_FULL_PATH } from '@/constants/routes'
 import { GET_STATUS_PAGES } from '@/gql/status-page'
-import { IStatusPage } from '@/types/status-page'
+import type { IStatusPage } from '@/types/status-page'
 import { useQuery } from '@apollo/client'
-import { CirclePlus } from 'lucide-react'
+import { CirclePlus, Pen } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { toast } from 'sonner'
@@ -12,7 +13,7 @@ import { toast } from 'sonner'
 export default function StatusPages() {
   const [statusPages, setStatusPages] = useState<IStatusPage[]>([])
 
-  const { data, loading, error } = useQuery(GET_STATUS_PAGES, {
+  const { data, loading, error, refetch } = useQuery(GET_STATUS_PAGES, {
     fetchPolicy: 'network-only',
   })
 
@@ -28,22 +29,6 @@ export default function StatusPages() {
 
   if (loading) return <Loading />
 
-  const statusPageCard = statusPages.map((statusPage) => (
-    <Link
-      to={STATUS_PAGE_FULL_PATH.replace(':slug', statusPage.slug)}
-      key={statusPage.id}
-      className="flex cursor-pointer flex-col rounded-md border border-black/20 p-4 transition-colors hover:bg-zinc-100 dark:border-white/10 dark:bg-zinc-900 dark:hover:bg-zinc-800"
-    >
-      <div className="flex flex-row items-center gap-4">
-        <img src={statusPage.logo} alt="logo" className="size-[64px] rounded-md" />
-        <div>
-          <div className="text-lg font-bold">{statusPage.name}</div>
-          <div className="text-muted-foreground text-sm">/status/{statusPage.slug}</div>
-        </div>
-      </div>
-    </Link>
-  ))
-
   return (
     <div className="w-full px-4 xl:m-auto xl:w-[1280px]">
       <div className="mt-10 mb-20">
@@ -54,12 +39,58 @@ export default function StatusPages() {
           </div>
           <Link to={STATUS_PAGE_CREATION_PATH}>
             <Button variant="default">
-              <CirclePlus />
+              <CirclePlus className="h-4 w-4" />
               Create Status Page
             </Button>
           </Link>
         </div>
-        {statusPageCard}
+
+        <div className="flex flex-col gap-4">
+          {statusPages.length > 0 ? (
+            statusPages.map((statusPage) => (
+              <div
+                key={statusPage.id}
+                className="flex flex-col gap-4 rounded-md border border-black/20 p-4 transition-colors hover:bg-zinc-100 sm:flex-row sm:items-center sm:justify-between dark:border-white/10 dark:bg-zinc-900 dark:hover:bg-zinc-800"
+              >
+                <Link
+                  to={STATUS_PAGE_FULL_PATH.replace(':slug', statusPage.slug)}
+                  className="flex flex-row items-center gap-4"
+                >
+                  {statusPage.logo && (
+                    <img
+                      src={statusPage.logo || '/placeholder.svg'}
+                      alt={`${statusPage.name} logo`}
+                      className="h-16 w-16 rounded-md"
+                    />
+                  )}
+                  <div>
+                    <div className="text-lg font-bold">{statusPage.name}</div>
+                    <div className="text-muted-foreground text-sm">/status/{statusPage.slug}</div>
+                  </div>
+                </Link>
+                <div className="flex flex-row items-center justify-end gap-2">
+                  <Link to={STATUS_PAGE_EDIT_PATH.replace(':id', statusPage.id)}>
+                    <Button variant="default" className="cursor-pointer">
+                      <Pen className="h-4 w-4 sm:mr-2" />
+                      <span className="hidden sm:inline">Edit</span>
+                    </Button>
+                  </Link>
+                  <DeleteStatusPageDialog statusPageId={statusPage.id} refetch={refetch} />
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="flex flex-col items-center justify-center rounded-md border border-dashed p-8 text-center">
+              <p className="text-muted-foreground mb-4">You don&apos;t have any status pages yet</p>
+              <Link to={STATUS_PAGE_CREATION_PATH}>
+                <Button variant="default">
+                  <CirclePlus className="h-4 w-4" />
+                  Create Your First Status Page
+                </Button>
+              </Link>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )

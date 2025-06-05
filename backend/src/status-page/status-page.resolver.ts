@@ -27,6 +27,11 @@ export class StatusPageResolver {
     return await this.statusPageService.getStatusPageBySlug(slug)
   }
 
+  @Query(() => StatusPageExtended)
+  async getStatusPageById(@Args('id') id: string): Promise<StatusPageExtended> {
+    return await this.statusPageService.getStatusPageById(id)
+  }
+
   @Mutation(() => StatusPage)
   @UseGuards(GqlAuthGuard)
   async createStatusPage(
@@ -34,5 +39,20 @@ export class StatusPageResolver {
     @Me() user: User,
   ) {
     return await this.statusPageService.create(user.id, input)
+  }
+
+  @Mutation(() => StatusPage)
+  @UseGuards(GqlAuthGuard)
+  async updateStatusPage(
+    @Args('id') id: string,
+    @Args('input') input: CreateStatusPageInput,
+  ) {
+    return await this.statusPageService.update(id, input)
+  }
+
+  @Mutation(() => StatusPage)
+  @UseGuards(GqlAuthGuard)
+  async deleteStatusPage(@Args('id') id: string) {
+    return await this.statusPageService.delete(id)
   }
 }

@@ -1,3 +1,4 @@
+import Favicon from '@/components/StatusPage/components/Favicon'
 import OverallStatus from '@/components/StatusPage/components/OverallStatus'
 import StatusCard from '@/components/StatusPage/components/StatusCard'
 import StatusLine from '@/components/StatusPage/components/StatusLine'
@@ -36,14 +37,16 @@ export default function StatusPage() {
 
   return (
     <div className="mt-10 flex min-h-screen flex-col">
+      <Favicon base64Icon={statusPage.logo} />
+      <title>{statusPage.name}</title>
       <div
-        className={`min-h-screen bg-zinc-50/70 backdrop-blur-lg dark:bg-zinc-950/70 ${statusPage.isFullWidth ? 'w-full px-4' : 'w-full px-4 xl:m-auto xl:w-[1280px]'}`}
+        className={`min-h-screen ${statusPage.isFullWidth ? 'w-full px-4' : 'w-full px-4 xl:m-auto xl:w-[1280px]'}`}
       >
         <div className="space-y-8">
           <div className="flex items-center gap-4">
             {statusPage.logo && (
               <img
-                src={statusPage.logo || '/placeholder.svg'}
+                src={statusPage.logo}
                 alt="Logo"
                 className="h-16 w-16 rounded-lg object-cover"
               />

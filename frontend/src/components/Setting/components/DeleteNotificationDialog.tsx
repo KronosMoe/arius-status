@@ -55,10 +55,10 @@ export default function DeleteNotificationDialog({ notification, refetch }: Prop
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
+          <Button onClick={() => setOpen(false)}>Cancel</Button>
           <Button variant="destructive" disabled={loading} onClick={onDelete}>
             {loading ? 'Deleting...' : 'Delete'}
           </Button>
-          <Button onClick={() => setOpen(false)}>Cancel</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

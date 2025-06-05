@@ -10,4 +10,5 @@ export const MONITOR_INFO_PATH = BASE_PATH + 'monitor/:monitorId'
 
 export const STATUS_PAGE_PATH = BASE_PATH + 'status-page/'
 export const STATUS_PAGE_CREATION_PATH = STATUS_PAGE_PATH + 'create'
+export const STATUS_PAGE_EDIT_PATH = STATUS_PAGE_PATH + 'edit/:id'
 export const STATUS_PAGE_FULL_PATH = BASE_PATH + 'page/' + ':slug'

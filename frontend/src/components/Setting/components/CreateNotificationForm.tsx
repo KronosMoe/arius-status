@@ -100,7 +100,7 @@ export default function CreateNotificationForm({ refetch }: Props) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>
-          <CirclePlus />
+          <CirclePlus className="h-4 w-4" />
           <span className="hidden sm:inline">Add New Notification</span>
         </Button>
       </DialogTrigger>

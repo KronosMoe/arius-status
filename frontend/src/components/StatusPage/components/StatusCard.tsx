@@ -2,16 +2,23 @@ import Loading from '@/components/utils/Loading'
 import { LATEST_STATUS_QUERY } from '@/gql/status'
 import { IMonitor } from '@/types/monitor'
 import { useQuery } from '@apollo/client'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import { IStatus } from '@/types/status'
-import { CircleCheck, CirclePause, CircleX } from 'lucide-react'
+import { CircleCheck, CirclePause, CircleX, HelpCircle } from 'lucide-react'
 
 type Props = {
   monitor: IMonitor
 }
 
 export default function StatusCard({ monitor }: Props) {
+  const [status, setStatus] = useState<IStatus>({
+    id: '',
+    responseTime: -999,
+    createdAt: new Date(),
+    metadata: {},
+  })
+
   const { data, loading, error } = useQuery(LATEST_STATUS_QUERY, {
     variables: {
       monitorId: monitor.id,
@@ -21,7 +28,12 @@ export default function StatusCard({ monitor }: Props) {
     skip: !monitor || monitor.status === 'PAUSED',
     errorPolicy: 'all',
   })
-  const status: IStatus = data?.getLatestStatusByMonitorId
+
+  useEffect(() => {
+    if (data?.getStatusByMonitorId) {
+      setStatus(data.getStatusByMonitorId as IStatus)
+    }
+  }, [data])
 
   useEffect(() => {
     if (error) toast.error(error.message)
@@ -29,7 +41,10 @@ export default function StatusCard({ monitor }: Props) {
 
   if (loading) return <Loading />
 
+  const isUnknownStatus = status.responseTime === -999
+
   const statusIcon = () => {
+    if (isUnknownStatus) return <HelpCircle className="text-gray-400" />
     switch (status.responseTime) {
       case -1:
         return <CircleX className="text-red-500" />
@@ -39,6 +54,7 @@ export default function StatusCard({ monitor }: Props) {
   }
 
   const statusText = () => {
+    if (isUnknownStatus) return 'Unknown'
     switch (status.responseTime) {
       case -1:
         return 'Degraded'
