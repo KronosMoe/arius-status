@@ -75,4 +75,4 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build --no-cache -t ${{ secrets.image_name }} -f Dockerfile .
+          docker build --no-cache -t ${{ secrets.IMAGE_NAME }} -f Dockerfile .
