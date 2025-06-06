@@ -1,6 +1,6 @@
 import { Route, Routes, useLocation } from 'react-router-dom'
-import Home from './pages/Home'
-import { AuthProvider } from './components/utils/providers/auth-provider'
+import Home from '@/pages/Home'
+import { AuthProvider } from '@/components/utils/providers/auth-provider'
 import { Toaster } from 'sonner'
 import {
   BASE_PATH,
@@ -13,21 +13,21 @@ import {
   STATUS_PAGE_EDIT_PATH,
   STATUS_PAGE_FULL_PATH,
   STATUS_PAGE_PATH,
-} from './constants/routes'
-import SignIn from './pages/Auth/SignIn'
-import SignUp from './pages/Auth/SignUp'
-import Protected from './components/utils/Protected'
-import Dashboard from './pages/Dashboard'
-import { TooltipProvider } from './components/ui/tooltip'
-import Setting from './pages/Setting'
-import MonitorInfo from './pages/Monitor/_id'
+} from '@/constants/routes'
+import SignIn from '@/pages/Auth/SignIn'
+import SignUp from '@/pages/Auth/SignUp'
+import Protected from '@/components/utils/Protected'
+import Dashboard from '@/pages/Dashboard'
+import { TooltipProvider } from '@/components/ui/tooltip'
+import Setting from '@/pages/Setting'
+import MonitorInfo from '@/pages/Monitor/_id'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
-import StatusPages from './pages/StatusPage'
-import StatusCreation from './pages/StatusPage/create'
-import StatusPage from './pages/StatusPage/_id'
-import StatusEditor from './pages/StatusPage/edit'
-import Navbar from './components/utils/Navbar'
+import StatusPages from '@/pages/StatusPage'
+import StatusCreation from '@/pages/StatusPage/create'
+import StatusPage from '@/pages/StatusPage/_id'
+import StatusEditor from '@/pages/StatusPage/edit'
+import Navbar from '@/components/utils/Navbar'
 
 function App() {
   const location = useLocation()
