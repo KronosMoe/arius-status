@@ -16,7 +16,7 @@ jobs:
 
     uses: KronosMoe/ci-template/.github/workflows/eslint.yml@main
     with:
-      custom-run: "pnpm run lint --filter frontend"
+      custom-run: "cd frontend && pnpm run lint"
 
   backend-eslint:
     permissions:
@@ -26,7 +26,7 @@ jobs:
 
     uses: KronosMoe/ci-template/.github/workflows/eslint.yml@main
     with:
-      custom-run: "pnpm run lint --filter backend"
+      custom-run: "cd backend && pnpm run lint"
 
   frontend-build:
     needs: frontend-eslint
@@ -37,7 +37,7 @@ jobs:
 
     uses: KronosMoe/ci-template/.github/workflows/build.yml@main
     with:
-      custom-run: "pnpm run build --filter frontend"
+      custom-run: "cd frontend && pnpm run build"
 
   backend-build:
     needs: backend-eslint
@@ -48,7 +48,7 @@ jobs:
 
     uses: KronosMoe/ci-template/.github/workflows/build.yml@main
     with:
-      custom-run: "pnpm run prisma:generate --filter backend && pnpm run build --filter frontend"
+      custom-run: "cd backend && pnpm run prisma:generate && pnpm run build"
 
   docker-build:
     name: Build Docker Image (Test)
