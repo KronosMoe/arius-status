@@ -1,4 +1,4 @@
-import Loading from '@/components/utils/Loading'
+import Loading from '@/components/util/Loading'
 import { OVERALL_STATUS_QUERY } from '@/gql/status'
 import { useQuery } from '@apollo/client'
 import { CircleCheck, CircleX } from 'lucide-react'

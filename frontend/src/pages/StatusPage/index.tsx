@@ -1,6 +1,6 @@
 import DeleteStatusPageDialog from '@/components/StatusPage/components/DeleteStatusPageDialog'
 import { Button } from '@/components/ui/button'
-import Loading from '@/components/utils/Loading'
+import Loading from '@/components/util/Loading'
 import { STATUS_PAGE_CREATION_PATH, STATUS_PAGE_EDIT_PATH, STATUS_PAGE_FULL_PATH } from '@/constants/routes'
 import { GET_STATUS_PAGES } from '@/gql/status-page'
 import type { IStatusPage } from '@/types/status-page'

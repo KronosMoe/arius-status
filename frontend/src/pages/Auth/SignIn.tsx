@@ -12,7 +12,7 @@ import { LOGIN_MUTATION } from '@/gql/auth'
 import { useEffect } from 'react'
 import { toast } from 'sonner'
 import { useAuth } from '@/hooks/useAuth'
-import SignInWithGithub from '@/components/utils/auth/SignInWithGithub'
+import SignInWithGithub from '@/components/util/auth/SignInWithGithub'
 import { Separator } from '@/components/ui/separator'
 
 const formSchema = z.object({

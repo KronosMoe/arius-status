@@ -1,7 +1,7 @@
 import type React from 'react'
 import { useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
-import Loading from '../utils/Loading'
+import Loading from '../util/Loading'
 import type { IMonitor } from '@/types/monitor'
 import { useMutation, useQuery } from '@apollo/client'
 import { MONITORS_QUERY } from '@/gql/monitors'

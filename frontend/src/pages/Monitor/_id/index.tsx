@@ -1,7 +1,7 @@
 import ActionDropdown from '@/components/Monitor/components/ActionDropdown'
 import PingChart from '@/components/Monitor/PingChart'
 import Status from '@/components/Monitor/Status'
-import Loading from '@/components/utils/Loading'
+import Loading from '@/components/util/Loading'
 import { FIND_MONITOR_BY_ID_QUERY } from '@/gql/monitors'
 import { IMonitor } from '@/types/monitor'
 import { useQuery } from '@apollo/client'

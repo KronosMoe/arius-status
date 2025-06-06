@@ -1,4 +1,4 @@
-import Loading from '@/components/utils/Loading'
+import Loading from '@/components/util/Loading'
 import { LATEST_STATUS_QUERY } from '@/gql/status'
 import { IMonitor } from '@/types/monitor'
 import { useQuery } from '@apollo/client'

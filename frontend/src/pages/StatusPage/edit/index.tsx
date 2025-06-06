@@ -1,5 +1,5 @@
 import StatusPageEditor from '@/components/StatusPage/StatusPageEditor'
-import Loading from '@/components/utils/Loading'
+import Loading from '@/components/util/Loading'
 import { GET_STATUS_BY_ID } from '@/gql/status-page'
 import { IStatusPageExtended } from '@/types/status-page'
 import { useQuery } from '@apollo/client'

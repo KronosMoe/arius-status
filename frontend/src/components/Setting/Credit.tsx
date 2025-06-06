@@ -1,4 +1,4 @@
-import Logo from '@/components/utils/Logo'
+import Logo from '@/components/util/Logo'
 
 export default function Credit() {
   return (

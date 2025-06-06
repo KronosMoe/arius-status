@@ -3,7 +3,7 @@ import { STATUS_QUERY } from '@/gql/status'
 import { IMonitor } from '@/types/monitor'
 import { IStatus } from '@/types/status'
 import { toast } from 'sonner'
-import Loading from '@/components/utils/Loading'
+import Loading from '@/components/util/Loading'
 import { useEffect, useState } from 'react'
 import PingLine from '../Dashboard/components/PingLine'
 

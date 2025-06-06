@@ -1,6 +1,6 @@
 import { Route, Routes, useLocation } from 'react-router-dom'
 import Home from '@/pages/Home'
-import { AuthProvider } from '@/components/utils/providers/auth-provider'
+import { AuthProvider } from '@/components/util/providers/auth-provider'
 import { Toaster } from 'sonner'
 import {
   BASE_PATH,
@@ -16,7 +16,7 @@ import {
 } from '@/constants/routes'
 import SignIn from '@/pages/Auth/SignIn'
 import SignUp from '@/pages/Auth/SignUp'
-import Protected from '@/components/utils/Protected'
+import Protected from '@/components/util/Protected'
 import Dashboard from '@/pages/Dashboard'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import Setting from '@/pages/Setting'
@@ -27,7 +27,7 @@ import StatusPages from '@/pages/StatusPage'
 import StatusCreation from '@/pages/StatusPage/create'
 import StatusPage from '@/pages/StatusPage/_id'
 import StatusEditor from '@/pages/StatusPage/edit'
-import Navbar from '@/components/utils/Navbar'
+import Navbar from '@/components/util/Navbar'
 
 function App() {
   const location = useLocation()
