@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { UsersService } from 'src/users/users.service'
 import { RegisterInput } from './dto/register.input'
-import * as bcrypt from 'bcrypt'
+import * as bcrypt from 'bcryptjs'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { generateToken } from 'src/libs/token'
 import { addMilliseconds } from 'date-fns'

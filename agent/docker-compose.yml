@@ -13,3 +13,6 @@ services:
     restart: unless-stopped
     networks:
       - app
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN

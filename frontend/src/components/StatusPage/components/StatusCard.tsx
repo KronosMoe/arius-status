@@ -30,8 +30,8 @@ export default function StatusCard({ monitor }: Props) {
   })
 
   useEffect(() => {
-    if (data?.getStatusByMonitorId) {
-      setStatus(data.getStatusByMonitorId as IStatus)
+    if (data?.getLatestStatusByMonitorId) {
+      setStatus(data.getLatestStatusByMonitorId as IStatus)
     }
   }, [data])
 

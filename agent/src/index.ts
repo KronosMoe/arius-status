@@ -9,7 +9,7 @@ import * as dotenv from "dotenv";
 
 dotenv.config();
 
-const SERVER_URL = "http://host.docker.internal:4001";
+const SERVER_URL = "http://host.docker.internal:8000";
 const AGENT_TOKEN = process.env.TOKEN;
 
 if (!AGENT_TOKEN) {

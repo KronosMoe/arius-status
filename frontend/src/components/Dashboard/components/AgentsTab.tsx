@@ -8,9 +8,10 @@ interface AgentsTabProps {
   agents: IAgent[]
   setAgents: React.Dispatch<React.SetStateAction<IAgent[]>>
   isLoading?: boolean
+  refetch: () => void
 }
 
-export function AgentsTab({ agents, setAgents, isLoading = false }: AgentsTabProps) {
+export function AgentsTab({ agents, setAgents, isLoading = false, refetch }: AgentsTabProps) {
   if (isLoading) {
     return <AgentsSkeletonList />
   }
@@ -31,7 +32,7 @@ export function AgentsTab({ agents, setAgents, isLoading = false }: AgentsTabPro
         <h2 className="text-lg font-medium">Your Agents</h2>
         <CreateAgentForm agents={agents} setAgents={setAgents} />
       </div>
-      <AgentsList agents={agents} />
+      <AgentsList agents={agents} refetch={refetch} />
     </div>
   )
 }

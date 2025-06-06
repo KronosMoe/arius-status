@@ -28,13 +28,26 @@ export class AgentsService {
     return agent
   }
 
+  async renameAgentById(agentId: string, name: string) {
+    const agent = await this.prisma.agents.update({
+      where: { id: agentId },
+      data: { name },
+    })
+    this.logger.log(
+      `Agent ${agent.name} with ID ${agent.id} renamed to ${name}`,
+    )
+    return agent
+  }
+
   async deleteAgentById(agentId: string) {
     const monitors = await this.prisma.monitors.findMany({
       where: { agentId },
     })
 
     if (monitors.length > 0) {
-      throw new BadRequestException('This agent has monitors assigned')
+      throw new BadRequestException(
+        'This agent has monitors assigned, delete them first',
+      )
     }
 
     const agent = await this.prisma.agents.delete({ where: { id: agentId } })

@@ -3,13 +3,27 @@ import { AppModule } from './app.module'
 import { DEFAULT_PORT } from './constants/env'
 import * as cookieParser from 'cookie-parser'
 import * as bodyParser from 'body-parser'
+import { NestExpressApplication } from '@nestjs/platform-express'
+import { join } from 'path'
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule)
+  const app = await NestFactory.create<NestExpressApplication>(AppModule)
 
+  app.useStaticAssets(join(__dirname, '..', 'public'))
   app.use(cookieParser())
   app.enableCors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    origin: [process.env.URL ?? 'http://localhost:3000'],
+    methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
+    allowedHeaders: [
+      'Accept',
+      'Authorization',
+      'Content-Type',
+      'X-Requested-With',
+      'apollo-require-preflight',
+      'Content-Type',
+      'Baggage',
+      'sentry-trace',
+    ],
     credentials: true,
   })
 

@@ -19,10 +19,25 @@ export class AgentsResolver {
 
   @Mutation(() => Agent)
   @UseGuards(GqlAuthGuard)
+  async renameAgentById(
+    @Args('id') agentId: string,
+    @Args('name') name: string,
+  ) {
+    return await this.agentsService.renameAgentById(agentId, name)
+  }
+
+  @Mutation(() => Agent)
+  @UseGuards(GqlAuthGuard)
   async createAgent(
     @Args('createAgentInput') createAgentInput: CreateAgentInput,
     @Me() user: User,
   ) {
     return await this.agentsService.createAgent(createAgentInput, user.id)
+  }
+
+  @Mutation(() => Agent)
+  @UseGuards(GqlAuthGuard)
+  async deleteAgentById(@Args('id') agentId: string) {
+    return await this.agentsService.deleteAgentById(agentId)
   }
 }

@@ -143,7 +143,9 @@ type Mutation {
   createNotificationSetting(createNotificationInput: CreateNotificationInput!): Notification!
   updateNotificationSetting(updateNotificationInput: UpdateNotificationInput!, id: String!): Notification!
   deleteNotificationSetting(id: String!): Notification!
+  renameAgentById(id: String!, name: String!): Agent!
   createAgent(createAgentInput: CreateAgentInput!): Agent!
+  deleteAgentById(id: String!): Agent!
   updateTheme(theme: String!): Setting!
   clearSessionsByUserId: [Session!]!
   clearSessionById(id: String!): Session!

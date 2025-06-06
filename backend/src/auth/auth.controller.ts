@@ -75,7 +75,7 @@ export class AuthController {
 
       return res.redirect(
         process.env.NODE_ENV === 'production'
-          ? '/dashboard'
+          ? process.env.URL + '/dashboard'
           : 'http://localhost:3000/dashboard',
       )
     } catch (error: any) {
@@ -85,7 +85,7 @@ export class AuthController {
       return res.redirect(
         `${
           process.env.NODE_ENV === 'production'
-            ? '/auth/sign-in'
+            ? process.env.URL + '/auth/sign-in'
             : `http://localhost:3000/auth/sign-in`
         }?error=${errorMessage}`,
       )

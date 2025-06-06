@@ -126,7 +126,7 @@ export default function Dashboard() {
             />
           </TabsContent>
           <TabsContent value="agents" className="mt-6">
-            <AgentsTab agents={sortedAgents} setAgents={setAgents} isLoading={agentLoading} />
+            <AgentsTab agents={sortedAgents} setAgents={setAgents} isLoading={agentLoading} refetch={refetchAgents} />
           </TabsContent>
         </DashboardTabs>
       </Tabs>

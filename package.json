@@ -1,8 +1,9 @@
 {
   "name": "arius-uptime",
   "version": "1.0.0",
-  "description": "",
+  "description": "Monorepo for Arius Uptime monitoring system",
   "keywords": [],
   "author": "Mirailisc",
-  "license": "ISC"
+  "license": "ISC",
+  "private": true
 }

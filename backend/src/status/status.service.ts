@@ -80,11 +80,14 @@ export class StatusService {
 
     const allStatuses = latestStatuses.filter(Boolean)
 
-    if (allStatuses.every((status) => status.responseTime !== -1)) {
+    const allUp = allStatuses.every((status) => status.responseTime !== -1)
+    const allDown = allStatuses.every((status) => status.responseTime === -1)
+
+    if (allUp) {
       return 'All Systems Operational'
     }
 
-    if (allStatuses.every((status) => status.responseTime === -1)) {
+    if (allDown) {
       return 'Degraded'
     }
 

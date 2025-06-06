@@ -1,4 +1,21 @@
 services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:4000"
+    environment:
+      - PORT=4000
+      - SESSION_SECRET
+      - DATABASE_URL
+      - URL=http://localhost:8000
+      - AMQP_URL=amqp://user:password@rabbitmq
+      - GITHUB_CLIENT_ID
+      - GITHUB_CLIENT_SECRET
+      - GITHUB_CALLBACK_URL
+    networks:
+      - app
   db:
     container_name: postgres
     image: postgres

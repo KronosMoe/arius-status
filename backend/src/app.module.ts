@@ -18,6 +18,8 @@ import { SettingsModule } from './settings/settings.module'
 import { PrismaService } from './prisma/prisma.service'
 import { GatewayModule } from './gateway/gateway.module'
 import { StatusPageModule } from './status-page/status-page.module'
+import { AppController } from './app.controller'
+import { AuthController } from './auth/auth.controller'
 
 @Module({
   imports: [
@@ -42,7 +44,7 @@ import { StatusPageModule } from './status-page/status-page.module'
     GatewayModule,
     StatusPageModule,
   ],
-  controllers: [],
+  controllers: [AuthController, AppController],
   providers: [NotificationService, PrismaService],
 })
 export class AppModule {}
