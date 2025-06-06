@@ -15,7 +15,7 @@ import { z } from 'zod'
 const formSchema = z
   .object({
     title: z.string().min(1, { message: 'Title is required' }),
-    method: z.enum(['Email', 'Slack', 'Discord'], {
+    method: z.enum(['Email', 'Discord'], {
       required_error: 'Method is required',
     }),
     message: z.string().min(1, { message: 'Message is required' }),
@@ -24,11 +24,11 @@ const formSchema = z
     content: z.string().optional(),
   })
   .superRefine((data, ctx) => {
-    if ((data.method === 'Slack' || data.method === 'Discord') && !data.webhookUrl) {
+    if ((data.method === 'Discord') && !data.webhookUrl) {
       ctx.addIssue({
         path: ['webhookUrl'],
         code: z.ZodIssueCode.custom,
-        message: 'Webhook URL is required for Slack or Discord',
+        message: 'Webhook URL is required for Discord',
       })
     }
 
@@ -137,7 +137,6 @@ export default function CreateNotificationForm({ refetch }: Props) {
                     </FormControl>
                     <SelectContent>
                       <SelectItem value="Email">Email</SelectItem>
-                      <SelectItem value="Slack">Slack</SelectItem>
                       <SelectItem value="Discord">Discord</SelectItem>
                     </SelectContent>
                   </Select>
@@ -145,7 +144,7 @@ export default function CreateNotificationForm({ refetch }: Props) {
                 </FormItem>
               )}
             />
-            {(method === 'Slack' || method === 'Discord') && (
+            {(method === 'Discord') && (
               <FormField
                 control={form.control}
                 name="webhookUrl"
@@ -189,7 +188,7 @@ export default function CreateNotificationForm({ refetch }: Props) {
               )}
             />
             <div className="flex justify-end gap-2">
-              {(method === 'Slack' || method === 'Discord') && webhookUrl && message && (
+              {(method === 'Discord') && webhookUrl && message && (
                 <Button type="button" variant="secondary" onClick={() => testWebhook(webhookUrl)}>
                   Test
                 </Button>

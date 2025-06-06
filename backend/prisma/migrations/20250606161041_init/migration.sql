@@ -108,6 +108,7 @@ CREATE TABLE "StatusPageMonitor" (
     "statusPageId" TEXT NOT NULL,
     "monitorId" TEXT NOT NULL,
     "type" TEXT NOT NULL,
+    "index" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "StatusPageMonitor_pkey" PRIMARY KEY ("id")
@@ -133,6 +134,9 @@ CREATE UNIQUE INDEX "Sessions_token_key" ON "Sessions"("token");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Agents_token_key" ON "Agents"("token");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "StatusPages_slug_key" ON "StatusPages"("slug");
 
 -- CreateIndex
 CREATE INDEX "StatusPages_userId_idx" ON "StatusPages"("userId");

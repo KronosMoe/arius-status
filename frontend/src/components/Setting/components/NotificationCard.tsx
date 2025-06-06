@@ -17,7 +17,6 @@ export default function NotificationCard({
   const getMethodIcon = (method: string) => {
     switch (method.toLowerCase()) {
       case 'discord':
-      case 'slack':
         return <Webhook className="h-4 w-4" />
       default:
         return <Bell className="h-4 w-4" />
@@ -28,8 +27,6 @@ export default function NotificationCard({
     switch (method.toLowerCase()) {
       case 'discord':
         return 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/20 dark:text-indigo-400'
-      case 'slack':
-        return 'bg-green-100 text-green-700 dark:bg-green-900/20 dark:text-green-400'
       case 'email':
         return 'bg-blue-100 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400'
       default:

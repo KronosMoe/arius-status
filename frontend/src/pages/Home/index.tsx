@@ -99,11 +99,6 @@ export default function Home() {
             icon={<FaRegEnvelope className="text-primary h-12 w-12" />}
           />
           <NotificationCard
-            title="Slack Notifications"
-            description="Get notifications in your team's Slack workspace."
-            icon={<FaSlack className="text-primary h-12 w-12" />}
-          />
-          <NotificationCard
             title="Discord Webhooks"
             description="Integrate directly into your Discord channels."
             icon={<FaDiscord className="text-primary h-12 w-12" />}
