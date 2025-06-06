@@ -5,7 +5,7 @@ on:
 
 jobs:
   deploy-agent:
-    name: Publish Docker image to registry
+    name: Publish Agent Docker image to registry
     runs-on: ubuntu-latest
 
     permissions:
@@ -33,13 +33,13 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: .
-          file: Dockerfile
+          context: ./agent
+          file: ./agent/Dockerfile
           push: ${{ github.ref == 'refs/heads/main' }}
           tags: mirailisc/${{ secrets.AGENT_IMAGE_NAME }}:${{ env.sha_short }},  mirailisc/${{ secrets.AGENT_IMAGE_NAME }}:latest
 
   deploy-app:
-    name: Publish Docker image to registry
+    name: Publish App Docker image to registry
     runs-on: ubuntu-latest
 
     permissions:
