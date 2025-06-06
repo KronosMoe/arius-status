@@ -16,7 +16,6 @@ import {
 } from './constants/routes'
 import SignIn from './pages/Auth/SignIn'
 import SignUp from './pages/Auth/SignUp'
-import Navbar from './components/utils/Navbar'
 import Protected from './components/utils/Protected'
 import Dashboard from './pages/Dashboard'
 import { TooltipProvider } from './components/ui/tooltip'
@@ -28,6 +27,7 @@ import StatusPages from './pages/StatusPage'
 import StatusCreation from './pages/StatusPage/create'
 import StatusPage from './pages/StatusPage/_id'
 import StatusEditor from './pages/StatusPage/edit'
+import Navbar from './components/utils/Navbar'
 
 function App() {
   const location = useLocation()
