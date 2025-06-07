@@ -46,7 +46,7 @@ export default function MonitorInfo() {
       case "UP":
         return {
           color: "bg-green-500",
-          label: "Online",
+          label: "Up",
           variant: "default" as const,
           icon: Wifi,
           ringColor: "ring-green-500/20",
@@ -54,7 +54,7 @@ export default function MonitorInfo() {
       case "DOWN":
         return {
           color: "bg-red-500",
-          label: "Offline",
+          label: "Down",
           variant: "destructive" as const,
           icon: WifiOff,
           ringColor: "ring-red-500/20",

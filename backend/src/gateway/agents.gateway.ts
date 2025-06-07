@@ -81,7 +81,7 @@ export class AgentsGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @ConnectedSocket() client: Socket,
   ) {
     this.logger.log(
-      `🩺 Health response from agent ${client.data.agentId}: ${data.status}`,
+      `Health response from agent ${client.data.agentId}: ${data.status}`,
     )
   }
 

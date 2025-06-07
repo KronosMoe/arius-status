@@ -35,7 +35,7 @@ socket.on("disconnect", (reason) => {
 });
 
 socket.on("health-check", () => {
-  logger.info("🩺 Health check received, responding...");
+  logger.info("Health check received, responding...");
   socket.emit("health-response", { status: "healthy" });
 });
 
