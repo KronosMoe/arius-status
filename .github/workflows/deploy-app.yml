@@ -36,7 +36,7 @@ jobs:
       - name: Shorter SHA
         shell: bash
         run: |
-          echo "sha_short=$(git rev-parse --short "${{ github.sha }}")" >> "$GITHUB_ENV"
+          echo "sha_short=sha_$(git rev-parse --short "${{ github.sha }}")" >> "$GITHUB_ENV"
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
@@ -68,7 +68,7 @@ jobs:
       - name: Shorter SHA
         shell: bash
         run: |
-          echo "sha_short=$(git rev-parse --short "${{ github.sha }}")" >> "$GITHUB_ENV"
+          echo "sha_short=sha_$(git rev-parse --short "${{ github.sha }}")" >> "$GITHUB_ENV"
 
       - name: Git config
         run: |
