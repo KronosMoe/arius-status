@@ -1,20 +1,64 @@
-import Logo from '@/components/util/Logo'
+import { Heart, Info } from "lucide-react"
+import Logo from "@/components/util/Logo"
+import BuyMe from "../util/BuyMe"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 
 export default function Credit() {
+  const version = import.meta.env.VITE_APP_VERSION || "In Development"
+
   return (
-    <div className="my-4">
-      <h2 className="my-4 text-xl font-bold">About</h2>
-      <div className="flex flex-col items-center justify-center">
-        <Logo size={128} />
-        <h3 className="mt-4 text-2xl font-bold">Arius Statuspage</h3>
-        <p className="text-sm text-zinc-500">Version: {import.meta.env.VITE_APP_VERSION || 'In Development'}</p>
-        <a
-          href="https://github.com/KronosMoe/arius-status"
-          className="mt-2 text-xs text-zinc-500 underline dark:text-zinc-400"
-        >
-          Check Update On GitHub
-        </a>
+    <div className="my-6 space-y-6">
+      <div className="flex items-center gap-3">
+        <Info className="h-6 w-6 text-primary" />
+        <h2 className="text-2xl font-bold tracking-tight">About</h2>
       </div>
+
+      <Card className="overflow-hidden">
+        <CardHeader className="text-center pb-4">
+          <div className="flex justify-center mb-4">
+            <div className="relative">
+              <Logo size={96} />
+              <div className="absolute -bottom-2 -right-2 bg-primary/10 rounded-full p-2">
+                <Heart className="h-4 w-4 text-primary fill-current" />
+              </div>
+            </div>
+          </div>
+          <CardTitle className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+            Arius Statuspage
+          </CardTitle>
+        </CardHeader>
+
+        <CardContent className="space-y-6">
+          <div className="flex justify-center">
+            <Badge variant="secondary" className="text-sm font-medium">
+              Version: {version}
+            </Badge>
+          </div>
+
+          <div className="flex justify-center">
+            <Button variant="outline" size="sm" asChild>
+              <a
+                href="https://github.com/KronosMoe/arius-status"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2"
+              >
+                Check Updates on GitHub
+              </a>
+            </Button>
+          </div>
+
+          <div className="border-t pt-6">
+            <div className="text-center mb-4">
+              <h3 className="text-lg font-semibold mb-2">Support the Project</h3>
+              <p className="text-sm text-muted-foreground">Help keep this project alive and maintained</p>
+            </div>
+            <BuyMe />
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }

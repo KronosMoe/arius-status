@@ -12,6 +12,9 @@ RUN corepack enable && corepack prepare pnpm@10.0.0 --activate
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY frontend ./frontend
 
+ARG VITE_APP_VERSION
+ENV VITE_APP_VERSION=$VITE_APP_VERSION
+
 RUN pnpm install --frozen-lockfile --filter frontend --workspace-root
 RUN pnpm --filter frontend run build
 

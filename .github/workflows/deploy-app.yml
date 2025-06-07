@@ -45,6 +45,8 @@ jobs:
           file: Dockerfile
           push: ${{ github.ref == 'refs/heads/main' }}
           tags: ${{secrets.DOCKER_REGISTRY}}/${{ secrets.IMAGE_NAME }}:${{ env.sha_short }},  ${{secrets.DOCKER_REGISTRY}}/${{ secrets.IMAGE_NAME }}:latest
+          build-args: |
+            VITE_APP_VERSION=${{ env.sha_short }}
 
   update-manifest:
     name: Update Kubernetes manifest

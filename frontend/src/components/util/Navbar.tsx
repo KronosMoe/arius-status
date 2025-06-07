@@ -1,16 +1,11 @@
 import { useAuth } from '@/hooks/useAuth'
 import { Button } from '../ui/button'
 import { Link } from 'react-router-dom'
-import { DASHBOARD_PATH, SETTING_PATH, SIGN_IN_PATH, STATUS_PAGE_PATH } from '@/constants/routes'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '../ui/dropdown-menu'
-import { ChevronDown, LayoutDashboard, LayoutPanelTop, LogIn, LogOut, Settings } from 'lucide-react'
+import { DASHBOARD_PATH, SIGN_IN_PATH } from '@/constants/routes'
+import { LogIn } from 'lucide-react'
 import Logo from './Logo'
+import NavbarDropdown from './NavbarDropdown'
+import SearchBar from './SearchBar'
 
 export default function Navbar() {
   const { auth, isAuthenticated, logout } = useAuth()
@@ -23,40 +18,12 @@ export default function Navbar() {
         </Link>
         <div className="flex items-center gap-2">
           {isAuthenticated && auth ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center gap-1">
-                  <img src={auth.image as string} alt="avatar" className="mr-1 h-6 w-6 rounded-full" />
-                  {auth.username} <ChevronDown className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <Link to={DASHBOARD_PATH}>
-                  <DropdownMenuItem>
-                    <LayoutDashboard />
-                    Dashboard
-                  </DropdownMenuItem>
-                </Link>
-                <Link to={STATUS_PAGE_PATH}>
-                  <DropdownMenuItem>
-                    <LayoutPanelTop />
-                    Status page
-                  </DropdownMenuItem>
-                </Link>
-                <DropdownMenuSeparator />
-                <Link to={SETTING_PATH}>
-                  <DropdownMenuItem>
-                    <Settings />
-                    Settings
-                  </DropdownMenuItem>
-                </Link>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={logout}>
-                  <LogOut />
-                  Sign Out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <>
+              <div className="hidden md:block">
+                <SearchBar logout={logout} />
+              </div>
+              <NavbarDropdown auth={auth} logout={logout} />
+            </>
           ) : (
             <Link to={SIGN_IN_PATH}>
               <Button className="flex items-center gap-1">

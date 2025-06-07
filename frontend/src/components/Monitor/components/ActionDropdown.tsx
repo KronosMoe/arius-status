@@ -4,7 +4,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { ChevronDown, Pause, Pencil, Play, Trash } from 'lucide-react'
@@ -91,11 +90,9 @@ export default function ActionDropdown({ monitor, refetchMonitor }: Props) {
               <Pause /> Pause
             </DropdownMenuItem>
           )}
-          <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => setOpenEdit(true)}>
             <Pencil /> Edit
           </DropdownMenuItem>
-          <DropdownMenuSeparator />
           <DropdownMenuItem className="text-red-500" onClick={() => setOpenDeleteDialog(true)}>
             <Trash /> Delete
           </DropdownMenuItem>

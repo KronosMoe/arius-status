@@ -613,7 +613,7 @@ export default function StatusPageCreation() {
 
                     {/* Footer */}
                     {footerText && (
-                      <footer className="mt-16 border-t pt-8">
+                      <footer className="mt-16 border-t py-8">
                         <div className="text-center">
                           <p className="text-muted-foreground text-sm">{footerText}</p>
                           <p className="text-muted-foreground mt-2 text-xs">Powered by Arius Statuspage</p>
