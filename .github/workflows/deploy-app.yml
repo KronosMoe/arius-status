@@ -10,33 +10,11 @@ jobs:
 
     permissions:
       contents: read
-      deployments: write
+      security-events: write
       actions: read
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Create GitHub Deployment
-        id: create_deployment
-        uses: octokit/request-action@v2.x
-        with:
-          route: POST /repos/${{ github.repository }}/deployments
-          mediaType: '{"previews": ["ant-man"]}'
-          ref: ${{ github.sha }}
-          required_contexts: '[]'
-          environment: production
-          auto_merge: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Set Deployment In Progress
-        uses: octokit/request-action@v2.x
-        with:
-          route: POST /repos/${{ github.repository }}/deployments/${{ steps.create_deployment.outputs.id }}/statuses
-          mediaType: '{"previews": ["ant-man"]}'
-          state: in_progress
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Tailscale
         uses: tailscale/github-action@v2
@@ -51,7 +29,7 @@ jobs:
       - name: Login to Private registry
         uses: docker/login-action@v3
         with:
-          registry: ${{secrets.DOCKER_REGISTRY }}
+          registry: ${{ secrets.DOCKER_REGISTRY }}
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
@@ -66,29 +44,9 @@ jobs:
           context: .
           file: Dockerfile
           push: ${{ github.ref == 'refs/heads/main' }}
-          tags: ${{secrets.DOCKER_REGISTRY}}/${{ secrets.IMAGE_NAME }}:${{ env.sha_short }},${{secrets.DOCKER_REGISTRY}}/${{ secrets.IMAGE_NAME }}:latest
+          tags: ${{ secrets.DOCKER_REGISTRY }}/${{ secrets.IMAGE_NAME }}:${{ env.sha_short }},${{ secrets.DOCKER_REGISTRY }}/${{ secrets.IMAGE_NAME }}:latest
           build-args: |
             VITE_APP_VERSION=${{ env.sha_short }}
-
-      - name: Set Deployment Status to Success
-        if: success()
-        uses: octokit/request-action@v2.x
-        with:
-          route: POST /repos/${{ github.repository }}/deployments/${{ steps.create_deployment.outputs.id }}/statuses
-          mediaType: '{"previews": ["ant-man"]}'
-          state: success
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Set Deployment Status to Failure
-        if: failure()
-        uses: octokit/request-action@v2.x
-        with:
-          route: POST /repos/${{ github.repository }}/deployments/${{ steps.create_deployment.outputs.id }}/statuses
-          mediaType: '{"previews": ["ant-man"]}'
-          state: failure
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   update-manifest:
     name: Update Kubernetes manifest
@@ -96,8 +54,9 @@ jobs:
     needs: [deploy-app]
 
     permissions:
-      contents: read
+      contents: write
       actions: read
+      security-events: write
 
     steps:
       - uses: actions/checkout@v4
@@ -111,11 +70,13 @@ jobs:
         run: |
           echo "sha_short=sha_$(git rev-parse --short "${{ github.sha }}")" >> "$GITHUB_ENV"
 
-      - name: Git config and update
+      - name: Git config
         run: |
           git config --global user.name "${{ github.actor }}"
           git config --global user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
           sed -i "s#appVersion.*#appVersion: ${{ env.sha_short }}#g" ${{ secrets.IMAGE_NAME }}/Chart.yaml
           git add -A
           git commit -am "update ${{ secrets.IMAGE_NAME }} image to version ${{ env.sha_short }}"
-          git push origin main
+
+      - name: Push updates
+        run: git push origin main
