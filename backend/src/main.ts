@@ -5,7 +5,7 @@ import * as cookieParser from 'cookie-parser'
 import * as bodyParser from 'body-parser'
 import { NestExpressApplication } from '@nestjs/platform-express'
 import { join } from 'path'
-import './libs/tracer'
+import { startTracing } from './libs/tracer'
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule)
@@ -23,7 +23,6 @@ async function bootstrap() {
       'apollo-require-preflight',
       'Content-Type',
       'Baggage',
-      'sentry-trace',
     ],
     credentials: true,
   })
@@ -31,6 +30,7 @@ async function bootstrap() {
   app.use(bodyParser.json({ limit: '50mb' }))
   app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
 
+  await startTracing()
   await app.listen(process.env.PORT ?? DEFAULT_PORT)
 }
 bootstrap()

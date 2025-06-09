@@ -10,44 +10,32 @@ import {
 } from '@opentelemetry/semantic-conventions'
 import { GraphQLInstrumentation } from '@opentelemetry/instrumentation-graphql'
 
-// Configure the SDK to export telemetry data to the console
-// Enable all auto-instrumentations from the meta package
-const exporterOptions = {
-  url: 'http://otel-collector-arisu-opentelemetry-collector.monitoring.svc.cluster.local:4317/v1/traces',
-}
+export async function startTracing() {
+  const exporterOptions = {
+    url: 'http://otel-collector-arisu-opentelemetry-collector.monitoring.svc.cluster.local:4317/v1/traces',
+  }
 
-const traceExporter = new OTLPTraceExporter(exporterOptions)
-const sdk = new opentelemetry.NodeSDK({
-  traceExporter,
-  instrumentations: [
-    getNodeAutoInstrumentations(),
-    new GraphQLInstrumentation({
-      // optional params
-      // allowValues: true,
-      // depth: 2,
-      // mergeItems: true,
-      // ignoreTrivialResolveSpans: true,
-      // ignoreResolveSpans: true,
+  const traceExporter = new OTLPTraceExporter(exporterOptions)
+  const sdk = new opentelemetry.NodeSDK({
+    traceExporter,
+    instrumentations: [
+      getNodeAutoInstrumentations(),
+      new GraphQLInstrumentation(),
+    ],
+    resource: resourceFromAttributes({
+      [ATTR_SERVICE_NAME]: 'arius-status-page',
+      [ATTR_SERVICE_VERSION]: process.env.VITE_APP_VERSION || '1.0.0',
     }),
-  ],
-  resource: resourceFromAttributes({
-    [ATTR_SERVICE_NAME]: 'arius-status-page',
-    [ATTR_SERVICE_VERSION]: process.env.VITE_APP_VERSION || '1.0.0',
-  }),
-})
+  })
 
-// initialize the SDK and register with the OpenTelemetry API
-// this enables the API to record telemetry
-sdk.start()
-console.log('Tracing initialized with ' + { url: exporterOptions })
+  sdk.start()
+  console.log('Tracing initialized')
 
-// gracefully shut down the SDK on process exit
-process.on('SIGTERM', () => {
-  sdk
-    .shutdown()
-    .then(() => console.log('Tracing terminated'))
-    .catch((error) => console.log('Error terminating tracing', error))
-    .finally(() => process.exit(0))
-})
-
-export default sdk
+  process.on('SIGTERM', () => {
+    sdk
+      .shutdown()
+      .then(() => console.log('Tracing terminated'))
+      .catch((error) => console.log('Error terminating tracing', error))
+      .finally(() => process.exit(0))
+  })
+}
