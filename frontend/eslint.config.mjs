@@ -9,7 +9,7 @@ import hooksPlugin from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 
 export default tseslint.config(
-  { files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'] },
+  { files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'], ignores: ['src/lib/i18n.mjs', 'node_modules'] },
   { languageOptions: { globals: globals.browser, ecmaVersion: 'latest' } },
   js.configs.recommended,
   pluginJs.configs.recommended,
