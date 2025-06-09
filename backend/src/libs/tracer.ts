@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 'use strict'
 
 import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node'
@@ -12,7 +13,7 @@ import { GraphQLInstrumentation } from '@opentelemetry/instrumentation-graphql'
 
 export async function startTracing() {
   const exporterOptions = {
-    url: 'http://otel-collector-arisu-opentelemetry-collector.monitoring.svc.cluster.local:4317/v1/traces',
+    url: 'https://otel-collector-arisu-opentelemetry-collector.monitoring:4317/v1/traces',
   }
 
   const traceExporter = new OTLPTraceExporter(exporterOptions)
@@ -29,7 +30,7 @@ export async function startTracing() {
   })
 
   sdk.start()
-  console.log('Tracing initialized')
+  console.log('Tracing initialized with endpoint to ' + exporterOptions.url)
 
   process.on('SIGTERM', () => {
     sdk
