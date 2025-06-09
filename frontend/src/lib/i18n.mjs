@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { watch, readFileSync, writeFileSync, readdirSync } from 'fs'
 import { load } from 'js-yaml'
 import { resolve, join, extname } from 'path'
