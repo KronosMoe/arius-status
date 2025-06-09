@@ -13,7 +13,7 @@ import { GraphQLInstrumentation } from '@opentelemetry/instrumentation-graphql'
 
 export async function startTracing() {
   const exporterOptions = {
-    url: 'https://otel-collector-arisu-opentelemetry-collector.monitoring:4317/v1/traces',
+    url: process.env.OTEL_EXPORTER_OTLP_ENDPOINT,
   }
 
   const traceExporter = new OTLPTraceExporter(exporterOptions)
