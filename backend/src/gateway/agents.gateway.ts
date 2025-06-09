@@ -112,7 +112,7 @@ export class AgentsGateway implements OnGatewayConnection, OnGatewayDisconnect {
       latestStatus.responseTime !== -1 &&
       data.responseTime === -1
     ) {
-      await this.notificationService.sendNotification(monitor, true)
+      await this.notificationService.sendMonitorNotification(monitor, true)
       this.logger.log(`Monitor ${monitor.id} is down, notifying...`)
     }
 
@@ -121,7 +121,7 @@ export class AgentsGateway implements OnGatewayConnection, OnGatewayDisconnect {
       latestStatus.responseTime === -1 &&
       data.responseTime !== -1
     ) {
-      await this.notificationService.sendNotification(monitor, false)
+      await this.notificationService.sendMonitorNotification(monitor, false)
       this.logger.log(`Monitor ${monitor.id} is up, notifying...`)
     }
 

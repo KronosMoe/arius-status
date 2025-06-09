@@ -44,14 +44,17 @@ export class AuthService {
         userId: user.id,
         platform: loginInput.platform,
         deviceIP: ip,
-        expires: {
-          gt: new Date(),
-        },
       },
     })
 
     if (existingSession) {
-      return { token: existingSession.token, user }
+      if (existingSession.expires > new Date()) {
+        return { token: existingSession.token, user }
+      } else {
+        await this.prisma.sessions.delete({
+          where: { token: existingSession.token },
+        })
+      }
     }
 
     const token = generateToken()
@@ -76,7 +79,7 @@ export class AuthService {
       include: { user: true },
     })
 
-    if (!session || session.expires < new Date()) {
+    if (session.expires.getTime() < Date.now()) {
       return null
     }
 

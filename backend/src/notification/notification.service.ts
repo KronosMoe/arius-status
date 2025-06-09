@@ -4,8 +4,12 @@ import { firstValueFrom } from 'rxjs'
 import { CreateNotificationInput } from './dto/create-notification.input'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { Monitor } from 'src/monitors/entities/monitor.entity'
-import { getDiscordEmbed } from 'src/libs/notification'
+import {
+  getDiscordAgentEmbed,
+  getDiscordMonitorEmbed,
+} from 'src/libs/notification'
 import { UpdateNotificationInput } from './dto/update-notification.input'
+import { Agent } from 'src/agents/entities/agent.entity'
 
 @Injectable()
 export class NotificationService {
@@ -57,7 +61,7 @@ export class NotificationService {
     })
   }
 
-  async sendNotification(
+  async sendMonitorNotification(
     monitor: Monitor & { userId: string },
     isDown = false,
   ) {
@@ -71,7 +75,26 @@ export class NotificationService {
 
         const payload = {
           content: setting.message || undefined,
-          embeds: getDiscordEmbed(monitor, isDown),
+          embeds: getDiscordMonitorEmbed(monitor, isDown),
+        }
+
+        await this.sendDiscordNotification(setting.webhookUrl, payload)
+      }
+    }
+  }
+
+  async sendAgentNotification(agent: Agent, userId: string, isDown = false) {
+    const settings = await this.getNotificationSettingsByUserId(userId)
+
+    for (const setting of settings) {
+      if (setting.method === 'Discord') {
+        if (!setting.webhookUrl) {
+          throw new BadRequestException('Webhook URL is required for Discord')
+        }
+
+        const payload = {
+          content: setting.message || undefined,
+          embeds: getDiscordAgentEmbed(agent, isDown),
         }
 
         await this.sendDiscordNotification(setting.webhookUrl, payload)

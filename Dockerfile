@@ -16,6 +16,7 @@ ARG VITE_APP_VERSION
 ENV VITE_APP_VERSION=$VITE_APP_VERSION
 
 RUN pnpm install --frozen-lockfile --filter frontend --workspace-root
+RUN pnpm --filter frontend run i18n:build
 RUN pnpm --filter frontend run build
 
 # --- Backend Build ---

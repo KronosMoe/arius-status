@@ -5,12 +5,7 @@ import https from "https";
 import { URL } from "url";
 import net from "net";
 import { logger } from "./lib/logger";
-import * as dotenv from "dotenv";
-
-dotenv.config();
-
-const SERVER_URL = "https://status.arius.cloud";
-const AGENT_TOKEN = process.env.TOKEN;
+import { AGENT_TOKEN, SERVER_URL } from "./lib/constant";
 
 if (!AGENT_TOKEN) {
   logger.error("AGENT_TOKEN is not set");
@@ -119,7 +114,7 @@ socket.on("run-command", (monitor) => {
       const req = client.get(url, { signal: controller.signal }, (res) => {
         clearTimeout(timeout);
         const responseTime = Date.now() - startTime;
-        res.resume(); // discard body
+        res.resume();
         sendResult(true, responseTime, {
           address: monitor.address,
           statusCode: res.statusCode,

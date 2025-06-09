@@ -60,10 +60,6 @@ export class MonitorGateway implements OnModuleInit {
       )
 
       const interval = setInterval(() => {
-        this.logger.log(
-          `Queueing monitor ${monitor.id} for agent ${monitor.agentId}`,
-        )
-
         this.amqpConnection.publish('monitor.exchange', 'monitor.route', {
           monitorId: monitor.id,
           agentId: monitor.agentId,
