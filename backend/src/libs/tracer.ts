@@ -1,15 +1,18 @@
-/* eslint-disable no-console */
 'use strict'
 
-import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node'
+import { Logger } from '@nestjs/common'
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http'
+import { ExpressInstrumentation } from '@opentelemetry/instrumentation-express'
+import { GraphQLInstrumentation } from '@opentelemetry/instrumentation-graphql'
+import { HttpInstrumentation } from '@opentelemetry/instrumentation-http'
 import { resourceFromAttributes } from '@opentelemetry/resources'
 import * as opentelemetry from '@opentelemetry/sdk-node'
 import {
   ATTR_SERVICE_NAME,
   ATTR_SERVICE_VERSION,
 } from '@opentelemetry/semantic-conventions'
-import { GraphQLInstrumentation } from '@opentelemetry/instrumentation-graphql'
+
+const logger = new Logger('OpenTelemetry')
 
 export async function startTracing() {
   const exporterOptions = {
@@ -20,7 +23,8 @@ export async function startTracing() {
   const sdk = new opentelemetry.NodeSDK({
     traceExporter,
     instrumentations: [
-      getNodeAutoInstrumentations(),
+      new HttpInstrumentation(),
+      new ExpressInstrumentation(),
       new GraphQLInstrumentation(),
     ],
     resource: resourceFromAttributes({
@@ -30,13 +34,13 @@ export async function startTracing() {
   })
 
   sdk.start()
-  console.log('Tracing initialized with endpoint to ' + exporterOptions.url)
+  logger.log(`Tracing initialized with endpoint to ${exporterOptions.url}`)
 
   process.on('SIGTERM', () => {
     sdk
       .shutdown()
-      .then(() => console.log('Tracing terminated'))
-      .catch((error) => console.log('Error terminating tracing', error))
+      .then(() => logger.log('Tracing terminated'))
+      .catch((error) => logger.error('Error terminating tracing', error))
       .finally(() => process.exit(0))
   })
 }
