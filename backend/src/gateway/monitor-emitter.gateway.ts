@@ -50,16 +50,18 @@ export class MonitorWebSocketEmitter {
 
     const isLatestStatusUp = latestStatus && latestStatus.responseTime !== -1
 
-    if (!agent.isOnline && isLatestStatusUp) {
-      this.logger.warn(
-        `Agent ${agentId} is offline and latest status is UP. Sending notification and updating monitor status.`,
-      )
+    if (!agent.isOnline) {
+      if (isLatestStatusUp) {
+        this.logger.warn(
+          `Agent ${agentId} is offline and latest status is UP. Sending notification.`,
+        )
 
-      await this.notificationService.sendAgentNotification(
-        agent,
-        agent.userId,
-        true,
-      )
+        await this.notificationService.sendAgentNotification(
+          agent,
+          agent.userId,
+          true,
+        )
+      }
 
       await this.prisma.statusResults.create({
         data: {
@@ -75,8 +77,6 @@ export class MonitorWebSocketEmitter {
           data: { status: 'DOWN' },
         })
       }
-
-      return
     }
 
     const socketServer = this.agentsGateway.server
