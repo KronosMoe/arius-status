@@ -1,8 +1,9 @@
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { Moon, Sun } from 'lucide-react'
 import { ISetting } from '@/types/setting'
 import { UPDATE_THEME_MUTATION } from '@/gql/settings'
 import { useMutation } from '@apollo/client'
+import { useAuth } from '@/hooks/useAuth'
 
 type Props = {
   settings: ISetting
@@ -10,25 +11,35 @@ type Props = {
 }
 
 export default function ThemeSwitcher({ settings, setSettings }: Props) {
+  const { isAuthenticated } = useAuth()
   const [updateTheme] = useMutation(UPDATE_THEME_MUTATION)
+
+  const setTheme = useCallback(
+    (newTheme: 'light' | 'dark') => {
+      document.documentElement.classList.toggle('dark', newTheme === 'dark')
+      localStorage.setItem('theme', newTheme)
+      setSettings((prev) => ({ ...prev, theme: newTheme }))
+    },
+    [setSettings],
+  )
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme')
 
-    if (savedTheme === 'dark') {
-      document.documentElement.classList.add('dark')
-      setSettings((prev) => ({ ...prev, theme: 'dark' }))
+    if (savedTheme) {
+      setTheme(savedTheme as 'light' | 'dark')
+    } else if (isAuthenticated) {
+      setTheme(settings.theme)
     } else {
-      document.documentElement.classList.remove('dark')
-      setSettings((prev) => ({ ...prev, theme: 'light' }))
+      setTheme('light')
     }
-  }, [setSettings])
+  }, [settings.theme, isAuthenticated, setTheme])
 
   const changeTheme = async (newTheme: 'light' | 'dark') => {
-    setSettings((prev) => ({ ...prev, theme: newTheme }))
-    await updateTheme({ variables: { theme: newTheme } })
-    localStorage.setItem('theme', newTheme)
-    document.documentElement.classList.toggle('dark', newTheme === 'dark')
+    setTheme(newTheme)
+    if (isAuthenticated) {
+      await updateTheme({ variables: { theme: newTheme } })
+    }
   }
 
   const isDark = settings.theme === 'dark'
