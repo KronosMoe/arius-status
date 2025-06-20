@@ -5,15 +5,11 @@ import Loading from '../util/Loading'
 import type { IMonitor } from '@/types/monitor'
 import { useMutation, useQuery } from '@apollo/client'
 import { MONITORS_QUERY } from '@/gql/monitors'
-import StatusCard from './components/StatusCard'
-import StatusLine from './components/StatusLine'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Input } from '../ui/input'
 import { Label } from '../ui/label'
-import OverallStatus from './components/OverallStatus'
 import { Switch } from '../ui/switch'
 import { Separator } from '../ui/separator'
-import DraggableMonitor from './components/DraggableMonitor'
 import { Button } from '../ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -21,7 +17,6 @@ import {
   ArrowLeft,
   ChevronDown,
   ChevronUp,
-  Plus,
   Trash2,
   Eye,
   Settings,
@@ -40,6 +35,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Alert, AlertDescription } from '../ui/alert'
 import { UPDATE_STATUS_PAGE_MUTATION } from '@/gql/status-page'
 import { IStatusPageExtended } from '@/types/status-page'
+import Preview from './components/Preview'
 
 const formSchema = z.object({
   name: z.string().min(1, 'Title is required').max(100, 'Title must be less than 100 characters'),
@@ -433,13 +429,13 @@ export default function StatusPageEditor({ statusPage, refetch }: Props) {
                         {/* Status Cards */}
                         <div className="space-y-3">
                           <div className="flex items-center justify-between">
-                            <Label className="text-sm font-medium">Status Cards</Label>
+                            <Label className="text-sm font-medium">Status Overviews</Label>
                             <Badge variant="outline">{statusCards.length}</Badge>
                           </div>
 
                           <Select onValueChange={handleSelectStatusCardMonitor}>
                             <SelectTrigger>
-                              <SelectValue placeholder="Add monitor as card" />
+                              <SelectValue placeholder="Add monitor as overview" />
                             </SelectTrigger>
                             <SelectContent>
                               {availableMonitorsForStatusCard.map((monitor) => (
@@ -478,13 +474,13 @@ export default function StatusPageEditor({ statusPage, refetch }: Props) {
                         {/* Status Lines */}
                         <div className="space-y-3">
                           <div className="flex items-center justify-between">
-                            <Label className="text-sm font-medium">Status Lines</Label>
+                            <Label className="text-sm font-medium">Status Timelines</Label>
                             <Badge variant="outline">{statusLines.length}</Badge>
                           </div>
 
                           <Select onValueChange={handleSelectStatusLineMonitor}>
                             <SelectTrigger>
-                              <SelectValue placeholder="Add monitor as line" />
+                              <SelectValue placeholder="Add monitor as timeline" />
                             </SelectTrigger>
                             <SelectContent>
                               {availableMonitorsForStatusLine.map((monitor) => (
@@ -556,90 +552,18 @@ export default function StatusPageEditor({ statusPage, refetch }: Props) {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="bg-background rounded-lg border p-6">
-                  {/* Status Page Preview */}
-                  <div className="space-y-8">
-                    {/* Header */}
-                    <div className="flex items-center gap-4">
-                      {logo && (
-                        <img
-                          src={logo || '/placeholder.svg'}
-                          alt="Logo"
-                          className="h-16 w-16 rounded-lg object-cover"
-                        />
-                      )}
-                      <div>
-                        <h1 className="text-3xl font-bold">{name || 'Status Page Title'}</h1>
-                      </div>
-                    </div>
-
-                    {/* Overall Status */}
-                    {showOverallStatus && selectedIds.length > 0 && <OverallStatus monitorIds={selectedIds} />}
-
-                    {/* Status Cards */}
-                    {statusCards.length > 0 && (
-                      <div className="space-y-4">
-                        <h2 className="text-xl font-semibold">Service Status</h2>
-                        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                          {statusCards.map((monitor, index) => (
-                            <DraggableMonitor
-                              key={monitor.id}
-                              index={index}
-                              monitor={monitor}
-                              moveMonitor={moveCard}
-                              type="card"
-                            >
-                              <StatusCard monitor={monitor} />
-                            </DraggableMonitor>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Status Lines */}
-                    {statusLines.length > 0 && (
-                      <div className="space-y-4">
-                        <h2 className="text-xl font-semibold">Response Time</h2>
-                        <div className="space-y-4">
-                          {statusLines.map((monitor, index) => (
-                            <DraggableMonitor
-                              key={monitor.id}
-                              index={index}
-                              monitor={monitor}
-                              moveMonitor={moveLine}
-                              type="line"
-                            >
-                              <StatusLine monitor={monitor} />
-                            </DraggableMonitor>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Empty State */}
-                    {statusCards.length === 0 && statusLines.length === 0 && (
-                      <div className="py-12 text-center">
-                        <Monitor className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
-                        <h3 className="mb-2 text-lg font-medium">No monitors added</h3>
-                        <p className="text-muted-foreground mb-4">Add monitors to your status page to get started</p>
-                        <Button onClick={() => setActiveTab('editor')}>
-                          <Plus className="mr-2 h-4 w-4" />
-                          Add Monitors
-                        </Button>
-                      </div>
-                    )}
-
-                    {/* Footer */}
-                    {footerText && (
-                      <footer className="mt-16 border-t py-8">
-                        <div className="text-center">
-                          <p className="text-muted-foreground text-sm">{footerText}</p>
-                          <p className="text-muted-foreground mt-2 text-xs">Powered by Arius Statuspage</p>
-                        </div>
-                      </footer>
-                    )}
-                  </div>
-                </div>
+                <Preview
+                  moveCard={moveCard}
+                  moveLine={moveLine}
+                  name={name}
+                  logo={logo}
+                  statusCards={statusCards}
+                  statusLines={statusLines}
+                  showOverallStatus={showOverallStatus}
+                  selectedIds={selectedIds}
+                  footerText={footerText}
+                  setActiveTab={setActiveTab}
+                />
               </CardContent>
             </Card>
           </TabsContent>

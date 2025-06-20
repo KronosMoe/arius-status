@@ -33,7 +33,7 @@ export default function StatusPage() {
 
   if (loading || !statusPage) return <Loading />
 
-  const selectedIds = statusPage.selectedMonitors.map((monitor) => monitor.id)
+  const selectedIds = statusPage.selectedMonitors.map((monitor) => monitor.monitorId)
 
   return (
     <div className="mt-10 flex min-h-screen flex-col">
@@ -60,7 +60,7 @@ export default function StatusPage() {
           )}
           {statusPage.statusCards.length > 0 && (
             <div className="space-y-4">
-              <h2 className="text-xl font-semibold">Service Status</h2>
+              <h2 className="text-xl font-semibold">Status Overview</h2>
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 {statusPage.statusCards.map((monitor, index) => (
                   <StatusCard monitor={monitor} key={index} />
@@ -70,7 +70,7 @@ export default function StatusPage() {
           )}
           {statusPage.statusLines.length > 0 && (
             <div className="space-y-4">
-              <h2 className="text-xl font-semibold">Response Time</h2>
+              <h2 className="text-xl font-semibold">Status Timeline</h2>
               <div className="space-y-4">
                 {statusPage.statusLines.map((monitor, index) => (
                   <StatusLine monitor={monitor} key={index} />
