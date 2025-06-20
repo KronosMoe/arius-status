@@ -5,6 +5,7 @@ import { CreateMonitorInput } from './dto/create-monitor.input'
 import { MonitorGateway } from '../gateway/monitors.gateway'
 import { MonitorAgent } from './entities/monitor-agent.entity'
 import { UpdateMonitorInput } from './dto/update-monitor.input'
+import { MonitorPublisherService } from 'src/gateway/monitor-publisher.service'
 
 @Injectable()
 export class MonitorsService {
@@ -13,7 +14,18 @@ export class MonitorsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly monitorGateway: MonitorGateway,
+    private readonly monitorPublisher: MonitorPublisherService,
   ) {}
+
+  private async publishAndStartMonitor(monitor: any) {
+    await this.monitorPublisher.publishMonitorCommand({
+      monitorId: monitor.id,
+      agentId: monitor.agentId,
+      data: monitor,
+    })
+
+    this.monitorGateway.startMonitor(monitor)
+  }
 
   async findMonitorsByUserId(userId: string): Promise<Monitor[]> {
     return await this.prisma.monitors.findMany({
@@ -69,7 +81,8 @@ export class MonitorsService {
         agent: true,
       },
     })
-    this.monitorGateway.startMonitor(monitor)
+
+    await this.publishAndStartMonitor(monitor)
     this.logger.log(`Monitor ${monitor.id} resumed`)
     return monitor
   }
@@ -105,7 +118,7 @@ export class MonitorsService {
       },
     })
 
-    this.monitorGateway.startMonitor(monitor)
+    await this.publishAndStartMonitor(monitor)
     this.logger.log(`Monitor ${monitor.id} updated`)
     return monitor
   }
@@ -121,7 +134,8 @@ export class MonitorsService {
         userId,
       },
     })
-    this.monitorGateway.startMonitor(monitor)
+
+    await this.publishAndStartMonitor(monitor)
     this.logger.log(`Monitor ${monitor.id} created`)
     return monitor
   }

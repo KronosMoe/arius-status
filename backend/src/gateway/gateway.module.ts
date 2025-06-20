@@ -6,6 +6,7 @@ import { PrismaService } from 'src/prisma/prisma.service'
 import { HttpModule } from '@nestjs/axios'
 import { RabbitMQSharedModule } from './rabbitmq.module'
 import { NotificationModule } from 'src/notification/notification.module'
+import { MonitorPublisherService } from './monitor-publisher.service'
 
 @Module({
   imports: [RabbitMQSharedModule, HttpModule, NotificationModule],
@@ -14,7 +15,8 @@ import { NotificationModule } from 'src/notification/notification.module'
     MonitorGateway,
     MonitorWebSocketEmitter,
     PrismaService,
+    MonitorPublisherService,
   ],
-  exports: [MonitorGateway],
+  exports: [MonitorGateway, MonitorPublisherService],
 })
 export class GatewayModule {}

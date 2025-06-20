@@ -31,36 +31,35 @@ export class MonitorWebSocketEmitter {
       return
     }
 
-    const [agent, monitor] = await Promise.all([
-      this.prisma.agents.findUnique({
-        where: { id: agentId },
-      }),
+    const [agent, monitor, latestStatus] = await Promise.all([
+      this.prisma.agents.findUnique({ where: { id: agentId } }),
       this.prisma.monitors.findUnique({
         where: { id: monitorId },
         select: { userId: true, status: true },
       }),
-    ])
-
-    if (!agent || !agent.isOnline) {
-      this.logger.log(`Agent ${agentId} is offline. Logging service as down.`)
-
-      const latestStatus = await this.prisma.statusResults.findFirst({
+      this.prisma.statusResults.findFirst({
         where: { monitorId },
         orderBy: { createdAt: 'desc' },
-      })
+      }),
+    ])
 
-      if (
-        latestStatus &&
-        latestStatus.responseTime !== -1 &&
-        data.responseTime === -1 &&
-        agent
-      ) {
-        await this.notificationService.sendAgentNotification(
-          agent,
-          agent.userId,
-          true,
-        )
-      }
+    if (!agent) {
+      this.logger.warn(`Agent ${agentId} not found.`)
+      return
+    }
+
+    const isLatestStatusUp = latestStatus && latestStatus.responseTime !== -1
+
+    if (!agent.isOnline && isLatestStatusUp) {
+      this.logger.warn(
+        `Agent ${agentId} is offline and latest status is UP. Sending notification and updating monitor status.`,
+      )
+
+      await this.notificationService.sendAgentNotification(
+        agent,
+        agent.userId,
+        true,
+      )
 
       await this.prisma.statusResults.create({
         data: {
@@ -70,8 +69,7 @@ export class MonitorWebSocketEmitter {
         },
       })
 
-      // Avoid updating status if it's already 'DOWN'
-      if (monitor.status !== 'DOWN') {
+      if (monitor?.status !== 'DOWN') {
         await this.prisma.monitors.update({
           where: { id: monitorId },
           data: { status: 'DOWN' },
@@ -83,11 +81,11 @@ export class MonitorWebSocketEmitter {
 
     const socketServer = this.agentsGateway.server
     if (!socketServer) {
-      this.logger.error('Socket server not ready')
+      this.logger.error('Socket server not initialized')
       return
     }
 
-    this.logger.log(`Emitting monitor ${monitorId} to agent ${agentId}`)
+    this.logger.log(`Emitting monitor command to agent ${agentId}`)
     socketServer.to(agentId).emit('run-command', data)
   }
 }

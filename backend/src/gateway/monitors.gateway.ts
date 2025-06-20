@@ -1,6 +1,6 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common'
 import { PrismaService } from 'src/prisma/prisma.service'
-import { AmqpConnection } from '@golevelup/nestjs-rabbitmq'
+import { MonitorPublisherService } from './monitor-publisher.service'
 
 @Injectable()
 export class MonitorGateway implements OnModuleInit {
@@ -8,7 +8,7 @@ export class MonitorGateway implements OnModuleInit {
 
   constructor(
     private prisma: PrismaService,
-    private amqpConnection: AmqpConnection,
+    private monitorPublisher: MonitorPublisherService,
   ) {}
 
   private monitorIntervals = new Map<string, NodeJS.Timeout>()
@@ -60,7 +60,7 @@ export class MonitorGateway implements OnModuleInit {
       )
 
       const interval = setInterval(() => {
-        this.amqpConnection.publish('monitor.exchange', 'monitor.route', {
+        this.monitorPublisher.publishMonitorCommand({
           monitorId: monitor.id,
           agentId: monitor.agentId,
           data: monitor,
