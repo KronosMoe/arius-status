@@ -122,13 +122,13 @@ export default function Dashboard() {
           <TabsContent value="monitors" className="mt-6">
             <MonitorsTab
               monitors={sortedMonitors}
-              setMonitors={setMonitors}
               agents={agents}
               isLoading={monitorLoading}
+              refetch={refetchMonitors}
             />
           </TabsContent>
           <TabsContent value="agents" className="mt-6">
-            <AgentsTab agents={sortedAgents} setAgents={setAgents} isLoading={agentLoading} refetch={refetchAgents} />
+            <AgentsTab agents={sortedAgents} isLoading={agentLoading} refetch={refetchAgents} />
           </TabsContent>
         </DashboardTabs>
       </Tabs>

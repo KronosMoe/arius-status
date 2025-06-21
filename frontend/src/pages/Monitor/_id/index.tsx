@@ -1,5 +1,3 @@
-'use client'
-
 import { Activity, ChevronDown, Clock, Globe, Server } from 'lucide-react'
 import ActionDropdown from '@/components/Monitor/components/ActionDropdown'
 import PingChart from '@/components/Monitor/PingChart'
@@ -40,7 +38,7 @@ export default function MonitorInfo() {
     data: monitorData,
     loading: monitorLoading,
     error: monitorError,
-    refetch: refetchMonitor,
+    refetch,
   } = useQuery(FIND_MONITOR_BY_ID_QUERY, {
     variables: { findMonitorByIdId: monitorId },
     pollInterval: 60 * 1000,
@@ -137,7 +135,7 @@ export default function MonitorInfo() {
                 </div>
               </div>
             </div>
-            <ActionDropdown monitor={monitor} refetchMonitor={refetchMonitor} />
+            <ActionDropdown monitor={monitor} refetch={refetch} />
           </div>
         </CardHeader>
         <CardContent>

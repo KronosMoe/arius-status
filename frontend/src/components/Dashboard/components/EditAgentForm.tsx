@@ -1,3 +1,4 @@
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -9,18 +10,9 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Edit } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { z } from 'zod'
-
-const formSchema = z.object({
-  name: z
-    .string()
-    .min(1, { message: 'Name is required' })
-    .transform((val) => val.toLowerCase().replace(/\s+/g, '-'))
-    .refine((val) => /^[a-z0-9-]+$/.test(val), {
-      message: 'Only lowercase letters, numbers, and hyphens are allowed',
-    }),
-})
 
 type Props = {
   agent: IAgent
@@ -28,11 +20,22 @@ type Props = {
 }
 
 export default function EditAgentForm({ agent, refetch }: Props) {
+  const { t } = useTranslation()
   const [open, setOpen] = useState(false)
+
+  const formSchema = z.object({
+    name: z
+      .string()
+      .min(1, { message: t('agent.edit-agent-form.validation.name.required') })
+      .transform((val) => val.toLowerCase().replace(/\s+/g, '-'))
+      .refine((val) => /^[a-z0-9-]+$/.test(val), {
+        message: t('agent.edit-agent-form.validation.name.refine'),
+      }),
+  })
 
   const [renameAgent, { loading }] = useMutation(RENAME_AGENT_MUTATION, {
     onCompleted: () => {
-      toast.success('Agent renamed successfully')
+      toast.success(t('agent.edit-agent-form.toast'))
       refetch()
     },
     onError: (error) => toast.error(error.message),
@@ -56,12 +59,14 @@ export default function EditAgentForm({ agent, refetch }: Props) {
       <DialogTrigger asChild>
         <Button variant="outline" size="sm" className="cursor-pointer">
           <Edit className="mr-2 h-4 w-4" />
-          Edit
+          {t('agent.edit-agent-form.button')}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Editing Agent {agent.name}</DialogTitle>
+          <DialogTitle>
+            {t('agent.edit-agent-form.title')} <Badge variant="outline">{agent.name}</Badge>
+          </DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
@@ -70,23 +75,21 @@ export default function EditAgentForm({ agent, refetch }: Props) {
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>{t('agent.edit-agent-form.name.label')}</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g. home-lab" {...field} />
+                    <Input placeholder={t('agent.edit-agent-form.name.placeholder')} {...field} />
                   </FormControl>
-                  <FormDescription>
-                    Must be lowercase and use hyphens instead of spaces (e.g. <code>home-lab</code>).
-                  </FormDescription>
+                  <FormDescription>{t('agent.edit-agent-form.name.description')}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <DialogFooter className="mt-4">
               <Button type="button" variant="outline" onClick={() => setOpen(false)}>
-                Cancel
+                {t('agent.edit-agent-form.cancel')}
               </Button>
               <Button variant="default" disabled={loading} type="submit">
-                Save
+                {t('agent.edit-agent-form.submit')}
               </Button>
             </DialogFooter>
           </form>

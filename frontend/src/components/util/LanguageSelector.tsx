@@ -6,6 +6,7 @@ import { useMutation } from '@apollo/client'
 import { UPDATE_LANGUAGE_MUTATION } from '@/gql/settings'
 import { useCallback } from 'react'
 import { useAuth } from '@/hooks/useAuth'
+import { toast } from 'sonner'
 
 type Props = {
   settings: ISetting
@@ -15,7 +16,14 @@ type Props = {
 export default function LanguageSelector({ settings, setSettings }: Props) {
   const { isAuthenticated } = useAuth()
   const { i18n } = useTranslation()
-  const [updateLanguage] = useMutation(UPDATE_LANGUAGE_MUTATION)
+  const [updateLanguage] = useMutation(UPDATE_LANGUAGE_MUTATION, {
+    onCompleted: () => {
+      toast.success('Language updated successfully')
+    },
+    onError: (error) => {
+      toast.error(error.message)
+    },
+  })
 
   const changeLanguage = useCallback(
     async (lang: string) => {

@@ -17,13 +17,19 @@ type Props = {
   monitor: IMonitor
   openEdit: boolean
   setOpenEdit: React.Dispatch<React.SetStateAction<boolean>>
-  refetchMonitor: () => void
+  refetch: () => void
 }
 
-export default function UpdateMonitorForm({ monitor, openEdit, setOpenEdit, refetchMonitor }: Props) {
+export default function UpdateMonitorForm({ monitor, openEdit, setOpenEdit, refetch }: Props) {
   const { t } = useTranslation()
 
-  const [updateMonitor, { loading, error }] = useMutation(UPDATE_MONITOR_MUTATION)
+  const [updateMonitor, { loading, error }] = useMutation(UPDATE_MONITOR_MUTATION, {
+    onCompleted: () => {
+      toast.success(t('monitor.edit-monitor-form.toast'))
+      refetch()
+    },
+    onError: (error) => toast.error(error.message),
+  })
 
   const formSchema = z
     .object({
@@ -77,9 +83,7 @@ export default function UpdateMonitorForm({ monitor, openEdit, setOpenEdit, refe
         },
       },
     })
-    toast.success(t('dashboard.edit-monitor-form.toast'))
     form.reset()
-    refetchMonitor()
     setOpenEdit(false)
   }
 
@@ -90,7 +94,10 @@ export default function UpdateMonitorForm({ monitor, openEdit, setOpenEdit, refe
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {t('dashboard.edit-monitor-form.title')} <Badge variant='outline' className="text-xs">{monitor.id}</Badge>
+            {t('monitor.edit-monitor-form.title')}{' '}
+            <Badge variant="outline" className="text-xs">
+              {monitor.id}
+            </Badge>
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
@@ -118,7 +125,7 @@ export default function UpdateMonitorForm({ monitor, openEdit, setOpenEdit, refe
                   <FormControl>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <SelectTrigger className="w-full">
-                        <SelectValue placeholder={t('dashboard.create-monitor-form.placeholder')} />
+                        <SelectValue placeholder={t('dashboard.create-monitor-form.type.placeholder')} />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="HTTP">HTTP</SelectItem>
@@ -164,7 +171,7 @@ export default function UpdateMonitorForm({ monitor, openEdit, setOpenEdit, refe
             />
 
             <Button type="submit" className="w-full" disabled={loading}>
-              {t('dashboard.edit-monitor-form.submit')}
+              {t('monitor.edit-monitor-form.submit')}
             </Button>
           </form>
         </Form>

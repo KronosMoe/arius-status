@@ -4,6 +4,7 @@ import { ISetting } from '@/types/setting'
 import { UPDATE_THEME_MUTATION } from '@/gql/settings'
 import { useMutation } from '@apollo/client'
 import { useAuth } from '@/hooks/useAuth'
+import { toast } from 'sonner'
 
 type Props = {
   settings: ISetting
@@ -12,7 +13,14 @@ type Props = {
 
 export default function ThemeSwitcher({ settings, setSettings }: Props) {
   const { isAuthenticated } = useAuth()
-  const [updateTheme] = useMutation(UPDATE_THEME_MUTATION)
+  const [updateTheme] = useMutation(UPDATE_THEME_MUTATION, {
+    onCompleted: () => {
+      toast.success('Theme updated successfully')
+    },
+    onError: (error) => {
+      toast.error(error.message)
+    },
+  })
 
   const setTheme = useCallback(
     async (newTheme: 'light' | 'dark') => {

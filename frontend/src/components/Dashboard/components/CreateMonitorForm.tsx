@@ -5,7 +5,6 @@ import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { CREATE_MONITOR_MUTATION } from '@/gql/monitors'
 import { IAgent } from '@/types/agent'
-import { IMonitor } from '@/types/monitor'
 import { useMutation } from '@apollo/client'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CirclePlus } from 'lucide-react'
@@ -16,17 +15,22 @@ import { toast } from 'sonner'
 import { z } from 'zod'
 
 type Props = {
-  monitors: IMonitor[]
   agents: IAgent[]
-  setMonitors: React.Dispatch<React.SetStateAction<IMonitor[]>>
+  refetch: () => void
 }
 
-export default function CreateMonitorForm({ monitors, agents, setMonitors }: Props) {
+export default function CreateMonitorForm({ agents, refetch }: Props) {
   const { t } = useTranslation()
 
   const [open, setOpen] = useState(false)
 
-  const [createMonitor, { loading, error }] = useMutation(CREATE_MONITOR_MUTATION)
+  const [createMonitor, { loading, error }] = useMutation(CREATE_MONITOR_MUTATION, {
+    onCompleted: () => {
+      toast.success(t('dashboard.create-monitor-form.toast'))
+      refetch()
+    },
+    onError: (error) => toast.error(error.message),
+  })
 
   const formSchema = z
     .object({
@@ -71,7 +75,7 @@ export default function CreateMonitorForm({ monitors, agents, setMonitors }: Pro
   })
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const { data } = await createMonitor({
+    await createMonitor({
       variables: {
         createMonitorInput: {
           name: values.name,
@@ -82,8 +86,6 @@ export default function CreateMonitorForm({ monitors, agents, setMonitors }: Pro
         },
       },
     })
-    toast.success(t('dashboard.edit-monitor-form.toast'))
-    setMonitors([...monitors, data.createMonitor])
     form.reset()
     setOpen(false)
   }
@@ -127,7 +129,7 @@ export default function CreateMonitorForm({ monitors, agents, setMonitors }: Pro
                   <FormControl>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <SelectTrigger className="w-full">
-                        <SelectValue placeholder={t('dashboard.create-monitor-form.placeholder')} />
+                        <SelectValue placeholder={t('dashboard.create-monitor-form.type.placeholder')} />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="HTTP">HTTP</SelectItem>
@@ -162,7 +164,7 @@ export default function CreateMonitorForm({ monitors, agents, setMonitors }: Pro
                   <FormControl>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <SelectTrigger className="w-full">
-                        <SelectValue placeholder={t('dashboard.create-monitor-form.placeholder')} />
+                        <SelectValue placeholder={t('dashboard.create-monitor-form.agent.placeholder')} />
                       </SelectTrigger>
                       <SelectContent>
                         {agents.map((agent) => (

@@ -68,22 +68,74 @@ export const Translation = {
         placeholder: 'dashboard.create-monitor-form.agent.placeholder',
       },
     },
-    edit-monitor-form: {
-      title: 'dashboard.edit-monitor-form.title',
-      toast: 'dashboard.edit-monitor-form.toast',
-      submit: 'dashboard.edit-monitor-form.submit',
-    },
     create-agent-form: {
       title: 'dashboard.create-agent-form.title',
-    },
-    edit-agent-form: {
-      title: 'dashboard.edit-agent-form.title',
-      name: 'dashboard.edit-agent-form.name',
+      toast: 'dashboard.create-agent-form.toast',
+      submit: 'dashboard.create-agent-form.submit',
     },
     error: {
       title: 'dashboard.error.title',
       message: 'dashboard.error.message',
       button: 'dashboard.error.button',
+    },
+  },
+  monitor: {
+    action: {
+      button: 'monitor.action.button',
+      pause: {
+        button: 'monitor.action.pause.button',
+        toast: 'monitor.action.pause.toast',
+      },
+      resume: {
+        button: 'monitor.action.resume.button',
+        toast: 'monitor.action.resume.toast',
+      },
+      edit: {
+        button: 'monitor.action.edit.button',
+      },
+      delete: {
+        button: 'monitor.action.delete.button',
+        cancel: 'monitor.action.delete.cancel',
+        toast: 'monitor.action.delete.toast',
+        confirmation: {
+          title: 'monitor.action.delete.confirmation.title',
+          description: 'monitor.action.delete.confirmation.description',
+        },
+      },
+    },
+    edit-monitor-form: {
+      title: 'monitor.edit-monitor-form.title',
+      toast: 'monitor.edit-monitor-form.toast',
+      submit: 'monitor.edit-monitor-form.submit',
+    },
+  },
+  agent: {
+    delete: {
+      button: 'agent.delete.button',
+      cancel: 'agent.delete.cancel',
+      toast: 'agent.delete.toast',
+      confirmation: {
+        title: 'agent.delete.confirmation.title',
+        description: 'agent.delete.confirmation.description',
+      },
+    },
+    edit-agent-form: {
+      title: 'agent.edit-agent-form.title',
+      validation: {
+        name: {
+          required: 'agent.edit-agent-form.validation.name.required',
+          refine: 'agent.edit-agent-form.validation.name.refine',
+        },
+      },
+      toast: 'agent.edit-agent-form.toast',
+      button: 'agent.edit-agent-form.button',
+      submit: 'agent.edit-agent-form.submit',
+      cancel: 'agent.edit-agent-form.cancel',
+      name: {
+        label: 'agent.edit-agent-form.name.label',
+        placeholder: 'agent.edit-agent-form.name.placeholder',
+        description: 'agent.edit-agent-form.name.description',
+      },
     },
   },
 }

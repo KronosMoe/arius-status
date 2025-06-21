@@ -49,16 +49,57 @@ dashboard:
     agent:
       label: Agent
       placeholder: Select agent
-  edit-monitor-form:
-    title: Edit Monitor
-    toast: Monitor updated successfully
-    submit: Save
   create-agent-form:
     title: Add New Agent
-  edit-agent-form:
-    title: Edit Agent
-    name: Agent Name
+    toast: Agent added successfully
+    submit: Add
   error:
     title: Error
     message: There was a problem loading your dashboard data.
     button: Try again
+
+monitor:
+  action:
+    button: Actions
+    pause:
+      button: Pause
+      toast: Monitor paused
+    resume:
+      button: Resume
+      toast: Monitor resumed
+    edit:
+      button: Edit
+    delete:
+      button: Delete
+      cancel: Cancel
+      toast: Monitor deleted successfully
+      confirmation:
+        title: Are you sure you want to delete this monitor?
+        description: This action cannot be undone. This will permanently delete your monitor.
+  edit-monitor-form:
+    title: Edit Monitor
+    toast: Monitor updated successfully
+    submit: Save
+
+agent:
+  delete:
+    button: Delete
+    cancel: Cancel
+    toast: Agent deleted successfully
+    confirmation:
+      title: Are you sure you want to delete this agent?
+      description: This action cannot be undone. This will permanently delete your agent.
+  edit-agent-form:
+    title: Edit Agent
+    validation:
+      name:
+        required: Agent name is required
+        refine: Agent name must be lowercase and use hyphens instead of spaces
+    toast: Agent renamed successfully
+    button: Rename
+    submit: Save
+    cancel: Cancel
+    name:
+      label: Agent Name
+      placeholder: Enter your agent name
+      description: Must be lowercase and use hyphens instead of spaces (e.g. home-lab).
