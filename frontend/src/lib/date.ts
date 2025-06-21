@@ -1,4 +1,5 @@
-import { format, isToday } from "date-fns"
+import { format, isToday, Locale } from 'date-fns'
+import { enUS, th } from 'date-fns/locale'
 
 export function formatAgo(seconds: number) {
   if (seconds >= 86400) {
@@ -16,4 +17,9 @@ export function formatAgo(seconds: number) {
 export const formatDate = (date: Date) => {
   if (isToday(date)) return format(date, 'hh:mm a')
   return format(date, 'MMM d')
+}
+
+export const dateFnsLocaleMap: Record<string, Locale> = {
+  en: enUS,
+  th: th,
 }

@@ -6,6 +6,8 @@ import { formatDistanceToNow } from 'date-fns'
 import DeleteAgentDialog from './DeleteAgentDialog'
 import EditAgentForm from './EditAgentForm'
 import CopyableAgentId from './CopyableAgentId'
+import { dateFnsLocaleMap } from '@/lib/date'
+import { useTranslation } from 'react-i18next'
 
 interface AgentsListProps {
   agents: IAgent[]
@@ -13,6 +15,8 @@ interface AgentsListProps {
 }
 
 export function AgentsList({ agents, refetch }: AgentsListProps) {
+  const { i18n } = useTranslation()
+
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
       {agents.map((agent) => (
@@ -24,7 +28,10 @@ export function AgentsList({ agents, refetch }: AgentsListProps) {
             </div>
             <CardDescription className="flex items-center gap-1">
               <Clock className="h-3 w-3" />
-              {formatDistanceToNow(new Date(agent.createdAt), { addSuffix: true })}
+              {formatDistanceToNow(new Date(agent.createdAt), {
+                addSuffix: true,
+                locale: dateFnsLocaleMap[i18n.language] ?? dateFnsLocaleMap['en'],
+              })}
             </CardDescription>
           </CardHeader>
           <CardContent>

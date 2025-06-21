@@ -4,6 +4,8 @@ import { Separator } from '../ui/separator'
 import { Clock, Server } from 'lucide-react'
 import { Badge } from '../ui/badge'
 import { formatDistanceToNow } from 'date-fns'
+import { dateFnsLocaleMap } from '@/lib/date'
+import { useTranslation } from 'react-i18next'
 
 type Props = {
   agents: IAgent[]
@@ -11,6 +13,8 @@ type Props = {
 }
 
 export default function Agents({ agents, setAgents }: Props) {
+  const { i18n } = useTranslation()
+
   const AgentsList = () => {
     return (
       <div>
@@ -35,7 +39,10 @@ export default function Agents({ agents, setAgents }: Props) {
             </div>
             <div className="flex flex-row items-center gap-2 text-xs text-zinc-500">
               <Clock size={16} />
-              {formatDistanceToNow(new Date(agent.createdAt), { addSuffix: true })}
+              {formatDistanceToNow(new Date(agent.createdAt), {
+                addSuffix: true,
+                locale: dateFnsLocaleMap[i18n.language] ?? dateFnsLocaleMap['en'],
+              })}
             </div>
           </div>
         ))}
