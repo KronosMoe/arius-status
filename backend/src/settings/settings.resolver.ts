@@ -29,6 +29,12 @@ export class SettingsResolver {
     return await this.settingsService.updateTheme(theme, user.id)
   }
 
+  @Mutation(() => Setting)
+  @UseGuards(GqlAuthGuard)
+  async updateLanguage(@Args('language') language: string, @Me() user: User) {
+    return await this.settingsService.updateLanguage(language, user.id)
+  }
+
   @Mutation(() => [Session])
   @UseGuards(GqlAuthGuard)
   async clearSessionsByUserId(@Me() user: User) {

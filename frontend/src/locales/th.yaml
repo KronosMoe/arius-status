@@ -1,1 +1,64 @@
-hello: "สวัสดี"
+dashboard:
+  header:
+    title: แดชบอร์ด
+    description: จัดการมอนิเตอร์และเอเจนต์ของคุณ
+    button:
+      refresh: รีเฟรช
+    stats:
+      total-monitors: จํานวนมอนิเตอร์
+      active-monitors: มอนิเตอร์ที่กําลังทํางาน
+      paused-monitors: มอนิเตอร์ที่หยุดการทํางาน
+      total-agents: จํานวนเอเจนต์
+  tabs:
+    monitors: มอนิเตอร์
+    agents: เอเจนต์
+  list:
+    title-monitor: มอนิเตอร์ของคุณ
+    title-agent: เอเจนต์ของคุณ
+  create-monitor-form:
+    title: เพิ่มมอนิเตอร์
+    submit: เพิ่ม
+    toast: เพิ่มมอนิเตอร์สําเร็จ
+    validation:
+      name:
+        required: ชื่อมอนิเตอร์ไม่สามารถว่างได้
+      type:
+        required: กรุณาเลือกประเภทมอนิเตอร์
+      address:
+        required: เป้าหมายไม่สามารถว่างได้
+      agent:
+        required: กรุณาเลือกเอเจนต์
+      interval:
+        min: อัตราการทํางานต้องมีอย่างน้อย 60 วินาที
+        max: อัตราการทํางานต้องไม่เกิน 86400 วินาที
+        positive: อัตราการทํางานต้องเป็นตัวเลขบวก
+      refine:
+        address: กรุณากรอกที่อยู่มอนิเตอร์ให้ถูกต้องตามประเภทมอนิเตอร์
+    name:
+      label: ชื่อมอนิเตอร์
+      placeholder: กรุณากรอกชื่อมอนิเตอร์
+    type:
+      label: ประเภทมอนิเตอร์
+      placeholder: กรุณาเลือกประเภทมอนิเตอร์
+    address:
+      label: ที่อยู่ของเป้าหมาย
+      placeholder: กรุณากรอกที่อยู่ของเป้าหมาย (เช่น https://example.com, 192.168.X.X)
+    interval:
+      label: อัตราการทํางาน (วินาที)
+      placeholder: กรุณากรอกอัตราการทํางาน
+    agent:
+      label: เอเจนต์
+      placeholder: กรุณาเลือกเอเจนต์
+  edit-monitor-form:
+    title: แก้ไขมอนิเตอร์
+    toast: แก้ไขมอนิเตอร์สําเร็จ
+    submit: แก้ไข
+  create-agent-form:
+    title: เพิ่มเอเจนต์
+  edit-agent-form:
+    title: แก้ไขเอเจนต์
+    name: ชื่อเอเจนต์
+  error:
+    title: เกิดข้อผิดพลาด
+    message: ไม่สามารถโหลดข้อมูลแดชบอร์ดได้
+    button: ลองใหม่

@@ -3,6 +3,7 @@ import { AgentsSkeletonList } from './AgentsSkeletonList'
 import { EmptyState } from './EmptyState'
 import { AgentsList } from './AgentsList'
 import CreateAgentForm from './CreateAgentForm'
+import { useTranslation } from 'react-i18next'
 
 interface AgentsTabProps {
   agents: IAgent[]
@@ -12,6 +13,8 @@ interface AgentsTabProps {
 }
 
 export function AgentsTab({ agents, setAgents, isLoading = false, refetch }: AgentsTabProps) {
+  const { t } = useTranslation()
+
   if (isLoading) {
     return <AgentsSkeletonList />
   }
@@ -29,7 +32,7 @@ export function AgentsTab({ agents, setAgents, isLoading = false, refetch }: Age
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-medium">Your Agents</h2>
+        <h2 className="text-lg font-medium">{t('dashboard.list.title-agent')}</h2>
         <CreateAgentForm agents={agents} setAgents={setAgents} />
       </div>
       <AgentsList agents={agents} refetch={refetch} />

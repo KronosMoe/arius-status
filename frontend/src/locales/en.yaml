@@ -1,1 +1,64 @@
-hello: "Hello"
+dashboard:
+  header:
+    title: Dashboard
+    description: Manage your monitors and agents
+    button:
+      refresh: Refresh
+    stats:
+      total-monitors: Total Monitors
+      active-monitors: Active Monitors
+      paused-monitors: Paused Monitors
+      total-agents: Total Agents
+  tabs:
+    monitors: Monitors
+    agents: Agents
+  list:
+    title-monitor: Your Monitors
+    title-agent: Your Agents
+  create-monitor-form:
+    title: Add New Monitor
+    submit: Add
+    toast: Monitor added successfully
+    validation:
+      name:
+        required: Monitor name is required
+      type:
+        required: Monitor type is required
+      address:
+        required: Monitor address is required
+      agent:
+        required: Agent is required
+      interval:
+        min: Interval must be at least 60 seconds
+        max: Interval must be at most 86400 seconds
+        positive: Interval must be a positive number
+      refine:
+        address: Invalid address format based on monitor type
+    name:
+      label: Monitor Name
+      placeholder: Enter your monitor name
+    type:
+      label: Monitor Type
+      placeholder: Select type
+    address:
+      label: Address
+      placeholder: Enter address (e.g., https://example.com or example.com:443)
+    interval:
+      label: Interval (in seconds)
+      placeholder: Enter interval in seconds (e.g., 60)
+    agent:
+      label: Agent
+      placeholder: Select agent
+  edit-monitor-form:
+    title: Edit Monitor
+    toast: Monitor updated successfully
+    submit: Save
+  create-agent-form:
+    title: Add New Agent
+  edit-agent-form:
+    title: Edit Agent
+    name: Agent Name
+  error:
+    title: Error
+    message: There was a problem loading your dashboard data.
+    button: Try again

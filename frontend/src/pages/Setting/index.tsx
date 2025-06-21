@@ -3,7 +3,7 @@ import type React from 'react'
 import { useEffect, useState } from 'react'
 import { useQuery } from '@apollo/client'
 import { toast } from 'sonner'
-import { Settings, Palette, Bell, Smartphone } from 'lucide-react'
+import { Settings, Palette, Bell, Smartphone, Globe } from 'lucide-react'
 
 import Credit from '@/components/Setting/Credit'
 import DeviceManager from '@/components/Setting/DeviceManager'
@@ -14,6 +14,7 @@ import { SETTINGS_QUERY } from '@/gql/settings'
 import { useAuth } from '@/hooks/useAuth'
 import type { ISetting } from '@/types/setting'
 import { Skeleton } from '@/components/ui/skeleton'
+import LanguageSelector from '@/components/util/LanguageSelector'
 
 interface SettingsSectionProps {
   icon: React.ReactNode
@@ -67,6 +68,7 @@ export default function Setting() {
 
   const [settings, setSettings] = useState<ISetting>({
     theme: auth?.settings.theme || 'light',
+    language: auth?.settings.language || 'en',
   })
 
   const { data, error, loading } = useQuery(SETTINGS_QUERY, {
@@ -85,7 +87,7 @@ export default function Setting() {
 
   if (loading) {
     return (
-      <div className="w-full px-4 xl:m-auto xl:w-[1280px] py-8">
+      <div className="w-full px-4 py-8 xl:m-auto xl:w-[1280px]">
         <div className="mb-8">
           <div className="mb-2 flex items-center gap-3">
             <Settings className="h-8 w-8" />
@@ -99,7 +101,7 @@ export default function Setting() {
   }
 
   return (
-    <div className="w-full px-4 xl:m-auto xl:w-[1280px] py-8">
+    <div className="w-full px-4 py-8 xl:m-auto xl:w-[1280px]">
       <div className="mb-8">
         <div className="mb-2 flex items-center gap-3">
           <Settings className="h-8 w-8" />
@@ -114,6 +116,13 @@ export default function Setting() {
           description="Customize how the interface looks and feels"
         >
           <ThemeSwitcher settings={settings} setSettings={setSettings} />
+        </SettingsSection>
+        <SettingsSection
+          icon={<Globe className="h-5 w-5" />}
+          title="Language"
+          description="Select your preferred language"
+        >
+          <LanguageSelector settings={settings} setSettings={setSettings} />
         </SettingsSection>
         <SettingsSection
           icon={<Bell className="h-5 w-5" />}
