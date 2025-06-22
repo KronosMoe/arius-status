@@ -9,12 +9,13 @@ import Credit from '@/components/Setting/Credit'
 import DeviceManager from '@/components/Setting/DeviceManager'
 import NotificationSetting from '@/components/Setting/Notification'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import ThemeSwitcher from '@/components/util/ThemeSwitcher'
+import ThemeSwitcher from '@/components/Setting/ThemeSwitcher'
 import { SETTINGS_QUERY } from '@/gql/settings'
 import { useAuth } from '@/hooks/useAuth'
 import type { ISetting } from '@/types/setting'
 import { Skeleton } from '@/components/ui/skeleton'
-import LanguageSelector from '@/components/util/LanguageSelector'
+import LanguageSelector from '@/components/Setting/LanguageSelector'
+import { useTranslation } from 'react-i18next'
 
 interface SettingsSectionProps {
   icon: React.ReactNode
@@ -64,6 +65,7 @@ function SettingsSkeleton() {
 }
 
 export default function Setting() {
+  const { t } = useTranslation()
   const { auth } = useAuth()
 
   const [settings, setSettings] = useState<ISetting>({
@@ -91,9 +93,9 @@ export default function Setting() {
         <div className="mb-8">
           <div className="mb-2 flex items-center gap-3">
             <Settings className="h-8 w-8" />
-            <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
+            <h1 className="text-3xl font-bold tracking-tight">{t('settings.title')}</h1>
           </div>
-          <p className="text-muted-foreground">Manage your account settings and preferences</p>
+          <p className="text-muted-foreground">{t('settings.description')}</p>
         </div>
         <SettingsSkeleton />
       </div>
@@ -105,36 +107,36 @@ export default function Setting() {
       <div className="mb-8">
         <div className="mb-2 flex items-center gap-3">
           <Settings className="h-8 w-8" />
-          <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
+          <h1 className="text-3xl font-bold tracking-tight">{t('settings.title')}</h1>
         </div>
-        <p className="text-muted-foreground">Manage your account settings and preferences</p>
+        <p className="text-muted-foreground">{t('settings.description')}</p>
       </div>
       <div className="space-y-6">
         <SettingsSection
           icon={<Palette className="h-5 w-5" />}
-          title="Appearance"
-          description="Customize how the interface looks and feels"
+          title={t('settings.appearance.title')}
+          description={t('settings.appearance.description')}
         >
           <ThemeSwitcher settings={settings} setSettings={setSettings} />
         </SettingsSection>
         <SettingsSection
           icon={<Globe className="h-5 w-5" />}
-          title="Language"
-          description="Select your preferred language"
+          title={t('settings.language.title')}
+          description={t('settings.language.description')}
         >
           <LanguageSelector settings={settings} setSettings={setSettings} />
         </SettingsSection>
         <SettingsSection
           icon={<Bell className="h-5 w-5" />}
-          title="Notifications"
-          description="Configure how and when you receive notifications"
+          title={t('settings.notification.title')}
+          description={t('settings.notification.description')}
         >
           <NotificationSetting />
         </SettingsSection>
         <SettingsSection
           icon={<Smartphone className="h-5 w-5" />}
-          title="Devices"
-          description="Manage devices where you're currently signed in"
+          title={t('settings.devices.title')}
+          description={t('settings.devices.description')}
         >
           <DeviceManager />
         </SettingsSection>

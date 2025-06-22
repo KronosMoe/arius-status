@@ -129,3 +129,99 @@ agent:
       label: Agent Name
       placeholder: Enter your agent name
       description: Must be lowercase and use hyphens instead of spaces (e.g. home-lab).
+
+settings:
+  title: Settings
+  description: Manage your account settings and preferences
+  appearance:
+    title: Appearance
+    description: Customize the appearance of your website experience
+    theme:
+      light: Light Mode
+      dark: Dark Mode
+      toast: Theme updated successfully
+  language:
+    title: Language
+    description: Choose your preferred language
+    toast: Language updated successfully
+  notification:
+    title: Notifications
+    description: Configure how and when you receive notifications
+    list:
+      title: Notifications
+      created: Created
+      default: Default
+    empty:
+      title: No Notifications Configured
+      description: Set up your notifications to receive alerts about your services and uptime monitoring.
+    button: Add New Notification
+    remove-dialog:
+      title: Are you sure you want to remove this notification?
+      description: This action cannot be undone. This will permanently delete your notification.
+      toast: Notification removed successfully
+      cancel: Cancel
+      submit: Confirm
+    edit-notification-form:
+      title: Editing
+      toast: Notification updated successfully
+      isDefault:
+        label: Set as Default
+      submit: Save
+      cancel: Cancel
+    create-notification-form:
+      title: Add New Notification
+      toast: Notification added successfully
+      submit: Add
+      cancel: Cancel
+      webhook-test:
+        button: Test
+        toast: Webhook sent successfully
+      validation:
+        name:
+          required: Notification title is required
+        method:
+          required: Notification method is required
+        email-content:
+          required: Email content is required
+        webhook:
+          required: Webhook URL is required
+          invalid: Invalid webhook URL
+      name:
+        label: Notification Title
+        placeholder: Enter notification title
+      method:
+        label: Notification Method
+        placeholder: Select notification method
+      email-content:
+        label: Email Content
+        placeholder: Enter email content
+      message:
+        label: Notification Message
+        placeholder: Enter notification message
+      webhook:
+        label: Webhook URL
+        placeholder: Enter webhook URL
+  devices:
+    title: Devices
+    description: Manage devices where you're currently signed in
+    active-session: Active Sessions
+    expires: Expires
+    created: Created
+    remove-device-dialog:
+      title: Remove Device Session?
+      description: Are you sure you want to remove this device session? This action cannot be undone.
+      toast: Device session removed successfully
+      cancel: Cancel
+      submit: Confirm
+    danger-zone:
+      title: Danger Zone
+      description: Log out of all devices. You'll need to sign in again on those devices.
+      button: Log Out of All Devices
+      dialog:
+        title: Log Out All Devices?
+        description: Are you sure you want to log out of all devices? This action cannot be undone.
+        toast: Logged out of all devices successfully
+        cancel: Cancel
+        submit: Confirm
+  about:
+    title: About

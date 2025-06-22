@@ -5,6 +5,7 @@ import { UPDATE_THEME_MUTATION } from '@/gql/settings'
 import { useMutation } from '@apollo/client'
 import { useAuth } from '@/hooks/useAuth'
 import { toast } from 'sonner'
+import { useTranslation } from 'react-i18next'
 
 type Props = {
   settings: ISetting
@@ -12,10 +13,11 @@ type Props = {
 }
 
 export default function ThemeSwitcher({ settings, setSettings }: Props) {
+  const { t } = useTranslation()
   const { isAuthenticated } = useAuth()
   const [updateTheme] = useMutation(UPDATE_THEME_MUTATION, {
     onCompleted: () => {
-      toast.success('Theme updated successfully')
+      toast.success(t('settings.appearance.theme.toast'))
     },
     onError: (error) => {
       toast.error(error.message)
@@ -44,7 +46,7 @@ export default function ThemeSwitcher({ settings, setSettings }: Props) {
             : 'bg-transparent hover:bg-zinc-100 dark:hover:bg-zinc-800'
         } border-black/20 dark:border-white/10`}
       >
-        <Sun /> Light Mode
+        <Sun /> {t('settings.appearance.theme.light')}
       </button>
 
       <button
@@ -55,7 +57,7 @@ export default function ThemeSwitcher({ settings, setSettings }: Props) {
             : 'bg-transparent hover:bg-zinc-100 dark:hover:bg-zinc-800'
         } border-black/20 dark:border-white/10`}
       >
-        <Moon /> Dark Mode
+        <Moon /> {t('settings.appearance.theme.dark')}
       </button>
     </div>
   )

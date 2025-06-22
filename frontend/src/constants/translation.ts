@@ -170,4 +170,126 @@ export const Translation = {
       },
     },
   },
+  settings: {
+    title: 'settings.title',
+    description: 'settings.description',
+    appearance: {
+      title: 'settings.appearance.title',
+      description: 'settings.appearance.description',
+      theme: {
+        light: 'settings.appearance.theme.light',
+        dark: 'settings.appearance.theme.dark',
+        toast: 'settings.appearance.theme.toast',
+      },
+    },
+    language: {
+      title: 'settings.language.title',
+      description: 'settings.language.description',
+      toast: 'settings.language.toast',
+    },
+    notification: {
+      title: 'settings.notification.title',
+      description: 'settings.notification.description',
+      list: {
+        title: 'settings.notification.list.title',
+        created: 'settings.notification.list.created',
+        default: 'settings.notification.list.default',
+      },
+      empty: {
+        title: 'settings.notification.empty.title',
+        description: 'settings.notification.empty.description',
+      },
+      button: 'settings.notification.button',
+      remove-dialog: {
+        title: 'settings.notification.remove-dialog.title',
+        description: 'settings.notification.remove-dialog.description',
+        toast: 'settings.notification.remove-dialog.toast',
+        cancel: 'settings.notification.remove-dialog.cancel',
+        submit: 'settings.notification.remove-dialog.submit',
+      },
+      edit-notification-form: {
+        title: 'settings.notification.edit-notification-form.title',
+        toast: 'settings.notification.edit-notification-form.toast',
+        isDefault: {
+          label: 'settings.notification.edit-notification-form.isDefault.label',
+        },
+        submit: 'settings.notification.edit-notification-form.submit',
+        cancel: 'settings.notification.edit-notification-form.cancel',
+      },
+      create-notification-form: {
+        title: 'settings.notification.create-notification-form.title',
+        toast: 'settings.notification.create-notification-form.toast',
+        submit: 'settings.notification.create-notification-form.submit',
+        cancel: 'settings.notification.create-notification-form.cancel',
+        webhook-test: {
+          button: 'settings.notification.create-notification-form.webhook-test.button',
+          toast: 'settings.notification.create-notification-form.webhook-test.toast',
+        },
+        validation: {
+          name: {
+            required: 'settings.notification.create-notification-form.validation.name.required',
+          },
+          method: {
+            required: 'settings.notification.create-notification-form.validation.method.required',
+          },
+          email-content: {
+            required: 'settings.notification.create-notification-form.validation.email-content.required',
+          },
+          webhook: {
+            required: 'settings.notification.create-notification-form.validation.webhook.required',
+            invalid: 'settings.notification.create-notification-form.validation.webhook.invalid',
+          },
+        },
+        name: {
+          label: 'settings.notification.create-notification-form.name.label',
+          placeholder: 'settings.notification.create-notification-form.name.placeholder',
+        },
+        method: {
+          label: 'settings.notification.create-notification-form.method.label',
+          placeholder: 'settings.notification.create-notification-form.method.placeholder',
+        },
+        email-content: {
+          label: 'settings.notification.create-notification-form.email-content.label',
+          placeholder: 'settings.notification.create-notification-form.email-content.placeholder',
+        },
+        message: {
+          label: 'settings.notification.create-notification-form.message.label',
+          placeholder: 'settings.notification.create-notification-form.message.placeholder',
+        },
+        webhook: {
+          label: 'settings.notification.create-notification-form.webhook.label',
+          placeholder: 'settings.notification.create-notification-form.webhook.placeholder',
+        },
+      },
+    },
+    devices: {
+      title: 'settings.devices.title',
+      description: 'settings.devices.description',
+      active-session: 'settings.devices.active-session',
+      expires: 'settings.devices.expires',
+      created: 'settings.devices.created',
+      remove-device-dialog: {
+        title: 'settings.devices.remove-device-dialog.title',
+        description: 'settings.devices.remove-device-dialog.description',
+        toast: 'settings.devices.remove-device-dialog.toast',
+        cancel: 'settings.devices.remove-device-dialog.cancel',
+        submit: 'settings.devices.remove-device-dialog.submit',
+      },
+      danger-zone: {
+        title: 'settings.devices.danger-zone.title',
+        description: 'settings.devices.danger-zone.description',
+        button: 'settings.devices.danger-zone.button',
+        dialog: {
+          title: 'settings.devices.danger-zone.dialog.title',
+          description: 'settings.devices.danger-zone.dialog.description',
+          toast: 'settings.devices.danger-zone.dialog.toast',
+          cancel: 'settings.devices.danger-zone.dialog.cancel',
+          submit: 'settings.devices.danger-zone.dialog.submit',
+        },
+      },
+    },
+    about: {
+      title: 'settings.about.title',
+    },
+  },
 }

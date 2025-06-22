@@ -15,10 +15,10 @@ type Props = {
 
 export default function LanguageSelector({ settings, setSettings }: Props) {
   const { isAuthenticated } = useAuth()
-  const { i18n } = useTranslation()
+  const { t, i18n } = useTranslation()
   const [updateLanguage] = useMutation(UPDATE_LANGUAGE_MUTATION, {
     onCompleted: () => {
-      toast.success('Language updated successfully')
+      toast.success(t('settings.language.toast'))
     },
     onError: (error) => {
       toast.error(error.message)

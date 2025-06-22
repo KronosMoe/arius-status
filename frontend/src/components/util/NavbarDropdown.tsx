@@ -5,7 +5,6 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu'
@@ -31,7 +30,6 @@ export default function NavbarDropdown({ auth, logout }: Props) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-40" align="start">
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuGroup>
           <Link to={DASHBOARD_PATH}>
             <DropdownMenuItem>

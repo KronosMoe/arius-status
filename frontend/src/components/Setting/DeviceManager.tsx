@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useMutation, useQuery } from '@apollo/client'
 import { toast } from 'sonner'
-import { Monitor } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -19,6 +18,7 @@ import {
 import { CLEAR_SESSION_BY_ID_MUTATION, CLEAR_SESSIONS_MUTATION, SESSIONS_QUERY } from '@/gql/settings'
 import type { ISession } from '@/types/setting'
 import DeviceCard from './components/DeviceCard'
+import { useTranslation } from 'react-i18next'
 
 function DevicesSkeleton() {
   return (
@@ -45,6 +45,7 @@ function DevicesSkeleton() {
 }
 
 export default function DeviceManager() {
+  const { t } = useTranslation()
   const [sessions, setSessions] = useState<ISession[]>([])
 
   const { data, error, loading } = useQuery(SESSIONS_QUERY, {
@@ -52,14 +53,14 @@ export default function DeviceManager() {
   })
 
   const [clearAll, { loading: clearAllLoading }] = useMutation(CLEAR_SESSIONS_MUTATION, {
-    onCompleted: () => toast.success('Logged out of all devices successfully.'),
-    onError: (error) => toast.error('Failed to log out of all devices', { description: error.message }),
+    onCompleted: () => toast.success(t('settings.devices.danger-zone.dialog.toast')),
+    onError: (error) => toast.error(error.message),
     refetchQueries: [{ query: SESSIONS_QUERY }],
   })
 
   const [clearSession, { loading: clearSessionLoading }] = useMutation(CLEAR_SESSION_BY_ID_MUTATION, {
-    onCompleted: () => toast.success('Device session removed successfully.'),
-    onError: (error) => toast.error('Failed to remove device session', { description: error.message }),
+    onCompleted: () => toast.success(t('settings.devices.remove-device-dialog.toast')),
+    onError: (error) => toast.error(error.message),
     refetchQueries: [{ query: SESSIONS_QUERY }],
   })
 
@@ -81,7 +82,7 @@ export default function DeviceManager() {
     <div className="space-y-6">
       {activeSessions.length > 0 ? (
         <div>
-          <h3 className="text-muted-foreground mb-3 text-sm font-medium">Active Sessions ({activeSessions.length})</h3>
+          <h3 className="text-muted-foreground mb-3 text-sm font-medium">{t('settings.devices.active-session')} ({activeSessions.length})</h3>
           <div className="space-y-3">
             {activeSessions.map((session) => (
               <DeviceCard
@@ -94,44 +95,33 @@ export default function DeviceManager() {
           </div>
         </div>
       ) : (
-        <Card>
-          <CardContent className="p-8 text-center">
-            <Monitor className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
-            <h3 className="mb-2 text-lg font-semibold">No Active Sessions</h3>
-            <p className="text-muted-foreground">You don&apos;t have any active device sessions at the moment.</p>
-          </CardContent>
-        </Card>
+        <></>
       )}
 
       {activeSessions.length > 0 && (
         <Card className="border-destructive/20 gap-0">
           <CardHeader className="pb-4">
-            <CardTitle className="text-destructive text-lg">Danger Zone</CardTitle>
-            <CardDescription>
-              Log out of all devices. You&apos;ll need to sign in again on those devices.
-            </CardDescription>
+            <CardTitle className="text-destructive text-lg">{t('settings.devices.danger-zone.title')}</CardTitle>
+            <CardDescription>{t('settings.devices.danger-zone.description')}</CardDescription>
           </CardHeader>
           <CardContent>
             <Dialog>
               <DialogTrigger asChild>
                 <Button variant="destructive" disabled={clearAllLoading}>
-                  {clearAllLoading ? 'Logging Out...' : 'Log Out All Devices'}
+                  {t('settings.devices.danger-zone.button')}
                 </Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Log Out All Devices?</DialogTitle>
-                  <DialogDescription>
-                    This will end all active sessions. You&apos;ll be logged out on {activeSessions.length} device
-                    {activeSessions.length === 1 ? '' : 's'}.
-                  </DialogDescription>
+                  <DialogTitle>{t('settings.devices.danger-zone.dialog.title')}</DialogTitle>
+                  <DialogDescription>{t('settings.devices.danger-zone.dialog.description')}</DialogDescription>
                 </DialogHeader>
                 <DialogFooter>
                   <DialogClose asChild>
-                    <Button variant="outline">Cancel</Button>
+                    <Button variant="outline">{t('settings.devices.danger-zone.dialog.cancel')}</Button>
                   </DialogClose>
                   <Button variant="destructive" onClick={() => clearAll()} disabled={clearAllLoading}>
-                    {clearAllLoading ? 'Logging Out...' : 'Confirm'}
+                    {t('settings.devices.danger-zone.dialog.submit')}
                   </Button>
                 </DialogFooter>
               </DialogContent>

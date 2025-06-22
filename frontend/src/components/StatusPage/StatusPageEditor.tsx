@@ -316,7 +316,7 @@ export default function StatusPageEditor({ statusPage, refetch }: Props) {
                           <Label htmlFor="slug">Page URL *</Label>
                           <div className="flex items-center">
                             <span className="inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400">
-                              /page/
+                              /status/
                             </span>
                             <Input
                               id="slug"
@@ -332,7 +332,7 @@ export default function StatusPageEditor({ statusPage, refetch }: Props) {
                           {errors.slug && <p className="text-sm text-red-600">{errors.slug.message}</p>}
                           <p className="text-muted-foreground text-xs">
                             Your status page will be available at:{' '}
-                            <code className="bg-muted rounded px-1 py-0.5">/page/{slug || 'your-slug'}</code>
+                            <code className="bg-muted rounded px-1 py-0.5">/status/{slug || 'your-slug'}</code>
                           </p>
                         </div>
                         <div className="space-y-2">

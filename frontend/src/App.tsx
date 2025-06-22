@@ -36,7 +36,7 @@ function App() {
       location.pathname === SIGN_IN_PATH ||
       location.pathname === SIGN_UP_PATH ||
       location.pathname === STATUS_PAGE_CREATION_PATH ||
-      location.pathname.startsWith('/page/')
+      location.pathname.startsWith('/status/')
     ) {
       return <></>
     }

@@ -69,7 +69,6 @@ export default function Dashboard() {
     setIsRefreshing(true)
     try {
       await Promise.all([refetchMonitors(), refetchAgents()])
-      toast.success('Data refreshed successfully')
     } catch {
       toast.error('Failed to refresh data')
     } finally {

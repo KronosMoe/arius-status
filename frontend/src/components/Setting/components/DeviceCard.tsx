@@ -1,4 +1,3 @@
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import {
@@ -13,8 +12,8 @@ import {
 } from '@/components/ui/dialog'
 import { formatDate } from '@/lib/date'
 import { ISession } from '@/types/setting'
-import { addDays, isBefore } from 'date-fns'
-import { Calendar, Clock, MapPin, Monitor, Shield, Smartphone, X } from 'lucide-react'
+import { Calendar, MapPin, Monitor, Shield, Smartphone, X } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 export default function DeviceCard({
   session,
@@ -25,9 +24,9 @@ export default function DeviceCard({
   onRemove: () => void
   isRemoving: boolean
 }) {
-  const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(session.platform)
+  const { t } = useTranslation()
 
-  const isExpiringSoon = isBefore(session.expires, addDays(new Date(), 1))
+  const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(session.platform)
 
   return (
     <Card className="transition-all duration-200 hover:shadow-md">
@@ -42,12 +41,6 @@ export default function DeviceCard({
             <div className="min-w-0 flex-1">
               <div className="mb-1 flex items-center gap-2">
                 <h3 className="text-sm font-semibold">{isMobile ? 'Mobile Device' : 'Desktop'}</h3>
-                {isExpiringSoon && (
-                  <Badge variant="outline" className="text-xs text-orange-600">
-                    <Clock className="mr-1 h-3 w-3" />
-                    Expires Soon
-                  </Badge>
-                )}
               </div>
               <div className="text-muted-foreground grid grid-cols-1 gap-2 text-xs sm:grid-cols-2">
                 <div className="flex items-center gap-1">
@@ -56,11 +49,11 @@ export default function DeviceCard({
                 </div>
                 <div className="flex items-center gap-1">
                   <Calendar className="h-3 w-3" />
-                  <span>Created {formatDate(session.createdAt)}</span>
+                  <span>{t('settings.devices.created')} {formatDate(session.createdAt)}</span>
                 </div>
                 <div className="flex items-center gap-1 sm:col-span-2">
                   <Shield className="h-3 w-3" />
-                  <span>Expires {formatDate(session.expires)}</span>
+                  <span>{t('settings.devices.expires')} {formatDate(session.expires)}</span>
                 </div>
               </div>
             </div>
@@ -78,18 +71,17 @@ export default function DeviceCard({
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Remove Device Session</DialogTitle>
+                <DialogTitle>{t('settings.devices.remove-device-dialog.title')}</DialogTitle>
                 <DialogDescription>
-                  This will log out this device. You&apos;ll need to sign in again on that device to continue using the
-                  service.
+                  {t('settings.devices.remove-device-dialog.description')}
                 </DialogDescription>
               </DialogHeader>
               <DialogFooter>
                 <DialogClose asChild>
-                  <Button variant="outline">Cancel</Button>
+                  <Button variant="outline">{t('settings.devices.remove-device-dialog.cancel')}</Button>
                 </DialogClose>
                 <Button variant="destructive" onClick={onRemove} disabled={isRemoving}>
-                  {isRemoving ? 'Removing...' : 'Remove Device'}
+                  {t('settings.devices.remove-device-dialog.submit')}
                 </Button>
               </DialogFooter>
             </DialogContent>
