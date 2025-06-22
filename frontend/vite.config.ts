@@ -22,7 +22,12 @@ export default defineConfig(({ mode }) => {
       },
     },
     base: '/',
-    plugins: [react(), eslint({ fix: true }) as PluginOption, tsconfigPaths(), tailwindcss()],
+    plugins: [
+      react(),
+      eslint({ fix: true, exclude: ['src/lib/i18n.mjs', 'src/constants/translation.ts'] }) as PluginOption,
+      tsconfigPaths(),
+      tailwindcss(),
+    ],
     resolve: {
       alias: {
         '@': resolve(__dirname, './src'),
