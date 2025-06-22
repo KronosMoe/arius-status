@@ -24,7 +24,10 @@ export default defineConfig(({ mode }) => {
     base: '/',
     plugins: [
       react(),
-      eslint({ fix: true, exclude: ['src/lib/i18n.mjs', 'src/constants/translation.ts'] }) as PluginOption,
+      eslint({
+        fix: true,
+        exclude: ['./src/lib/i18n.mjs', './src/constants/translation.ts', '**/i18n.mjs', '**/translation.ts'],
+      }) as PluginOption,
       tsconfigPaths(),
       tailwindcss(),
     ],
