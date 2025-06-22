@@ -26,5 +26,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src", "src/lib/i18n.mjs"]
+  "include": ["src", "src/lib/i18n.mjs"],
+  "exclude": ["src/constants/translation.ts"]
 }

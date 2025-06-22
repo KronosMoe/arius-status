@@ -1,6 +1,5 @@
 import { resolve } from 'path'
 import { defineConfig, loadEnv } from 'vite'
-import type { PluginOption } from 'vite'
 import eslint from 'vite-plugin-eslint2'
 import tsconfigPaths from 'vite-tsconfig-paths'
 
@@ -26,8 +25,8 @@ export default defineConfig(({ mode }) => {
       react(),
       eslint({
         fix: true,
-        exclude: ['./src/lib/i18n.mjs', './src/constants/translation.ts', '**/i18n.mjs', '**/translation.ts'],
-      }) as PluginOption,
+        exclude: ['./src/lib/i18n.mjs', './src/constants/translation.ts'],
+      }),
       tsconfigPaths(),
       tailwindcss(),
     ],
