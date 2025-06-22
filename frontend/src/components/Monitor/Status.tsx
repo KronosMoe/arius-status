@@ -5,9 +5,11 @@ import { IStatus } from '@/types/status'
 import { toast } from 'sonner'
 import Loading from '@/components/util/Loading'
 import { useEffect, useState } from 'react'
-import PingLine from '../Dashboard/components/PingLine'
+import PingLine from './components/PingLine'
+import { useTranslation } from 'react-i18next'
 
 export default function Status({ monitor }: { monitor: IMonitor }) {
+  const { t } = useTranslation()
   const [barCount, setBarCount] = useState(60)
   const [statusHistory, setStatusHistory] = useState<IStatus[]>([])
 
@@ -58,7 +60,7 @@ export default function Status({ monitor }: { monitor: IMonitor }) {
       className={`flex cursor-pointer flex-col rounded-md border border-black/20 p-4 dark:border-white/10 dark:bg-zinc-900`}
     >
       <PingLine monitor={monitor} barCount={barCount} statusHistory={statusHistory} />
-      <div className="mt-2 text-sm text-zinc-400">Check every {monitor.interval} seconds</div>
+      <div className="mt-2 text-sm text-zinc-400">{t('monitor.info.overview.check', { interval: monitor.interval })}</div>
     </div>
   )
 }

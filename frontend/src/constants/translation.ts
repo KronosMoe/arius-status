@@ -1,4 +1,19 @@
 export const Translation = {
+  nav: {
+    dashboard: 'nav.dashboard',
+    status-page: 'nav.status-page',
+    settings: 'nav.settings',
+    sign-out: 'nav.sign-out',
+    search: {
+      placeholder: 'nav.search.placeholder',
+    },
+    command: {
+      navigation: 'nav.command.navigation',
+      action: 'nav.command.action',
+      placeholder: 'nav.command.placeholder',
+      no-results: 'nav.command.no-results',
+    },
+  },
   dashboard: {
     header: {
       title: 'dashboard.header.title',
@@ -80,6 +95,23 @@ export const Translation = {
     },
   },
   monitor: {
+    info: {
+      target: 'monitor.info.target',
+      interval: 'monitor.info.interval',
+      type: 'monitor.info.type',
+      overview: {
+        title: 'monitor.info.overview.title',
+        check: 'monitor.info.overview.check',
+        time: {
+          now: 'monitor.info.overview.time.now',
+        },
+      },
+      metrics: {
+        title: 'monitor.info.metrics.title',
+        uptime: 'monitor.info.metrics.uptime',
+        total-check: 'monitor.info.metrics.total-check',
+      },
+    },
     action: {
       button: 'monitor.action.button',
       pause: {

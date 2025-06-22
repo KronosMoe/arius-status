@@ -5,7 +5,7 @@ import type { IStatus } from '@/types/status'
 import { toast } from 'sonner'
 import Loading from '@/components/util/Loading'
 import { useEffect, useState, useCallback } from 'react'
-import PingLine from './PingLine'
+import PingLine from '../../Monitor/components/PingLine'
 import { Badge } from '@/components/ui/badge'
 
 export default function MonitorCard({ monitor }: { monitor: IMonitor }) {

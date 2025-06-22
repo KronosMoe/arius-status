@@ -1,3 +1,16 @@
+nav:
+  dashboard: แดชบอร์ด
+  status-page: หน้าแสดงสถานะ
+  settings: การตั้งค่า
+  sign-out: ออกจากระบบ
+  search:
+    placeholder: ค้นหา...
+  command:
+    navigation: ไปยัง
+    action: คำสั่ง
+    placeholder: คุณกำลังมองหาอะไร?
+    no-results: ไม่พบผลลัพธ์
+
 dashboard:
   header:
     title: แดชบอร์ด
@@ -29,9 +42,9 @@ dashboard:
       agent:
         required: กรุณาเลือกเอเจนต์
       interval:
-        min: อัตราการทํางานต้องมีอย่างน้อย 60 วินาที
-        max: อัตราการทํางานต้องไม่เกิน 86400 วินาที
-        positive: อัตราการทํางานต้องเป็นตัวเลขบวก
+        min: รอบการทํางานต้องมีอย่างน้อย 60 วินาที
+        max: รอบการทํางานต้องไม่เกิน 86400 วินาที
+        positive: รอบการทํางานต้องเป็นตัวเลขบวก
       refine:
         address: กรุณากรอกที่อยู่มอนิเตอร์ให้ถูกต้องตามประเภทมอนิเตอร์
     name:
@@ -44,8 +57,8 @@ dashboard:
       label: ที่อยู่ของเป้าหมาย
       placeholder: กรุณากรอกที่อยู่ของเป้าหมาย (เช่น https://example.com, 192.168.X.X)
     interval:
-      label: อัตราการทํางาน (วินาที)
-      placeholder: กรุณากรอกอัตราการทํางาน
+      label: รอบการทํางาน (วินาที)
+      placeholder: กรุณากรอกรอบการทํางาน
     agent:
       label: เอเจนต์
       placeholder: กรุณาเลือกเอเจนต์
@@ -59,6 +72,19 @@ dashboard:
     button: ลองใหม่
 
 monitor:
+  info:
+    target: ที่อยู่เป้าหมาย
+    interval: รอบเช็ค (วินาที)
+    type: ประเภทมอนิเตอร์
+    overview:
+      title: ภาพรวมสถานะ
+      check: เช็คทุก {{interval}} วินาที
+      time:
+        now: ปัจจุบัน
+    metrics:
+      title: ตัวชี้วัดประสิทธิภาพ
+      uptime: เปอร์เซ็นการทำงาน
+      total-check: จํานวนการเช็ค
   action:
     button: คำสั่ง
     pause:

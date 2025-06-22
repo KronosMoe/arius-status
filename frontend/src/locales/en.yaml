@@ -1,3 +1,16 @@
+nav:
+  dashboard: Dashboard
+  status-page: Status Page
+  settings: Settings
+  sign-out: Sign Out
+  search:
+    placeholder: Search...
+  command:
+    navigation: Navigation
+    action: Action
+    placeholder: What are you looking for?
+    no-results: No results found.
+
 dashboard:
   header:
     title: Dashboard
@@ -25,7 +38,7 @@ dashboard:
       type:
         required: Monitor type is required
       address:
-        required: Monitor address is required
+        required: Monitor target address is required
       agent:
         required: Agent is required
       interval:
@@ -41,8 +54,8 @@ dashboard:
       label: Monitor Type
       placeholder: Select type
     address:
-      label: Address
-      placeholder: Enter address (e.g., https://example.com or example.com:443)
+      label: Target Address
+      placeholder: Enter target address (e.g., https://example.com or example.com:443)
     interval:
       label: Interval (in seconds)
       placeholder: Enter interval in seconds (e.g., 60)
@@ -59,6 +72,19 @@ dashboard:
     button: Try again
 
 monitor:
+  info:
+    target: Target Address
+    interval: Check Interval (in seconds)
+    type: Monitor Type
+    overview:
+      title: Overview
+      check: Check every {{interval}} seconds
+      time:
+        now: Now
+    metrics:
+      title: Performance Metrics
+      uptime: Uptime
+      total-check: Total Checks
   action:
     button: Actions
     pause:
