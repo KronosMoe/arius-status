@@ -6,8 +6,8 @@ nav:
   search:
     placeholder: ค้นหา...
   command:
-    navigation: การนำทาง
-    action: การดำเนินการ
+    navigation: ไปยัง
+    action: คำสั่ง
     placeholder: คุณกำลังมองหาอะไร?
     no-results: ไม่พบผลลัพธ์
 
@@ -86,7 +86,7 @@ monitor:
       uptime: เวลาใช้งาน
       total-check: การตรวจสอบทั้งหมด
   action:
-    button: การดำเนินการ
+    button: คำสั่ง
     pause:
       button: หยุดชั่วคราว
       toast: หยุดมอนิเตอร์แล้ว
