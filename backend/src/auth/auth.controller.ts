@@ -8,6 +8,80 @@ import { ACCESS_TOKEN } from 'src/constants/cookies'
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Get('google/callback')
+  async googleCallback(@Req() req: Request, @Res() res: Response) {
+    const code = req.query.code as string
+
+    if (!code) {
+      throw new BadRequestException('Code not found')
+    }
+
+    try {
+      const tokenRes = await axios.post(
+        'https://oauth2.googleapis.com/token',
+        {
+          code,
+          client_id: process.env.GOOGLE_CLIENT_ID,
+          client_secret: process.env.GOOGLE_CLIENT_SECRET,
+          redirect_uri: `${process.env.BACKEND_URL}/auth/google/callback`,
+          grant_type: 'authorization_code',
+        },
+        {
+          headers: { 'Content-Type': 'application/json' },
+        },
+      )
+
+      const accessToken = tokenRes.data.access_token
+
+      const userRes = await axios.get(
+        'https://www.googleapis.com/oauth2/v2/userinfo',
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      )
+
+      const { email, name, picture } = userRes.data
+
+      const user = await this.authService.validateOAuthLogin(
+        {
+          email,
+          username: name,
+          image: picture,
+        },
+        'google',
+      )
+
+      const userAgent = req.headers['user-agent'] || 'unknown'
+      const token = await this.authService.createSession(
+        user.id,
+        req.ip,
+        userAgent,
+      )
+
+      res.cookie('ACCESS_TOKEN', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      })
+
+      return res.redirect(
+        process.env.NODE_ENV === 'production'
+          ? `${process.env.URL}/dashboard`
+          : 'http://localhost:3000/dashboard',
+      )
+    } catch (error: any) {
+      const msg = encodeURIComponent(error.message || 'OAuth failed')
+      return res.redirect(
+        process.env.NODE_ENV === 'production'
+          ? `${process.env.URL}/auth/sign-in?error=${msg}`
+          : `http://localhost:3000/auth/sign-in?error=${msg}`,
+      )
+    }
+  }
+
   @Get('github/callback')
   async githubCallback(@Req() req: Request, @Res() res: Response) {
     const code = req.query.code as string
@@ -53,11 +127,14 @@ export class AuthController {
 
     try {
       // This may throw if user exists
-      const user = await this.authService.validateOAuthLogin({
-        username,
-        email: primaryEmail,
-        image,
-      })
+      const user = await this.authService.validateOAuthLogin(
+        {
+          username,
+          email: primaryEmail,
+          image,
+        },
+        'github',
+      )
 
       const userAgent = req.headers['user-agent'] || 'unknown'
       const token = await this.authService.createSession(

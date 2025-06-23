@@ -14,6 +14,7 @@ import { toast } from 'sonner'
 import { useAuth } from '@/hooks/useAuth'
 import SignInWithGithub from '@/components/util/auth/SignInWithGithub'
 import { Separator } from '@/components/ui/separator'
+import SignInWithGoogle from '@/components/util/auth/SignInWithGoogle'
 
 const formSchema = z.object({
   username: z.string().min(1, { message: 'Username is required' }),
@@ -64,8 +65,9 @@ export default function SignIn() {
         </CardHeader>
         <CardContent>
           <div className="mb-8">
-            <div className="flex w-full justify-center">
+            <div className="flex flex-col gap-2 w-full justify-center">
               <SignInWithGithub />
+              <SignInWithGoogle />
             </div>
 
             <div className="text-muted-foreground my-6 flex items-center space-x-4 text-sm">

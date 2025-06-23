@@ -117,6 +117,7 @@ type StatusPageExtended {
 type Query {
   me: Auth
   getGithubOAuthUrl: String!
+  getGoogleOAuthUrl: String!
   findMonitorsByUserId: [Monitor!]!
   findMonitorById(id: String!): MonitorAgent!
   getNotificationSettingsByUserId: [Notification!]!

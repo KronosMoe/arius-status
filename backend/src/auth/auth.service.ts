@@ -107,13 +107,16 @@ export class AuthService {
     return { ...user, settings } as Auth
   }
 
-  async validateOAuthLogin(githubUser: {
-    username: string
-    email: string
-    image: string
-  }): Promise<User> {
+  async validateOAuthLogin(
+    oauthUser: {
+      username: string
+      email: string
+      image: string
+    },
+    provider: string,
+  ): Promise<User> {
     const existingUser = await this.prisma.users.findUnique({
-      where: { email: githubUser.email },
+      where: { email: oauthUser.email },
     })
 
     if (existingUser) {
@@ -121,10 +124,10 @@ export class AuthService {
     }
 
     const user = await this.userService.createUser({
-      username: githubUser.username,
-      email: githubUser.email,
+      username: oauthUser.username,
+      email: oauthUser.email,
       password: '',
-      provider: 'github',
+      provider,
     })
 
     return user

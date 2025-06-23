@@ -37,3 +37,10 @@ export const GITHUB_OAUTH_URL_QUERY = gql`
     getGithubOAuthUrl
   }
 `
+
+// Google Oauth
+export const GOOGLE_OAUTH_URL_QUERY = gql`
+  query GoogleOauthUrl {
+    getGoogleOAuthUrl
+  }
+`
