@@ -10,7 +10,7 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 
 export default tseslint.config(
   { files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'] },
-  { ignores: ['src/lib/i18n.mjs', 'node_modules'] },
+  { ignores: ['src/lib/i18n.mjs', 'node_modules', 'src/constants/translation.ts'] },
   { languageOptions: { globals: globals.browser, ecmaVersion: 'latest' } },
   js.configs.recommended,
   pluginJs.configs.recommended,

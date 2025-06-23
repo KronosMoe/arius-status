@@ -12,6 +12,7 @@ import { DELETE_AGENT_MUTATION } from '@/gql/agents'
 import { useMutation } from '@apollo/client'
 import { Trash } from 'lucide-react'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
 type Props = {
@@ -20,11 +21,12 @@ type Props = {
 }
 
 export default function DeleteAgentDialog({ agentId, refetch }: Props) {
+  const { t } = useTranslation()
   const [open, setOpen] = useState(false)
 
   const [deleteAgent, { loading: isDeleting }] = useMutation(DELETE_AGENT_MUTATION, {
     onCompleted: () => {
-      toast.success('Agent deleted successfully')
+      toast.success(t('agent.delete.toast'))
       refetch()
     },
     onError: (error) => toast.error(error.message),
@@ -35,16 +37,16 @@ export default function DeleteAgentDialog({ agentId, refetch }: Props) {
       <DialogTrigger asChild>
         <Button variant="destructive" size="sm" className="cursor-pointer">
           <Trash className="mr-2 h-4 w-4" />
-          Delete
+          {t('agent.delete.button')}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Are you sure?</DialogTitle>
-          <DialogDescription>This action cannot be undone. This will permanently delete your agent.</DialogDescription>
+          <DialogTitle>{t('agent.delete.confirmation.title')}</DialogTitle>
+          <DialogDescription>{t('agent.delete.confirmation.description')}</DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button onClick={() => setOpen(false)}>Cancel</Button>
+          <Button onClick={() => setOpen(false)}>{t('agent.delete.cancel')}</Button>
           <Button
             variant="destructive"
             disabled={isDeleting}
@@ -53,7 +55,7 @@ export default function DeleteAgentDialog({ agentId, refetch }: Props) {
               setOpen(false)
             }}
           >
-            Delete
+            {t('agent.delete.button')}
           </Button>
         </DialogFooter>
       </DialogContent>

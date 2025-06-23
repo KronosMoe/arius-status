@@ -5,13 +5,13 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu'
 import { Link } from 'react-router-dom'
 import { Activity, ChevronDown, Gauge, LogOut, Settings } from 'lucide-react'
 import { Auth } from '@/types/auth'
+import { useTranslation } from 'react-i18next'
 
 type Props = {
   auth: Auth
@@ -19,6 +19,8 @@ type Props = {
 }
 
 export default function NavbarDropdown({ auth, logout }: Props) {
+  const { t } = useTranslation()
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -28,24 +30,23 @@ export default function NavbarDropdown({ auth, logout }: Props) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-40" align="start">
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuGroup>
           <Link to={DASHBOARD_PATH}>
             <DropdownMenuItem>
               <Gauge className="h-4 w-4" />
-              Dashboard
+              {t('nav.dashboard')}
             </DropdownMenuItem>
           </Link>
           <Link to={STATUS_PAGE_PATH}>
             <DropdownMenuItem>
               <Activity className="h-4 w-4" />
-              Status page
+              {t('nav.status-page')}
             </DropdownMenuItem>
           </Link>
           <Link to={SETTING_PATH}>
             <DropdownMenuItem>
               <Settings className="h-4 w-4" />
-              Settings
+              {t('nav.settings')}
             </DropdownMenuItem>
           </Link>
         </DropdownMenuGroup>
@@ -53,7 +54,7 @@ export default function NavbarDropdown({ auth, logout }: Props) {
         <DropdownMenuGroup>
           <DropdownMenuItem onClick={logout}>
             <LogOut className="h-4 w-4" />
-            Sign Out
+            {t('nav.sign-out')}
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>

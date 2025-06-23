@@ -6,6 +6,8 @@ import { Clock } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 import { MONITOR_INFO_PATH } from '@/constants/routes'
 import { Link } from 'react-router-dom'
+import { dateFnsLocaleMap } from '@/lib/date'
+import { useTranslation } from 'react-i18next'
 
 interface MonitorsListProps {
   monitors: IMonitor[]
@@ -13,6 +15,8 @@ interface MonitorsListProps {
 }
 
 export function MonitorsList({ monitors, agents }: MonitorsListProps) {
+  const { i18n } = useTranslation()
+
   const badgeBgFilter = (status: string) => {
     switch (status) {
       case 'UP':
@@ -41,7 +45,10 @@ export function MonitorsList({ monitors, agents }: MonitorsListProps) {
                 </div>
                 <CardDescription className="flex items-center gap-1">
                   <Clock className="h-3 w-3" />
-                  {formatDistanceToNow(new Date(monitor.createdAt), { addSuffix: true })}
+                  {formatDistanceToNow(new Date(monitor.createdAt), {
+                    addSuffix: true,
+                    locale: dateFnsLocaleMap[i18n.language] ?? dateFnsLocaleMap['en'],
+                  })}
                 </CardDescription>
               </CardHeader>
               <CardContent className="pb-2">

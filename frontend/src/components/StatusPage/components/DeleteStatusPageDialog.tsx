@@ -12,6 +12,7 @@ import { DELETE_STATUS_PAGE_MUTATION } from '@/gql/status-page'
 import { useMutation } from '@apollo/client'
 import { Trash } from 'lucide-react'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
 type Props = {
@@ -20,6 +21,7 @@ type Props = {
 }
 
 export default function DeleteStatusPageDialog({ statusPageId, refetch }: Props) {
+  const { t } = useTranslation()
   const [open, setOpen] = useState(false)
 
   const [deleteStatusPage, { loading }] = useMutation(DELETE_STATUS_PAGE_MUTATION, {
@@ -27,7 +29,7 @@ export default function DeleteStatusPageDialog({ statusPageId, refetch }: Props)
       id: statusPageId,
     },
     onCompleted: () => {
-      toast.success('Status page deleted successfully')
+      toast.success(t('status-page.delete-dialog.toast'))
       setOpen(false)
       refetch()
     },
@@ -41,20 +43,20 @@ export default function DeleteStatusPageDialog({ statusPageId, refetch }: Props)
       <DialogTrigger asChild>
         <Button variant="destructive" className="cursor-pointer">
           <Trash className="mr-2 h-4 w-4" />
-          Delete
+          {t('status-page.delete-dialog.button')}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Are you sure?</DialogTitle>
+          <DialogTitle>{t('status-page.delete-dialog.title')}</DialogTitle>
           <DialogDescription>
-            This action cannot be undone. This will permanently delete your status page.
+            {t('status-page.delete-dialog.description')}
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button onClick={() => setOpen(false)}>Cancel</Button>
+          <Button onClick={() => setOpen(false)}>{t('status-page.delete-dialog.cancel')}</Button>
           <Button variant="destructive" disabled={loading} onClick={() => deleteStatusPage()}>
-            Delete
+            {t('status-page.delete-dialog.submit')}
           </Button>
         </DialogFooter>
       </DialogContent>

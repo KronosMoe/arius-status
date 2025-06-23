@@ -6,6 +6,7 @@ import type { INotification } from '@/types/setting'
 import UpdateNotificationForm from './UpdateNotificationForm'
 import DeleteNotificationDialog from './DeleteNotificationDialog'
 import { formatDate } from '@/lib/date'
+import { useTranslation } from 'react-i18next'
 
 export default function NotificationCard({
   notification,
@@ -14,6 +15,8 @@ export default function NotificationCard({
   notification: INotification
   refetch: () => void
 }) {
+  const { t } = useTranslation()
+
   const getMethodIcon = (method: string) => {
     switch (method.toLowerCase()) {
       case 'discord':
@@ -48,7 +51,7 @@ export default function NotificationCard({
                 <h3 className="truncate text-sm font-semibold">{notification.title}</h3>
                 {notification.isDefault && (
                   <Badge variant="outline" className="hidden text-xs text-blue-600 sm:block">
-                    Default
+                    {t('settings.notification.list.default')}
                   </Badge>
                 )}
               </div>
@@ -72,7 +75,7 @@ export default function NotificationCard({
                 )}
                 <div className="flex items-center gap-1">
                   <Calendar className="h-3 w-3" />
-                  <span>Created {formatDate(notification.createdAt)}</span>
+                  <span>{t('settings.notification.list.created')} {formatDate(notification.createdAt)}</span>
                 </div>
               </div>
             </div>

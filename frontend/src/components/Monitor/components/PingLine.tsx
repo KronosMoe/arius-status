@@ -1,8 +1,10 @@
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip'
-import { formatAgo } from '@/lib/date'
+import { dateFnsLocaleMap } from '@/lib/date'
 import type { IMonitor } from '@/types/monitor'
 import type { IStatus } from '@/types/status'
+import { formatDistanceToNow } from 'date-fns'
 import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 
 type Props = {
   monitor: IMonitor
@@ -11,8 +13,13 @@ type Props = {
 }
 
 export default function PingLine({ monitor, barCount, statusHistory }: Props) {
+  const { t, i18n } = useTranslation()
   const totalSeconds = monitor.interval * barCount
-  const startLabel = formatAgo(totalSeconds)
+  const date = new Date(Date.now() - totalSeconds * 1000)
+  const startLabel = formatDistanceToNow(date, {
+    addSuffix: true,
+    locale: dateFnsLocaleMap[i18n.language] ?? dateFnsLocaleMap['en'],
+  })
 
   // Memoize the bars data to prevent unnecessary re-renders
   const barsData = useMemo(() => {
@@ -45,8 +52,8 @@ export default function PingLine({ monitor, barCount, statusHistory }: Props) {
   return (
     <>
       <div className="my-2 flex flex-row items-center justify-between">
-        <div className="text-xs text-zinc-400">~{startLabel}</div>
-        <div className="text-xs text-zinc-400">Now</div>
+        <div className="text-xs text-zinc-400">{startLabel}</div>
+        <div className="text-xs text-zinc-400">{t('monitor.info.overview.time.now')}</div>
       </div>
 
       <TooltipProvider>

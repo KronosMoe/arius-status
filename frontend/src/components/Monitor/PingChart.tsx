@@ -18,6 +18,7 @@ import { STATUS_BY_TIME_RANGE_QUERY } from '@/gql/status'
 import Loading from '../util/Loading'
 import { toast } from 'sonner'
 import type { IStatus } from '@/types/status'
+import { useTranslation } from 'react-i18next'
 
 ChartJS.register(LineElement, PointElement, TimeScale, LinearScale, Tooltip, annotationPlugin)
 
@@ -27,6 +28,7 @@ type Props = {
 }
 
 export default function PingChart({ monitor, selectedTimeRange }: Props) {
+  const { t } = useTranslation()
   const from = useMemo(() => new Date(Date.now() - selectedTimeRange.value), [selectedTimeRange])
   const to = useMemo(() => new Date(), [])
 
@@ -266,11 +268,11 @@ export default function PingChart({ monitor, selectedTimeRange }: Props) {
         {uptimeStats && (
           <div className="mb-4 grid grid-cols-2 gap-4 sm:grid-cols-4">
             <div className="rounded-lg border border-green-200 bg-green-50 p-3 dark:border-green-800 dark:bg-green-900/20">
-              <div className="text-sm font-medium text-green-800 dark:text-green-200">Uptime</div>
+              <div className="text-sm font-medium text-green-800 dark:text-green-200">{t('monitor.info.metrics.uptime')}</div>
               <div className="text-lg font-bold text-green-900 dark:text-green-100">{uptimeStats.percentage}%</div>
             </div>
             <div className="rounded-lg border border-blue-200 bg-blue-50 p-3 dark:border-blue-800 dark:bg-blue-900/20">
-              <div className="text-sm font-medium text-blue-800 dark:text-blue-200">Total Checks</div>
+              <div className="text-sm font-medium text-blue-800 dark:text-blue-200">{t('monitor.info.metrics.total-check')}</div>
               <div className="text-lg font-bold text-blue-900 dark:text-blue-100">{uptimeStats.total}</div>
             </div>
             <div className="rounded-lg border border-green-200 bg-green-50 p-3 dark:border-green-800 dark:bg-green-900/20">

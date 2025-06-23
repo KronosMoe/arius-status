@@ -4,6 +4,7 @@ export const SETTINGS_QUERY = gql`
   query GetSettingsByUserId {
     getSettingsByUserId {
       theme
+      language
     }
   }
 `
@@ -12,6 +13,14 @@ export const UPDATE_THEME_MUTATION = gql`
   mutation Mutation($theme: String!) {
     updateTheme(theme: $theme) {
       theme
+    }
+  }
+`
+
+export const UPDATE_LANGUAGE_MUTATION = gql`
+  mutation Mutation($language: String!) {
+    updateLanguage(language: $language) {
+      language
     }
   }
 `

@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint . --report-unused-disable-directives --max-warnings 20 --config ./eslint.config.mjs",
+    "lint": "eslint . --report-unused-disable-directives --fix --max-warnings 20 --config ./eslint.config.mjs",
     "preview": "vite preview",
     "i18n:build": "node src/lib/i18n.mjs"
   },

@@ -13,6 +13,7 @@ import { INotification } from '@/types/setting'
 import { useMutation } from '@apollo/client'
 import { Trash } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
 type Props = {
@@ -21,6 +22,7 @@ type Props = {
 }
 
 export default function DeleteNotificationDialog({ notification, refetch }: Props) {
+  const { t } = useTranslation()
   const [open, setOpen] = useState(false)
   const [deleteNotification, { error, loading }] = useMutation(DELETE_NOTIFICATION_MUTATION, {
     variables: {
@@ -30,7 +32,7 @@ export default function DeleteNotificationDialog({ notification, refetch }: Prop
 
   const onDelete = async () => {
     await deleteNotification()
-    toast.success('Notification deleted successfully')
+    toast.success(t('settings.notification.remove-dialog.toast'))
     setOpen(false)
     refetch()
   }
@@ -48,16 +50,13 @@ export default function DeleteNotificationDialog({ notification, refetch }: Prop
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Are you sure?</DialogTitle>
-          <DialogDescription>
-            This action cannot be undone. This will permanently delete your notification{' '}
-            <b>&quot;{notification.title}&quot;</b>
-          </DialogDescription>
+          <DialogTitle>{t('settings.notification.remove-dialog.title')}</DialogTitle>
+          <DialogDescription>{t('settings.notification.remove-dialog.description')}</DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button onClick={() => setOpen(false)}>Cancel</Button>
+          <Button onClick={() => setOpen(false)}>{t('settings.notification.remove-dialog.cancel')}</Button>
           <Button variant="destructive" disabled={loading} onClick={onDelete}>
-            {loading ? 'Deleting...' : 'Delete'}
+            {t('settings.notification.remove-dialog.submit')}
           </Button>
         </DialogFooter>
       </DialogContent>

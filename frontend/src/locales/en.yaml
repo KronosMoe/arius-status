@@ -1,1 +1,304 @@
-hello: "Hello"
+nav:
+  dashboard: Dashboard
+  status-page: Status Page
+  settings: Settings
+  sign-out: Sign Out
+  search:
+    placeholder: Search...
+  command:
+    navigation: Navigation
+    action: Action
+    placeholder: What are you looking for?
+    no-results: No results found.
+
+dashboard:
+  header:
+    title: Dashboard
+    description: Manage your monitors and agents
+    button:
+      refresh: Refresh
+    stats:
+      total-monitors: Total Monitors
+      active-monitors: Active Monitors
+      paused-monitors: Paused Monitors
+      total-agents: Total Agents
+  tabs:
+    monitors: Monitors
+    agents: Agents
+  list:
+    title-monitor: Your Monitors
+    title-agent: Your Agents
+  create-monitor-form:
+    title: Add New Monitor
+    submit: Add
+    toast: Monitor added successfully
+    validation:
+      name:
+        required: Monitor name is required
+      type:
+        required: Monitor type is required
+      address:
+        required: Monitor target address is required
+      agent:
+        required: Agent is required
+      interval:
+        min: Interval must be at least 60 seconds
+        max: Interval must be at most 86400 seconds
+        positive: Interval must be a positive number
+      refine:
+        address: Invalid address format based on monitor type
+    name:
+      label: Monitor Name
+      placeholder: Enter your monitor name
+    type:
+      label: Monitor Type
+      placeholder: Select type
+    address:
+      label: Target Address
+      placeholder: Enter target address (e.g., https://example.com or example.com:443)
+    interval:
+      label: Interval (in seconds)
+      placeholder: Enter interval in seconds (e.g., 60)
+    agent:
+      label: Agent
+      placeholder: Select agent
+  create-agent-form:
+    title: Add New Agent
+    toast: Agent added successfully
+    submit: Add
+  error:
+    title: Error
+    message: There was a problem loading your dashboard data.
+    button: Try again
+
+monitor:
+  info:
+    target: Target Address
+    interval: Check Interval (in seconds)
+    type: Monitor Type
+    overview:
+      title: Overview
+      check: Check every {{interval}} seconds
+      time:
+        now: Now
+    metrics:
+      title: Performance Metrics
+      uptime: Uptime
+      total-check: Total Checks
+  action:
+    button: Actions
+    pause:
+      button: Pause
+      toast: Monitor paused
+    resume:
+      button: Resume
+      toast: Monitor resumed
+    edit:
+      button: Edit
+    delete:
+      button: Delete
+      cancel: Cancel
+      toast: Monitor deleted successfully
+      confirmation:
+        title: Are you sure you want to delete this monitor?
+        description: This action cannot be undone. This will permanently delete your monitor.
+  edit-monitor-form:
+    title: Edit Monitor
+    toast: Monitor updated successfully
+    submit: Save
+
+agent:
+  delete:
+    button: Delete
+    cancel: Cancel
+    toast: Agent deleted successfully
+    confirmation:
+      title: Are you sure you want to delete this agent?
+      description: This action cannot be undone. This will permanently delete your agent.
+  edit-agent-form:
+    title: Edit Agent
+    validation:
+      name:
+        required: Agent name is required
+        refine: Agent name must be lowercase and use hyphens instead of spaces
+    toast: Agent renamed successfully
+    button: Rename
+    submit: Save
+    cancel: Cancel
+    name:
+      label: Agent Name
+      placeholder: Enter your agent name
+      description: Must be lowercase and use hyphens instead of spaces (e.g. home-lab).
+
+settings:
+  title: Settings
+  description: Manage your account settings and preferences
+  appearance:
+    title: Appearance
+    description: Customize the appearance of your website experience
+    theme:
+      light: Light Mode
+      dark: Dark Mode
+      toast: Theme updated successfully
+  language:
+    title: Language
+    description: Choose your preferred language
+    toast: Language updated successfully
+  notification:
+    title: Notifications
+    description: Configure how and when you receive notifications
+    list:
+      title: Notifications
+      created: Created
+      default: Default
+    empty:
+      title: No Notifications Configured
+      description: Set up your notifications to receive alerts about your services and uptime monitoring.
+    button: Add New Notification
+    remove-dialog:
+      title: Are you sure you want to remove this notification?
+      description: This action cannot be undone. This will permanently delete your notification.
+      toast: Notification removed successfully
+      cancel: Cancel
+      submit: Confirm
+    edit-notification-form:
+      title: Editing
+      toast: Notification updated successfully
+      isDefault:
+        label: Set as Default
+      submit: Save
+      cancel: Cancel
+    create-notification-form:
+      title: Add New Notification
+      toast: Notification added successfully
+      submit: Add
+      cancel: Cancel
+      webhook-test:
+        button: Test
+        toast: Webhook sent successfully
+      validation:
+        name:
+          required: Notification title is required
+        method:
+          required: Notification method is required
+        email-content:
+          required: Email content is required
+        webhook:
+          required: Webhook URL is required
+          invalid: Invalid webhook URL
+      name:
+        label: Notification Title
+        placeholder: Enter notification title
+      method:
+        label: Notification Method
+        placeholder: Select notification method
+      email-content:
+        label: Email Content
+        placeholder: Enter email content
+      message:
+        label: Notification Message
+        placeholder: Enter notification message
+      webhook:
+        label: Webhook URL
+        placeholder: Enter webhook URL
+  devices:
+    title: Devices
+    description: Manage devices where you're currently signed in
+    active-session: Active Sessions
+    expires: Expires
+    created: Created
+    remove-device-dialog:
+      title: Remove Device Session?
+      description: Are you sure you want to remove this device session? This action cannot be undone.
+      toast: Device session removed successfully
+      cancel: Cancel
+      submit: Confirm
+    danger-zone:
+      title: Danger Zone
+      description: Log out of all devices. You'll need to sign in again on those devices.
+      button: Log Out of All Devices
+      dialog:
+        title: Log Out All Devices?
+        description: Are you sure you want to log out of all devices? This action cannot be undone.
+        toast: Logged out of all devices successfully
+        cancel: Cancel
+        submit: Confirm
+  about:
+    title: About
+
+status-page:
+  title: Status Page
+  description: Manage your status pages
+  edit-button: Edit
+  empty:
+    title: You don't have any status pages yet
+    button: Create Your First Status Page
+  edit-status-page-form:
+    toast: Status page updated successfully
+    submit: Save Changes
+  create-status-page-form:
+    title: Status Page Creator
+    button: Create Status Page
+    description: Design and configure your status page
+    toast: Status page created successfully
+    submit: Create Status Page
+    back: Go Back
+    reset: Reset
+    editor:
+      title: Configuration
+      button: Editor
+    preview:
+      title: Live Preview
+      button: Preview
+    validation:
+      name:
+        required: Title is required
+        max: Title must be less than 100 characters
+      footer:
+        max: Footer must be less than 200 characters
+      slug:
+        required: Slug is required
+        max: Slug must be less than 50 characters
+        regex: Slug can only contain lowercase letters, numbers, and hyphens
+        refine: Slug cannot start or end with a hyphen
+      monitor:
+        required: Please select at least one monitor
+      file:
+        size: File size should not exceed 50MB
+    name:
+      label: Page Title
+      placeholder: Enter a name for your status page
+    slug:
+      label: Status Page Slug
+      placeholder: Enter a Slug for your status page
+      message: Your status page will be available at
+    logo:
+      label: Logo
+      placeholder: Upload Logo
+    footer:
+      label: Footer Text
+      placeholder: Enter footer text (optional)
+    layout:
+      title: Layout Settings
+      overall-status:
+        label: Show Overall Status
+        message: Show aggregated status at the top
+      full-width:
+        label: Full Width
+        message: Use full width layout
+    monitors:
+      title: Monitors
+      empty: No monitors found. Create monitors first to add them to your status page.
+      status-overview:
+        label: Status Overviews
+        placeholder: Add monitor as overview
+      status-timeline:
+        label: Status Timelines
+        placeholder: Add monitor as timeline
+  delete-dialog:
+    title: Are you sure?
+    description: This action cannot be undone. This will permanently delete your status page.
+    toast: Status page removed successfully
+    cancel: Cancel
+    submit: Confirm
+    button: Delete
