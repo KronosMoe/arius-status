@@ -53,10 +53,14 @@ export class AgentsGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     client.join(agent.id)
 
-    await this.prisma.agents.update({
+    const updatedAgent = await this.prisma.agents.update({
       where: { id: agent.id },
       data: { isOnline: true },
     })
+
+    if (!agent.isOnline && updatedAgent.isOnline) {
+      this.notificationService.sendAgentNotification(agent, agent.userId, false)
+    }
 
     setInterval(() => {
       client.emit('health-check')
