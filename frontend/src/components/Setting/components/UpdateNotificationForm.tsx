@@ -4,6 +4,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
+import { Textarea } from '@/components/ui/textarea'
 import { UPDATE_NOTIFICATION_MUTATION } from '@/gql/settings'
 import { INotification } from '@/types/setting'
 import { useMutation } from '@apollo/client'
@@ -11,38 +12,9 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Pencil } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { z } from 'zod'
-
-const formSchema = z
-  .object({
-    title: z.string().min(1, { message: 'Title is required' }),
-    method: z.enum(['Email', 'Discord'], {
-      required_error: 'Method is required',
-    }),
-    message: z.string().min(1, { message: 'Message is required' }),
-    metadata: z.any(),
-    webhookUrl: z.string().url('Invalid URL').optional(),
-    content: z.string().optional(),
-    isDefault: z.boolean(),
-  })
-  .superRefine((data, ctx) => {
-    if ((data.method === 'Discord') && !data.webhookUrl) {
-      ctx.addIssue({
-        path: ['webhookUrl'],
-        code: z.ZodIssueCode.custom,
-        message: 'Webhook URL is required for Discord',
-      })
-    }
-
-    if (data.method === 'Email' && !data.content) {
-      ctx.addIssue({
-        path: ['content'],
-        code: z.ZodIssueCode.custom,
-        message: 'Content is required for Email',
-      })
-    }
-  })
 
 type Props = {
   notification: INotification
@@ -50,9 +22,45 @@ type Props = {
 }
 
 export default function UpdateNotificationForm({ refetch, notification }: Props) {
+  const { t } = useTranslation()
   const [open, setOpen] = useState(false)
 
   const [updateNotification, { error, loading }] = useMutation(UPDATE_NOTIFICATION_MUTATION)
+
+  const formSchema = z
+    .object({
+      title: z
+        .string()
+        .min(1, { message: t('settings.notification.create-notification-form.validation.name.required') }),
+      method: z.enum(['Email', 'Discord'], {
+        required_error: t('settings.notification.create-notification-form.validation.method.required'),
+      }),
+      message: z.string().optional(),
+      metadata: z.any(),
+      webhookUrl: z
+        .string()
+        .url(t('settings.notification.create-notification-form.validation.webhook.invalid'))
+        .optional(),
+      content: z.string().optional(),
+      isDefault: z.boolean(),
+    })
+    .superRefine((data, ctx) => {
+      if (data.method === 'Discord' && !data.webhookUrl) {
+        ctx.addIssue({
+          path: ['webhookUrl'],
+          code: z.ZodIssueCode.custom,
+          message: t('settings.notification.create-notification-form.validation.webhook.required'),
+        })
+      }
+
+      if (data.method === 'Email' && !data.content) {
+        ctx.addIssue({
+          path: ['content'],
+          code: z.ZodIssueCode.custom,
+          message: t('settings.notification.create-notification-form.validation.email-content.required'),
+        })
+      }
+    })
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -77,7 +85,7 @@ export default function UpdateNotificationForm({ refetch, notification }: Props)
       },
       body: JSON.stringify({ content: message }),
     })
-    toast.success('Webhook sent successfully')
+    toast.success(t('settings.notification.create-notification-form.webhook-test.toast'))
   }
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -95,7 +103,7 @@ export default function UpdateNotificationForm({ refetch, notification }: Props)
         },
       },
     })
-    toast.success('Notification updated successfully')
+    toast.success(t('settings.notification.edit-notification-form.toast'))
     form.reset()
     setOpen(false)
     refetch()
@@ -114,7 +122,7 @@ export default function UpdateNotificationForm({ refetch, notification }: Props)
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create Notification</DialogTitle>
+          <DialogTitle>{t('settings.notification.edit-notification-form.title')} {notification.title}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -123,9 +131,12 @@ export default function UpdateNotificationForm({ refetch, notification }: Props)
               name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Title</FormLabel>
+                  <FormLabel>{t('settings.notification.create-notification-form.name.label')}</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input
+                      {...field}
+                      placeholder={t('settings.notification.create-notification-form.name.placeholder')}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -136,11 +147,13 @@ export default function UpdateNotificationForm({ refetch, notification }: Props)
               name="method"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Method</FormLabel>
+                  <FormLabel>{t('settings.notification.create-notification-form.method.label')}</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl className="w-full">
                       <SelectTrigger>
-                        <SelectValue placeholder="Select a method" />
+                        <SelectValue
+                          placeholder={t('settings.notification.create-notification-form.method.placeholder')}
+                        />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -152,15 +165,18 @@ export default function UpdateNotificationForm({ refetch, notification }: Props)
                 </FormItem>
               )}
             />
-            {(method === 'Discord') && (
+            {method === 'Discord' && (
               <FormField
                 control={form.control}
                 name="webhookUrl"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Webhook URL</FormLabel>
+                    <FormLabel>{t('settings.notification.create-notification-form.webhook.label')}</FormLabel>
                     <FormControl>
-                      <Input placeholder="https://example.com/webhook" {...field} />
+                      <Input
+                        placeholder={t('settings.notification.create-notification-form.webhook.placeholder')}
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -173,9 +189,12 @@ export default function UpdateNotificationForm({ refetch, notification }: Props)
                 name="content"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email Content</FormLabel>
+                    <FormLabel>{t('settings.notification.create-notification-form.email-content.label')}</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter email content" {...field} />
+                      <Textarea
+                        placeholder={t('settings.notification.create-notification-form.email-content.placeholder')}
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -187,9 +206,12 @@ export default function UpdateNotificationForm({ refetch, notification }: Props)
               name="message"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Message</FormLabel>
+                  <FormLabel>{t('settings.notification.create-notification-form.message.label')}</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input
+                      {...field}
+                      placeholder={t('settings.notification.create-notification-form.message.placeholder')}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -201,7 +223,7 @@ export default function UpdateNotificationForm({ refetch, notification }: Props)
               render={({ field }) => (
                 <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                   <div className="space-y-0.5">
-                    <FormLabel>Set as default</FormLabel>
+                    <FormLabel>{t('settings.notification.edit-notification-form.isDefault.label')}</FormLabel>
                   </div>
                   <FormControl>
                     <Switch checked={field.value} onCheckedChange={field.onChange} />
@@ -210,13 +232,16 @@ export default function UpdateNotificationForm({ refetch, notification }: Props)
               )}
             />
             <div className="flex justify-end gap-2">
-              {(method === 'Discord') && webhookUrl && message && (
+              {method === 'Discord' && webhookUrl && (
                 <Button type="button" variant="secondary" onClick={() => testWebhook(webhookUrl)}>
-                  Test
+                  {t('settings.notification.create-notification-form.webhook-test.button')}
                 </Button>
               )}
+              <Button variant="outline" onClick={() => setOpen(false)}>
+                {t('settings.notification.edit-notification-form.cancel')}
+              </Button>
               <Button type="submit" disabled={loading}>
-                {loading ? 'Saving...' : 'Save'}
+                {t('settings.notification.edit-notification-form.submit')}
               </Button>
             </div>
           </form>

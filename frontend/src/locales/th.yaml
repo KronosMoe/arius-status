@@ -1,1 +1,304 @@
-hello: "สวัสดี"
+nav:
+  dashboard: แดชบอร์ด
+  status-page: หน้าสถานะ
+  settings: การตั้งค่า
+  sign-out: ออกจากระบบ
+  search:
+    placeholder: ค้นหา...
+  command:
+    navigation: ไปยัง
+    action: คำสั่ง
+    placeholder: คุณกำลังมองหาอะไร?
+    no-results: ไม่พบผลลัพธ์
+
+dashboard:
+  header:
+    title: แดชบอร์ด
+    description: จัดการมอนิเตอร์และเอเจนต์ของคุณ
+    button:
+      refresh: รีเฟรช
+    stats:
+      total-monitors: มอนิเตอร์ทั้งหมด
+      active-monitors: มอนิเตอร์ที่ใช้งานอยู่
+      paused-monitors: มอนิเตอร์ที่หยุดชั่วคราว
+      total-agents: เอเจนต์ทั้งหมด
+  tabs:
+    monitors: มอนิเตอร์
+    agents: เอเจนต์
+  list:
+    title-monitor: มอนิเตอร์ของคุณ
+    title-agent: เอเจนต์ของคุณ
+  create-monitor-form:
+    title: เพิ่มมอนิเตอร์ใหม่
+    submit: เพิ่ม
+    toast: เพิ่มมอนิเตอร์เรียบร้อยแล้ว
+    validation:
+      name:
+        required: จำเป็นต้องระบุชื่อมอนิเตอร์
+      type:
+        required: จำเป็นต้องระบุประเภทมอนิเตอร์
+      address:
+        required: จำเป็นต้องระบุที่อยู่เป้าหมายของมอนิเตอร์
+      agent:
+        required: จำเป็นต้องระบุเอเจนต์
+      interval:
+        min: ช่วงเวลาต้องไม่น้อยกว่า 60 วินาที
+        max: ช่วงเวลาต้องไม่เกิน 86400 วินาที
+        positive: ช่วงเวลาต้องเป็นจำนวนบวก
+      refine:
+        address: รูปแบบที่อยู่ไม่ถูกต้องตามประเภทมอนิเตอร์
+    name:
+      label: ชื่อมอนิเตอร์
+      placeholder: ป้อนชื่อมอนิเตอร์ของคุณ
+    type:
+      label: ประเภทมอนิเตอร์
+      placeholder: เลือกประเภท
+    address:
+      label: ที่อยู่เป้าหมาย
+      placeholder: ป้อนที่อยู่เป้าหมาย (เช่น https://example.com หรือ example.com:443)
+    interval:
+      label: ช่วงเวลา (เป็นวินาที)
+      placeholder: ป้อนช่วงเวลา (เช่น 60)
+    agent:
+      label: เอเจนต์
+      placeholder: เลือกเอเจนต์
+  create-agent-form:
+    title: เพิ่มเอเจนต์ใหม่
+    toast: เพิ่มเอเจนต์เรียบร้อยแล้ว
+    submit: เพิ่ม
+  error:
+    title: ข้อผิดพลาด
+    message: มีปัญหาในการโหลดข้อมูลแดชบอร์ดของคุณ
+    button: ลองอีกครั้ง
+
+monitor:
+  info:
+    target: ที่อยู่เป้าหมาย
+    interval: ตรวจสอบทุก (วินาที)
+    type: ประเภทมอนิเตอร์
+    overview:
+      title: ภาพรวม
+      check: ตรวจสอบทุก ๆ {{interval}} วินาที
+      time:
+        now: ขณะนี้
+    metrics:
+      title: ตัวชี้วัดประสิทธิภาพ
+      uptime: เวลาใช้งาน
+      total-check: การตรวจสอบทั้งหมด
+  action:
+    button: คำสั่ง
+    pause:
+      button: หยุดชั่วคราว
+      toast: หยุดมอนิเตอร์แล้ว
+    resume:
+      button: ดำเนินการต่อ
+      toast: เริ่มมอนิเตอร์อีกครั้งแล้ว
+    edit:
+      button: แก้ไข
+    delete:
+      button: ลบ
+      cancel: ยกเลิก
+      toast: ลบมอนิเตอร์เรียบร้อยแล้ว
+      confirmation:
+        title: คุณแน่ใจหรือไม่ว่าต้องการลบมอนิเตอร์นี้?
+        description: การกระทำนี้ไม่สามารถย้อนกลับได้ และจะลบมอนิเตอร์ของคุณถาวร
+  edit-monitor-form:
+    title: แก้ไขมอนิเตอร์
+    toast: อัปเดตมอนิเตอร์เรียบร้อยแล้ว
+    submit: บันทึก
+
+agent:
+  delete:
+    button: ลบ
+    cancel: ยกเลิก
+    toast: ลบเอเจนต์เรียบร้อยแล้ว
+    confirmation:
+      title: คุณแน่ใจหรือไม่ว่าต้องการลบเอเจนต์นี้?
+      description: การกระทำนี้ไม่สามารถย้อนกลับได้ และจะลบเอเจนต์ของคุณถาวร
+  edit-agent-form:
+    title: แก้ไขเอเจนต์
+    validation:
+      name:
+        required: จำเป็นต้องระบุชื่อเอเจนต์
+        refine: ชื่อเอเจนต์ต้องเป็นตัวพิมพ์เล็กและใช้ขีดกลางแทนช่องว่าง
+    toast: เปลี่ยนชื่อเอเจนต์เรียบร้อยแล้ว
+    button: เปลี่ยนชื่อ
+    submit: บันทึก
+    cancel: ยกเลิก
+    name:
+      label: ชื่อเอเจนต์
+      placeholder: ป้อนชื่อเอเจนต์ของคุณ
+      description: ต้องเป็นตัวพิมพ์เล็กและใช้ขีดกลางแทนช่องว่าง (เช่น home-lab)
+
+settings:
+  title: การตั้งค่า
+  description: จัดการการตั้งค่าและความชอบของบัญชีของคุณ
+  appearance:
+    title: รูปลักษณ์
+    description: ปรับแต่งรูปลักษณ์ของประสบการณ์ใช้งานเว็บไซต์ของคุณ
+    theme:
+      light: โหมดสว่าง
+      dark: โหมดมืด
+      toast: อัปเดตธีมเรียบร้อยแล้ว
+  language:
+    title: ภาษา
+    description: เลือกภาษาที่คุณต้องการ
+    toast: อัปเดตภาษาเรียบร้อยแล้ว
+  notification:
+    title: การแจ้งเตือน
+    description: กำหนดค่าการแจ้งเตือนและวิธีการแจ้ง
+    list:
+      title: การแจ้งเตือน
+      created: สร้างเมื่อ
+      default: ค่าเริ่มต้น
+    empty:
+      title: ยังไม่มีการตั้งค่าการแจ้งเตือน
+      description: ตั้งค่าการแจ้งเตือนเพื่อรับการแจ้งเตือนเกี่ยวกับสถานะของเซอร์วิสและการตรวจสอบเวลาใช้งาน
+    button: เพิ่มการแจ้งเตือนใหม่
+    remove-dialog:
+      title: คุณแน่ใจหรือไม่ว่าต้องการลบการแจ้งเตือนนี้?
+      description: การกระทำนี้ไม่สามารถย้อนกลับได้ และจะลบการแจ้งเตือนของคุณถาวร
+      toast: ลบการแจ้งเตือนเรียบร้อยแล้ว
+      cancel: ยกเลิก
+      submit: ยืนยัน
+    edit-notification-form:
+      title: แก้ไขการแจ้งเตือน
+      toast: อัปเดตการแจ้งเตือนเรียบร้อยแล้ว
+      isDefault:
+        label: ตั้งเป็นค่าเริ่มต้น
+      submit: บันทึก
+      cancel: ยกเลิก
+    create-notification-form:
+      title: เพิ่มการแจ้งเตือนใหม่
+      toast: เพิ่มการแจ้งเตือนเรียบร้อยแล้ว
+      submit: เพิ่ม
+      cancel: ยกเลิก
+      webhook-test:
+        button: ทดสอบ
+        toast: ส่ง Webhook เรียบร้อยแล้ว
+      validation:
+        name:
+          required: จำเป็นต้องระบุชื่อการแจ้งเตือน
+        method:
+          required: จำเป็นต้องระบุวิธีการแจ้งเตือน
+        email-content:
+          required: จำเป็นต้องระบุเนื้อหาอีเมล
+        webhook:
+          required: จำเป็นต้องระบุ URL ของ Webhook
+          invalid: URL ของ Webhook ไม่ถูกต้อง
+      name:
+        label: ชื่อการแจ้งเตือน
+        placeholder: ป้อนชื่อการแจ้งเตือน
+      method:
+        label: วิธีการแจ้งเตือน
+        placeholder: เลือกวิธีการแจ้งเตือน
+      email-content:
+        label: เนื้อหาอีเมล
+        placeholder: ป้อนเนื้อหาอีเมล
+      message:
+        label: ข้อความการแจ้งเตือน
+        placeholder: ป้อนข้อความการแจ้งเตือน
+      webhook:
+        label: URL ของ Webhook
+        placeholder: ป้อน URL ของ Webhook
+  devices:
+    title: อุปกรณ์
+    description: จัดการอุปกรณ์ที่คุณลงชื่อเข้าใช้อยู่ในขณะนี้
+    active-session: เซสชันที่ใช้งานอยู่
+    expires: หมดอายุ
+    created: สร้างเมื่อ
+    remove-device-dialog:
+      title: ลบเซสชันอุปกรณ์?
+      description: คุณแน่ใจหรือไม่ว่าต้องการลบเซสชันอุปกรณ์นี้? การกระทำนี้ไม่สามารถย้อนกลับได้
+      toast: ลบเซสชันอุปกรณ์เรียบร้อยแล้ว
+      cancel: ยกเลิก
+      submit: ยืนยัน
+    danger-zone:
+      title: โซนอันตราย
+      description: ออกจากระบบในทุกอุปกรณ์ คุณจะต้องเข้าสู่ระบบใหม่ในอุปกรณ์เหล่านั้น
+      button: ออกจากระบบในทุกอุปกรณ์
+      dialog:
+        title: ออกจากระบบในทุกอุปกรณ์?
+        description: คุณแน่ใจหรือไม่ว่าต้องการออกจากระบบในทุกอุปกรณ์? การกระทำนี้ไม่สามารถย้อนกลับได้
+        toast: ออกจากระบบในทุกอุปกรณ์เรียบร้อยแล้ว
+        cancel: ยกเลิก
+        submit: ยืนยัน
+  about:
+    title: เกี่ยวกับ
+
+status-page:
+  title: หน้าสถานะ
+  description: จัดการหน้าสถานะของคุณ
+  edit-button: แก้ไข
+  empty:
+    title: คุณไม่มีหน้าสถานะใดๆ
+    button: สร้างหน้าสถานะแรกของคุณ
+  edit-status-page-form:
+    toast: แก้ไขหน้าสถานะเรียบร้อยแล้ว
+    submit: บันทึกการแก้ไข
+  create-status-page-form:
+    title: สร้างหน้าสถานะ
+    button: สร้างหน้าสถานะ
+    description: ออกแบบและกำหนดค่าหน้าสถานะของคุณ
+    toast: สร้างหน้าสถานะเรียบร้อยแล้ว
+    submit: สร้างหน้าสถานะ
+    reset: รีเซ็ต
+    back: ย้อนกลับ
+    editor:
+      title: การตั้งค่า
+      button: ตัวแก้ไข
+    preview:
+      title: แสดงตัวอย่าง
+      button: ตัวอย่าง
+    validation:
+      name:
+        required: ต้องระบุชื่อเรื่อง
+        max: ชื่อเรื่องต้องมีความยาวไม่เกิน 100 ตัวอักษร
+      footer:
+        max: ข้อความส่วนท้ายต้องมีความยาวไม่เกิน 200 ตัวอักษร
+      slug:
+        required: ต้องระบุ Slug
+        max: Slug ต้องมีความยาวไม่เกิน 50 ตัวอักษร
+        regex: Slug สามารถใช้ได้เฉพาะตัวอักษรตัวพิมพ์เล็ก ตัวเลข และขีดกลางเท่านั้น
+        refine: Slug ไม่สามารถขึ้นต้นหรือจบด้วยขีดกลางได้
+      monitor:
+        required: กรุณาเลือกมอนิเตอร์อย่างน้อยหนึ่งรายการ
+      file:
+        size: ขนาดไฟล์ต้องไม่เกิน 50MB
+    name:
+      label: ชื่อหน้า
+      placeholder: ป้อนชื่อสำหรับหน้าสถานะของคุณ
+    slug:
+      label: Slug ของหน้าสถานะ
+      placeholder: ป้อน Slug สำหรับหน้าสถานะของคุณ
+      message: หน้าสถานะของคุณจะสามารถเข้าถึงได้ที่
+    logo:
+      label: โลโก้
+      placeholder: อัปโหลดโลโก้
+    footer:
+      label: ข้อความส่วนท้าย
+      placeholder: ป้อนข้อความส่วนท้าย (ไม่จำเป็น)
+    layout:
+      title: การตั้งค่าการแสดงผล
+      overall-status:
+        label: แสดงสถานะโดยรวม
+        message: แสดงสถานะรวมไว้ด้านบน
+      full-width:
+        label: เต็มความกว้าง
+        message: ใช้รูปแบบแสดงผลแบบเต็มความกว้าง
+    monitors:
+      title: มอนิเตอร์
+      empty: ไม่มีพบมอนิเตอร์ กรุณาสร้างมอนิเตอร์ก่อน
+      status-overview:
+        label: ภาพรวมสถานะ
+        placeholder: เพิ่มมอนิเตอร์เป็นภาพรวม
+      status-timeline:
+        label: ไทม์ไลน์สถานะ
+        placeholder: เพิ่มมอนิเตอร์เป็นไทม์ไลน์
+  delete-dialog:
+    title: คุณแน่ใจหรือไม่
+    description: การดําเนินการนี้ไม่สามารถยกเลิกได้ การลบหน้าสถานะของคุณจะถูกลบถาวร
+    toast: หน้าสถานะของคุณถูกลบเรียบร้อย
+    cancel: ยกเลิก
+    submit: ยืนยัน
+    button: ลบ

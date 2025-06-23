@@ -5,6 +5,7 @@
 type Setting {
   id: String!
   theme: String!
+  language: String!
 }
 
 type Auth {
@@ -116,6 +117,7 @@ type StatusPageExtended {
 type Query {
   me: Auth
   getGithubOAuthUrl: String!
+  getGoogleOAuthUrl: String!
   findMonitorsByUserId: [Monitor!]!
   findMonitorById(id: String!): MonitorAgent!
   getNotificationSettingsByUserId: [Notification!]!
@@ -147,6 +149,7 @@ type Mutation {
   createAgent(createAgentInput: CreateAgentInput!): Agent!
   deleteAgentById(id: String!): Agent!
   updateTheme(theme: String!): Setting!
+  updateLanguage(language: String!): Setting!
   clearSessionsByUserId: [Session!]!
   clearSessionById(id: String!): Session!
   createStatusPage(input: CreateStatusPageInput!): StatusPage!

@@ -6,6 +6,7 @@ import {
   BASE_PATH,
   DASHBOARD_PATH,
   MONITOR_INFO_PATH,
+  PRIVACY_POLICY_PATH,
   SETTING_PATH,
   SIGN_IN_PATH,
   SIGN_UP_PATH,
@@ -28,6 +29,7 @@ import StatusCreation from '@/pages/StatusPage/create'
 import StatusPage from '@/pages/StatusPage/_id'
 import StatusEditor from '@/pages/StatusPage/edit'
 import Navbar from '@/components/util/Navbar'
+import PrivacyPolicy from './pages/PrivacyPolicy'
 
 function App() {
   const location = useLocation()
@@ -36,7 +38,7 @@ function App() {
       location.pathname === SIGN_IN_PATH ||
       location.pathname === SIGN_UP_PATH ||
       location.pathname === STATUS_PAGE_CREATION_PATH ||
-      location.pathname.startsWith('/page/')
+      location.pathname.startsWith('/status/')
     ) {
       return <></>
     }
@@ -52,6 +54,7 @@ function App() {
           <Toaster />
           <Routes>
             <Route path={BASE_PATH} element={<Home />} />
+            <Route path={PRIVACY_POLICY_PATH} element={<PrivacyPolicy />} />
 
             <Route path={SIGN_IN_PATH} element={<SignIn />} />
             <Route path={SIGN_UP_PATH} element={<SignUp />} />

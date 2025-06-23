@@ -1,4 +1,5 @@
 export const BASE_PATH = '/'
+export const PRIVACY_POLICY_PATH = BASE_PATH + 'privacy-policy'
 
 export const AUTH_PATH = BASE_PATH + 'auth/'
 export const SIGN_IN_PATH = AUTH_PATH + 'sign-in'

@@ -14,8 +14,10 @@ import { DashboardHeader } from '@/components/Dashboard/components/DashboardHead
 import { DashboardTabs } from '@/components/Dashboard/components/DashboardTabs'
 import { MonitorsTab } from '@/components/Dashboard/components/MonitorsTab'
 import { AgentsTab } from '@/components/Dashboard/components/AgentsTab'
+import { useTranslation } from 'react-i18next'
 
 export default function Dashboard() {
+  const { t } = useTranslation()
   const [activeTab, setActiveTab] = useState<string>('monitors')
 
   const {
@@ -67,7 +69,6 @@ export default function Dashboard() {
     setIsRefreshing(true)
     try {
       await Promise.all([refetchMonitors(), refetchAgents()])
-      toast.success('Data refreshed successfully')
     } catch {
       toast.error('Failed to refresh data')
     } finally {
@@ -85,19 +86,19 @@ export default function Dashboard() {
   return (
     <DashboardShell>
       <DashboardHeader
-        title="Dashboard"
-        description="Manage your monitors and agents"
+        title={t('dashboard.header.title')}
+        description={t('dashboard.header.description')}
         action={
           <Button onClick={refreshData} disabled={isRefreshing || isLoading} variant="outline" size="sm">
             <RefreshCw className={`mr-2 h-4 w-4 ${isRefreshing || isPolling ? 'animate-spin' : ''}`} />
-            {isRefreshing ? 'Refreshing...' : 'Refresh'}
+            {t('dashboard.header.button.refresh')}
           </Button>
         }
         stats={[
-          { label: 'Total Monitors', value: monitors.length },
-          { label: 'Active Monitors', value: activeMonitors },
-          { label: 'Paused Monitors', value: pausedMonitors },
-          { label: 'Total Agents', value: agents.length },
+          { label: t('dashboard.header.stats.total-monitors'), value: monitors.length },
+          { label: t('dashboard.header.stats.active-monitors'), value: activeMonitors },
+          { label: t('dashboard.header.stats.paused-monitors'), value: pausedMonitors },
+          { label: t('dashboard.header.stats.total-agents'), value: agents.length },
         ]}
         isLoading={isLoading}
       />
@@ -105,11 +106,11 @@ export default function Dashboard() {
       {isError && !isLoading && (
         <Alert variant="destructive" className="mb-6">
           <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Error</AlertTitle>
+          <AlertTitle>{t('dashboard.error.title')}</AlertTitle>
           <AlertDescription className="flex flex-col gap-2">
-            <p>There was a problem loading your dashboard data.</p>
+            <p>{t('dashboard.error.message')}</p>
             <Button variant="outline" size="sm" className="w-fit" onClick={refreshData}>
-              Try again
+              {t('dashboard.error.button')}
             </Button>
           </AlertDescription>
         </Alert>
@@ -120,13 +121,13 @@ export default function Dashboard() {
           <TabsContent value="monitors" className="mt-6">
             <MonitorsTab
               monitors={sortedMonitors}
-              setMonitors={setMonitors}
               agents={agents}
               isLoading={monitorLoading}
+              refetch={refetchMonitors}
             />
           </TabsContent>
           <TabsContent value="agents" className="mt-6">
-            <AgentsTab agents={sortedAgents} setAgents={setAgents} isLoading={agentLoading} refetch={refetchAgents} />
+            <AgentsTab agents={sortedAgents} isLoading={agentLoading} refetch={refetchAgents} />
           </TabsContent>
         </DashboardTabs>
       </Tabs>

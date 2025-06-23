@@ -24,6 +24,17 @@ export class SettingsService {
     })
   }
 
+  async updateLanguage(language: string, userId: string) {
+    return this.prisma.settings.update({
+      where: {
+        userId,
+      },
+      data: {
+        language,
+      },
+    })
+  }
+
   async getSessionsByUserId(userId: string) {
     return this.prisma.sessions.findMany({
       where: {

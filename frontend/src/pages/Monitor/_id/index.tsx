@@ -1,5 +1,3 @@
-'use client'
-
 import { Activity, ChevronDown, Clock, Globe, Server } from 'lucide-react'
 import ActionDropdown from '@/components/Monitor/components/ActionDropdown'
 import PingChart from '@/components/Monitor/PingChart'
@@ -17,10 +15,10 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
+import { useTranslation } from 'react-i18next'
 
 const timeRanges = [
   { label: '1h', value: 1 * 60 * 60 * 1000 },
@@ -31,6 +29,7 @@ const timeRanges = [
 ]
 
 export default function MonitorInfo() {
+  const { t } = useTranslation()
   const [selectedTimeRange, setSelectedTimeRange] = useState(timeRanges[0])
 
   const { monitorId } = useParams<{ monitorId: string }>()
@@ -40,7 +39,7 @@ export default function MonitorInfo() {
     data: monitorData,
     loading: monitorLoading,
     error: monitorError,
-    refetch: refetchMonitor,
+    refetch,
   } = useQuery(FIND_MONITOR_BY_ID_QUERY, {
     variables: { findMonitorByIdId: monitorId },
     pollInterval: 60 * 1000,
@@ -63,30 +62,26 @@ export default function MonitorInfo() {
     switch (status) {
       case 'UP':
         return {
-          color: 'bg-green-500',
+          color: 'bg-green-600',
           label: 'UP',
-          variant: 'default' as const,
           ringColor: 'ring-green-500/20',
         }
       case 'DOWN':
         return {
           color: 'bg-red-500',
           label: 'DOWN',
-          variant: 'destructive' as const,
           ringColor: 'ring-red-500/20',
         }
       case 'PAUSED':
         return {
           color: 'bg-yellow-500',
           label: 'PAUSED',
-          variant: 'secondary' as const,
           ringColor: 'ring-yellow-500/20',
         }
       default:
         return {
           color: 'bg-gray-500',
           label: 'UNKNOWN',
-          variant: 'outline' as const,
           ringColor: 'ring-gray-500/20',
         }
     }
@@ -127,7 +122,7 @@ export default function MonitorInfo() {
               <div>
                 <CardTitle className="text-3xl font-bold">{monitor.name}</CardTitle>
                 <div className="mt-2 flex items-center gap-2">
-                  <Badge variant={statusConfig.variant} className="flex items-center gap-1">
+                  <Badge className={`flex items-center gap-1 text-white ${statusConfig.color}`}>
                     {statusConfig.label}
                   </Badge>
                   <Badge variant="outline" className="flex items-center gap-1">
@@ -137,7 +132,7 @@ export default function MonitorInfo() {
                 </div>
               </div>
             </div>
-            <ActionDropdown monitor={monitor} refetchMonitor={refetchMonitor} />
+            <ActionDropdown monitor={monitor} refetch={refetch} />
           </div>
         </CardHeader>
         <CardContent>
@@ -145,21 +140,21 @@ export default function MonitorInfo() {
             <div className="bg-muted/50 flex items-center gap-3 rounded-lg p-3">
               <Globe className="text-muted-foreground h-5 w-5" />
               <div>
-                <p className="text-sm font-medium">Target</p>
+                <p className="text-sm font-medium">{t('monitor.info.target')}</p>
                 <p className="text-muted-foreground text-sm break-all">{monitor.address}</p>
               </div>
             </div>
             <div className="bg-muted/50 flex items-center gap-3 rounded-lg p-3">
               <Clock className="text-muted-foreground h-5 w-5" />
               <div>
-                <p className="text-sm font-medium">Check Interval</p>
-                <p className="text-muted-foreground text-sm">{monitor.interval}s</p>
+                <p className="text-sm font-medium">{t('monitor.info.interval')}</p>
+                <p className="text-muted-foreground text-sm">{monitor.interval}</p>
               </div>
             </div>
             <div className="bg-muted/50 flex items-center gap-3 rounded-lg p-3">
               <Activity className="text-muted-foreground h-5 w-5" />
               <div>
-                <p className="text-sm font-medium">Monitor Type</p>
+                <p className="text-sm font-medium">{t('monitor.info.type')}</p>
                 <p className="text-muted-foreground text-sm">{monitor.type}</p>
               </div>
             </div>
@@ -172,7 +167,7 @@ export default function MonitorInfo() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Activity className="h-5 w-5" />
-            Status Overview
+            {t('monitor.info.overview.title')}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -185,7 +180,7 @@ export default function MonitorInfo() {
         <CardHeader className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2">
             <Activity className="h-5 w-5" />
-            Performance Metrics
+            {t('monitor.info.metrics.title')}
           </CardTitle>
           <div>
             <DropdownMenu>
@@ -195,7 +190,6 @@ export default function MonitorInfo() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56">
-                <DropdownMenuLabel>Select Time Range</DropdownMenuLabel>
                 {timeRanges.map((range) => (
                   <DropdownMenuItem key={range.label} onClick={() => setSelectedTimeRange(range)}>
                     {range.label}

@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react'
 import { useQuery } from '@apollo/client'
 import { toast } from 'sonner'
-import { Bell, Settings } from 'lucide-react'
+import { Bell } from 'lucide-react'
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import CreateNotificationForm from './components/CreateNotificationForm'
 import { NOTIFICATION_QUERY } from '@/gql/settings'
 import type { INotification } from '@/types/setting'
 import NotificationCard from './components/NotificationCard'
+import { useTranslation } from 'react-i18next'
 
 function NotificationsSkeleton() {
   return (
@@ -39,6 +40,7 @@ function NotificationsSkeleton() {
 }
 
 export default function NotificationSetting() {
+  const { t } = useTranslation()
   const [notifications, setNotifications] = useState<INotification[]>([])
   const { data, loading, error, refetch } = useQuery(NOTIFICATION_QUERY, {
     errorPolicy: 'all',
@@ -52,16 +54,11 @@ export default function NotificationSetting() {
 
   useEffect(() => {
     if (error) {
-      toast.error('Failed to load notifications', {
-        description: error.message,
-      })
+      toast.error(error.message)
     }
   }, [error])
 
   if (loading) return <NotificationsSkeleton />
-
-  const defaultNotifications = notifications.filter((n) => n.isDefault)
-  const customNotifications = notifications.filter((n) => !n.isDefault)
 
   return (
     <div className="space-y-6">
@@ -70,37 +67,17 @@ export default function NotificationSetting() {
         <div className="flex-1">
           <div className="mb-2 flex items-center gap-2">
             <Bell className="h-5 w-5" />
-            <h2 className="text-xl font-bold">Notifications</h2>
+            <h2 className="text-xl font-bold">{t('settings.notification.title')}</h2>
           </div>
-          <p className="text-muted-foreground text-sm">
-            Configure webhook endpoints to receive uptime alerts and system notifications.
-          </p>
         </div>
         <CreateNotificationForm refetch={refetch} />
       </div>
 
-      {/* Default Notifications */}
-      {defaultNotifications.length > 0 && (
+      {notifications.length > 0 && (
         <div>
-          <h3 className="text-muted-foreground mb-3 text-sm font-medium">
-            Default Notifications ({defaultNotifications.length})
-          </h3>
+          <h3 className="text-muted-foreground mb-3 text-sm font-medium">{t('settings.notification.list.title')} ({notifications.length})</h3>
           <div className="space-y-3">
-            {defaultNotifications.map((notification) => (
-              <NotificationCard key={notification.id} notification={notification} refetch={refetch} />
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Custom Notifications */}
-      {customNotifications.length > 0 && (
-        <div>
-          <h3 className="text-muted-foreground mb-3 text-sm font-medium">
-            Custom Notifications ({customNotifications.length})
-          </h3>
-          <div className="space-y-3">
-            {customNotifications.map((notification) => (
+            {notifications.map((notification) => (
               <NotificationCard key={notification.id} notification={notification} refetch={refetch} />
             ))}
           </div>
@@ -112,29 +89,11 @@ export default function NotificationSetting() {
         <Card>
           <CardContent className="p-8 text-center">
             <Bell className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
-            <h3 className="mb-2 text-lg font-semibold">No Notifications Configured</h3>
+            <h3 className="mb-2 text-lg font-semibold">{t('settings.notification.empty.title')}</h3>
             <p className="text-muted-foreground mb-4">
-              Set up webhook notifications to receive alerts about your services and uptime monitoring.
+              {t('settings.notification.empty.description')}
             </p>
             <CreateNotificationForm refetch={refetch} />
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Info Card */}
-      {notifications.length > 0 && (
-        <Card className="bg-muted/50 gap-0">
-          <CardHeader className="pb-3">
-            <CardTitle className="flex items-center gap-2 text-sm">
-              <Settings className="h-4 w-4" />
-              Notification Settings
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-0">
-            <p className="text-muted-foreground text-xs">
-              Notifications are sent when uptime checks fail, services go down, or other important events occur. Make
-              sure your webhook URLs are accessible and properly configured.
-            </p>
           </CardContent>
         </Card>
       )}

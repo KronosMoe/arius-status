@@ -1,6 +1,8 @@
-import { formatAgo } from '@/lib/date'
+import { dateFnsLocaleMap } from '@/lib/date'
 import { IMonitor } from '@/types/monitor'
 import { IStatus } from '@/types/status'
+import { formatDistanceToNow } from 'date-fns'
+import { useTranslation } from 'react-i18next'
 
 type Props = {
   monitor: IMonitor
@@ -9,8 +11,13 @@ type Props = {
 }
 
 export default function PingLine({ monitor, barCount, statusHistory }: Props) {
+  const { i18n } = useTranslation()
   const totalSeconds = monitor.interval * barCount
-  const startLabel = formatAgo(totalSeconds)
+  const date = new Date(Date.now() - totalSeconds * 1000)
+  const startLabel = formatDistanceToNow(date, {
+    addSuffix: true,
+    locale: dateFnsLocaleMap[i18n.language] ?? dateFnsLocaleMap['en'],
+  })
 
   return (
     <>

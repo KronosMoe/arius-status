@@ -1,5 +1,6 @@
 export interface ISetting {
   theme: 'light' | 'dark'
+  language: string
 }
 
 export interface INotification {

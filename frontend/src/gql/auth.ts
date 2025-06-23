@@ -7,6 +7,7 @@ export const ME_QUERY = gql`
       image
       settings {
         theme
+        language
       }
     }
   }
@@ -34,5 +35,12 @@ export const REGISTER_MUTATION = gql`
 export const GITHUB_OAUTH_URL_QUERY = gql`
   query GithubOauthUrl {
     getGithubOAuthUrl
+  }
+`
+
+// Google Oauth
+export const GOOGLE_OAUTH_URL_QUERY = gql`
+  query GoogleOauthUrl {
+    getGoogleOAuthUrl
   }
 `
