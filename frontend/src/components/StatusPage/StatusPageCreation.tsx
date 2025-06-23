@@ -35,21 +35,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Alert, AlertDescription } from '../ui/alert'
 import { CREATE_STATUS_PAGE_MUTATION } from '@/gql/status-page'
 import Preview from './components/Preview'
-
-const formSchema = z.object({
-  name: z.string().min(1, 'Title is required').max(100, 'Title must be less than 100 characters'),
-  footerText: z.string().max(200, 'Footer text must be less than 200 characters').optional(),
-  slug: z
-    .string()
-    .min(1, 'Slug is required')
-    .max(50, 'Slug must be less than 50 characters')
-    .regex(/^[a-z0-9-]+$/, 'Slug can only contain lowercase letters, numbers, and hyphens')
-    .refine((val) => !val.startsWith('-') && !val.endsWith('-'), 'Slug cannot start or end with a hyphen'),
-  showOverallStatus: z.boolean(),
-  isFullWidth: z.boolean(),
-})
-
-type FormData = z.infer<typeof formSchema>
+import { useTranslation } from 'react-i18next'
 
 export default function StatusPageCreation() {
   const navigate = useNavigate()
@@ -61,11 +47,12 @@ export default function StatusPageCreation() {
   } = useQuery(MONITORS_QUERY, {
     fetchPolicy: 'network-only',
   })
+  const { t } = useTranslation()
 
   const [createStatusPage, { loading: createStatusPageLoading }] = useMutation(CREATE_STATUS_PAGE_MUTATION, {
     onError: (error) => toast.error(error.message),
     onCompleted: () => {
-      toast.success('Status page saved successfully!')
+      toast.success(t('status-page.create-status-page-form.toast'))
       setHasUnsavedChanges(false)
       navigate(STATUS_PAGE_PATH, { replace: true })
     },
@@ -82,6 +69,21 @@ export default function StatusPageCreation() {
   const [hasManuallyEditedSlug, setHasManuallyEditedSlug] = useState(false)
 
   const selectedIds = useMemo(() => Array.from(new Set(selectedMonitor.map((m) => m.id))), [selectedMonitor])
+
+  const formSchema = z.object({
+    name: z.string().min(1, t('status-page.create-status-page-form.validation.name.required')).max(100, t('status-page.create-status-page-form.validation.name.max')),
+    footerText: z.string().max(200, t('status-page.create-status-page-form.validation.footer.max')).optional(),
+    slug: z
+      .string()
+      .min(1, t('status-page.create-status-page-form.validation.slug.required'))
+      .max(50, t('status-page.create-status-page-form.validation.slug.max'))
+      .regex(/^[a-z0-9-]+$/, t('status-page.create-status-page-form.validation.slug.regex'))
+      .refine((val) => !val.startsWith('-') && !val.endsWith('-'), t('status-page.create-status-page-form.validation.slug.refine')),
+    showOverallStatus: z.boolean(),
+    isFullWidth: z.boolean(),
+  })
+
+  type FormData = z.infer<typeof formSchema>
 
   const {
     register,
@@ -181,7 +183,7 @@ export default function StatusPageCreation() {
 
   const onSubmit = async (data: FormData) => {
     if (selectedMonitor.length === 0) {
-      toast.error('Please select at least one monitor')
+      toast.error(t('status-page.create-status-page-form.validation.monitor.required'))
       return
     }
 
@@ -206,7 +208,7 @@ export default function StatusPageCreation() {
       const maxSizeInBytes = 50 * 1024 * 1024
 
       if (file.size > maxSizeInBytes) {
-        toast.error('File size should not exceed 50MB.')
+        toast.error(t('status-page.create-status-page-form.validation.file.size'))
       }
 
       const reader = new FileReader()
@@ -245,31 +247,25 @@ export default function StatusPageCreation() {
             <Link to={STATUS_PAGE_PATH}>
               <Button variant="outline" size="sm">
                 <ArrowLeft className="mr-2 h-4 w-4" />
-                Go Back
+                {t('status-page.create-status-page-form.back')}
               </Button>
             </Link>
             <div>
-              <h1 className="text-2xl font-bold">Status Page Creator</h1>
-              <p className="text-muted-foreground text-sm">Design and configure your status page</p>
+              <h1 className="text-2xl font-bold">{t('status-page.create-status-page-form.title')}</h1>
+              <p className="text-muted-foreground text-sm">{t('status-page.create-status-page-form.description')}</p>
             </div>
           </div>
-
-          {hasUnsavedChanges && (
-            <Badge variant="secondary" className="animate-pulse">
-              Unsaved changes
-            </Badge>
-          )}
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="editor" className="flex items-center gap-2">
               <Settings className="h-4 w-4" />
-              Editor
+              {t('status-page.create-status-page-form.editor.button')}
             </TabsTrigger>
             <TabsTrigger value="preview" className="flex items-center gap-2">
               <Eye className="h-4 w-4" />
-              Preview
+              {t('status-page.create-status-page-form.preview.button')}
             </TabsTrigger>
           </TabsList>
 
@@ -277,7 +273,7 @@ export default function StatusPageCreation() {
             {/* Configuration Panel */}
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-                <CardTitle className="text-lg">Configuration</CardTitle>
+                <CardTitle className="text-lg">{t('status-page.create-status-page-form.editor.title')}</CardTitle>
                 <Button variant="ghost" size="sm" onClick={() => setEditorCollapsed(!isEditorCollapsed)}>
                   {isEditorCollapsed ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
                 </Button>
@@ -290,20 +286,20 @@ export default function StatusPageCreation() {
                     <div className="space-y-4">
                       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                         <div className="space-y-2">
-                          <Label htmlFor="name">Page Title *</Label>
+                          <Label htmlFor="name">{t('status-page.create-status-page-form.name.label')}</Label>
                           <Input
                             id="name"
                             {...register('name')}
                             onChange={handleNameChange}
-                            placeholder="Enter status page title"
+                            placeholder={t('status-page.create-status-page-form.name.placeholder')}
                             className={errors.name ? 'border-red-500' : ''}
                           />
                           {errors.name && <p className="text-sm text-red-600">{errors.name.message}</p>}
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="slug">Page URL *</Label>
+                          <Label htmlFor="slug">{t('status-page.create-status-page-form.slug.label')}</Label>
                           <div className="flex items-center">
-                            <span className="w-[90px] inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400">
+                            <span className="inline-flex w-[90px] items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400">
                               /status/
                             </span>
                             <Input
@@ -313,18 +309,18 @@ export default function StatusPageCreation() {
                                 setValue('slug', e.target.value)
                                 setHasManuallyEditedSlug(true)
                               }}
-                              placeholder="my-status-page"
+                              placeholder={t('status-page.create-status-page-form.slug.placeholder')}
                               className={`rounded-l-none ${errors.slug ? 'border-red-500' : ''}`}
                             />
                           </div>
                           {errors.slug && <p className="text-sm text-red-600">{errors.slug.message}</p>}
                           <p className="text-muted-foreground text-xs">
-                            Your status page will be available at:{' '}
+                            {t('status-page.create-status-page-form.slug.message')}
                             <code className="bg-muted rounded px-1 py-0.5">/status/{slug || 'your-slug'}</code>
                           </p>
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="logo">Logo</Label>
+                          <Label htmlFor="logo">{t('status-page.create-status-page-form.logo.label')}</Label>
                           <div className="flex items-center gap-3">
                             {logo && <img src={logo} alt="Logo" className="h-10 w-10 rounded-md object-cover" />}
                             <div className="flex-1">
@@ -342,7 +338,7 @@ export default function StatusPageCreation() {
                                 onClick={() => document.getElementById('logo-upload')?.click()}
                               >
                                 <Upload className="mr-2 h-4 w-4" />
-                                Upload Logo
+                                {t('status-page.create-status-page-form.logo.placeholder')}
                               </Button>
                             </div>
                           </div>
@@ -350,8 +346,8 @@ export default function StatusPageCreation() {
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="footerText">Footer Text</Label>
-                        <Input id="footerText" {...register('footerText')} placeholder="Enter footer text (optional)" />
+                        <Label htmlFor="footerText">{t('status-page.create-status-page-form.footer.label')}</Label>
+                        <Input id="footerText" {...register('footerText')} placeholder={t('status-page.create-status-page-form.footer.placeholder')} />
                         {errors.footerText && <p className="text-sm text-red-600">{errors.footerText.message}</p>}
                       </div>
                     </div>
@@ -360,14 +356,14 @@ export default function StatusPageCreation() {
 
                     {/* Layout Settings */}
                     <div className="space-y-4">
-                      <h3 className="text-sm font-medium">Layout Settings</h3>
+                      <h3 className="text-sm font-medium">{t('status-page.create-status-page-form.layout.title')}</h3>
                       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                         <div className="flex items-center justify-between rounded-lg border p-3">
                           <div>
                             <Label htmlFor="overall-status-toggle" className="font-medium">
-                              Overall Status
+                              {t('status-page.create-status-page-form.layout.overall-status.label')}
                             </Label>
-                            <p className="text-muted-foreground text-sm">Show aggregated status at the top</p>
+                            <p className="text-muted-foreground text-sm">{t('status-page.create-status-page-form.layout.overall-status.message')}</p>
                           </div>
                           <Switch
                             id="overall-status-toggle"
@@ -379,9 +375,9 @@ export default function StatusPageCreation() {
                         <div className="flex items-center justify-between rounded-lg border p-3">
                           <div>
                             <Label htmlFor="full-width-toggle" className="font-medium">
-                              Full Width
+                              {t('status-page.create-status-page-form.layout.full-width.label')}
                             </Label>
-                            <p className="text-muted-foreground text-sm">Use full width layout</p>
+                            <p className="text-muted-foreground text-sm">{t('status-page.create-status-page-form.layout.full-width.message')}</p>
                           </div>
                           <Switch
                             id="full-width-toggle"
@@ -396,13 +392,13 @@ export default function StatusPageCreation() {
 
                     {/* Monitor Selection */}
                     <div className="space-y-4">
-                      <h3 className="text-sm font-medium">Monitors</h3>
+                      <h3 className="text-sm font-medium">{t('status-page.create-status-page-form.monitors.title')}</h3>
 
                       {monitors.length === 0 && (
                         <Alert>
                           <Monitor className="h-4 w-4" />
                           <AlertDescription>
-                            No monitors found. Create monitors first to add them to your status page.
+                            {t('status-page.create-status-page-form.monitors.empty')}
                           </AlertDescription>
                         </Alert>
                       )}
@@ -411,13 +407,13 @@ export default function StatusPageCreation() {
                         {/* Status Cards */}
                         <div className="space-y-3">
                           <div className="flex items-center justify-between">
-                            <Label className="text-sm font-medium">Status Overviews</Label>
+                            <Label className="text-sm font-medium">{t('status-page.create-status-page-form.monitors.status-overview.label')}</Label>
                             <Badge variant="outline">{statusCards.length}</Badge>
                           </div>
 
                           <Select onValueChange={handleSelectStatusCardMonitor}>
                             <SelectTrigger>
-                              <SelectValue placeholder="Add monitor as overview" />
+                              <SelectValue placeholder={t('status-page.create-status-page-form.monitors.status-overview.placeholder')} />
                             </SelectTrigger>
                             <SelectContent>
                               {availableMonitorsForStatusCard.map((monitor) => (
@@ -456,13 +452,13 @@ export default function StatusPageCreation() {
                         {/* Status Lines */}
                         <div className="space-y-3">
                           <div className="flex items-center justify-between">
-                            <Label className="text-sm font-medium">Status Timelines</Label>
+                            <Label className="text-sm font-medium">{t('status-page.create-status-page-form.monitors.status-timeline.label')}</Label>
                             <Badge variant="outline">{statusLines.length}</Badge>
                           </div>
 
                           <Select onValueChange={handleSelectStatusLineMonitor}>
                             <SelectTrigger>
-                              <SelectValue placeholder="Add monitor as timeline" />
+                              <SelectValue placeholder={t('status-page.create-status-page-form.monitors.status-timeline.placeholder')} />
                             </SelectTrigger>
                             <SelectContent>
                               {availableMonitorsForStatusLine.map((monitor) => (
@@ -504,17 +500,17 @@ export default function StatusPageCreation() {
                     <div className="flex items-center justify-between border-t pt-4">
                       <Button type="button" variant="outline" onClick={handleReset} disabled={!hasUnsavedChanges}>
                         <RotateCcw className="mr-2 h-4 w-4" />
-                        Reset
+                        {t('status-page.create-status-page-form.reset')}
                       </Button>
 
                       <div className="flex gap-2">
                         <Button type="button" variant="outline" onClick={() => setActiveTab('preview')}>
                           <Eye className="mr-2 h-4 w-4" />
-                          Preview
+                          {t('status-page.create-status-page-form.preview.button')}
                         </Button>
                         <Button type="submit" disabled={createStatusPageLoading}>
                           <Save className="mr-2 h-4 w-4" />
-                          Save Status Page
+                          {t('status-page.create-status-page-form.submit')}
                         </Button>
                       </div>
                     </div>
@@ -530,7 +526,7 @@ export default function StatusPageCreation() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Eye className="h-5 w-5" />
-                  Live Preview
+                  {t('status-page.create-status-page-form.preview.title')}
                 </CardTitle>
               </CardHeader>
               <CardContent>

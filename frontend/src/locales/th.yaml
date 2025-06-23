@@ -201,7 +201,6 @@ settings:
       webhook:
         label: URL ของ Webhook
         placeholder: ป้อน URL ของ Webhook
-
   devices:
     title: อุปกรณ์
     description: จัดการอุปกรณ์ที่คุณลงชื่อเข้าใช้อยู่ในขณะนี้
@@ -224,6 +223,82 @@ settings:
         toast: ออกจากระบบในทุกอุปกรณ์เรียบร้อยแล้ว
         cancel: ยกเลิก
         submit: ยืนยัน
-
   about:
     title: เกี่ยวกับ
+
+status-page:
+  title: หน้าสถานะ
+  description: จัดการหน้าสถานะของคุณ
+  edit-button: แก้ไข
+  empty:
+    title: คุณไม่มีหน้าสถานะใดๆ
+    button: สร้างหน้าสถานะแรกของคุณ
+  edit-status-page-form:
+    toast: แก้ไขหน้าสถานะเรียบร้อยแล้ว
+    submit: บันทึกการแก้ไข
+  create-status-page-form:
+    title: สร้างหน้าสถานะ
+    button: สร้างหน้าสถานะ
+    description: ออกแบบและกำหนดค่าหน้าสถานะของคุณ
+    toast: สร้างหน้าสถานะเรียบร้อยแล้ว
+    submit: สร้างหน้าสถานะ
+    reset: รีเซ็ต
+    back: ย้อนกลับ
+    editor:
+      title: การตั้งค่า
+      button: ตัวแก้ไข
+    preview:
+      title: แสดงตัวอย่าง
+      button: ตัวอย่าง
+    validation:
+      name:
+        required: ต้องระบุชื่อเรื่อง
+        max: ชื่อเรื่องต้องมีความยาวไม่เกิน 100 ตัวอักษร
+      footer:
+        max: ข้อความส่วนท้ายต้องมีความยาวไม่เกิน 200 ตัวอักษร
+      slug:
+        required: ต้องระบุ Slug
+        max: Slug ต้องมีความยาวไม่เกิน 50 ตัวอักษร
+        regex: Slug สามารถใช้ได้เฉพาะตัวอักษรตัวพิมพ์เล็ก ตัวเลข และขีดกลางเท่านั้น
+        refine: Slug ไม่สามารถขึ้นต้นหรือจบด้วยขีดกลางได้
+      monitor:
+        required: กรุณาเลือกมอนิเตอร์อย่างน้อยหนึ่งรายการ
+      file:
+        size: ขนาดไฟล์ต้องไม่เกิน 50MB
+    name:
+      label: ชื่อหน้า
+      placeholder: ป้อนชื่อสำหรับหน้าสถานะของคุณ
+    slug:
+      label: Slug ของหน้าสถานะ
+      placeholder: ป้อน Slug สำหรับหน้าสถานะของคุณ
+      message: หน้าสถานะของคุณจะสามารถเข้าถึงได้ที่
+    logo:
+      label: โลโก้
+      placeholder: อัปโหลดโลโก้
+    footer:
+      label: ข้อความส่วนท้าย
+      placeholder: ป้อนข้อความส่วนท้าย (ไม่จำเป็น)
+    layout:
+      title: การตั้งค่าการแสดงผล
+      overall-status:
+        label: แสดงสถานะโดยรวม
+        message: แสดงสถานะรวมไว้ด้านบน
+      full-width:
+        label: เต็มความกว้าง
+        message: ใช้รูปแบบแสดงผลแบบเต็มความกว้าง
+    monitors:
+      title: มอนิเตอร์
+      empty: ไม่มีพบมอนิเตอร์ กรุณาสร้างมอนิเตอร์ก่อน
+      status-overview:
+        label: ภาพรวมสถานะ
+        placeholder: เพิ่มมอนิเตอร์เป็นภาพรวม
+      status-timeline:
+        label: ไทม์ไลน์สถานะ
+        placeholder: เพิ่มมอนิเตอร์เป็นไทม์ไลน์
+  delete-dialog:
+    title: คุณแน่ใจหรือไม่
+    description: การดําเนินการนี้ไม่สามารถยกเลิกได้ การลบหน้าสถานะของคุณจะถูกลบถาวร
+    toast: หน้าสถานะของคุณถูกลบเรียบร้อย
+    cancel: ยกเลิก
+    submit: ยืนยัน
+    button: ลบ

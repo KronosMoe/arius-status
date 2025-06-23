@@ -7,10 +7,12 @@ import type { IStatusPage } from '@/types/status-page'
 import { useQuery } from '@apollo/client'
 import { CirclePlus, Pen } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { toast } from 'sonner'
 
 export default function StatusPages() {
+  const { t } = useTranslation()
   const [statusPages, setStatusPages] = useState<IStatusPage[]>([])
 
   const { data, loading, error, refetch } = useQuery(GET_STATUS_PAGES, {
@@ -34,13 +36,13 @@ export default function StatusPages() {
       <div className="mt-10 mb-20">
         <div className="my-4 flex flex-col items-center justify-between gap-4 sm:flex-row">
           <div className="text-center sm:text-left">
-            <h1 className="text-3xl font-bold tracking-tight">Status Pages</h1>
-            <p className="text-muted-foreground">Manage your status pages</p>
+            <h1 className="text-3xl font-bold tracking-tight">{t('status-page.title')}</h1>
+            <p className="text-muted-foreground">{t('status-page.description')}</p>
           </div>
           <Link to={STATUS_PAGE_CREATION_PATH}>
             <Button variant="default">
               <CirclePlus className="h-4 w-4" />
-              Create Status Page
+              {t('status-page.create-status-page-form.button')}
             </Button>
           </Link>
         </div>
@@ -72,7 +74,7 @@ export default function StatusPages() {
                   <Link to={STATUS_PAGE_EDIT_PATH.replace(':id', statusPage.id)}>
                     <Button variant="default" className="cursor-pointer">
                       <Pen className="h-4 w-4 sm:mr-2" />
-                      <span className="hidden sm:inline">Edit</span>
+                      <span className="hidden sm:inline">{t('status-page.edit-button')}</span>
                     </Button>
                   </Link>
                   <DeleteStatusPageDialog statusPageId={statusPage.id} refetch={refetch} />
@@ -81,11 +83,11 @@ export default function StatusPages() {
             ))
           ) : (
             <div className="flex flex-col items-center justify-center rounded-md border border-dashed p-8 text-center">
-              <p className="text-muted-foreground mb-4">You don&apos;t have any status pages yet</p>
+              <p className="text-muted-foreground mb-4">{t('status-page.empty.title')}</p>
               <Link to={STATUS_PAGE_CREATION_PATH}>
                 <Button variant="default">
                   <CirclePlus className="h-4 w-4" />
-                  Create Your First Status Page
+                  {t('status-page.empty.button')}
                 </Button>
               </Link>
             </div>

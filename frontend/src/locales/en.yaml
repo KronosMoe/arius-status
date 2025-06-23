@@ -225,3 +225,80 @@ settings:
         submit: Confirm
   about:
     title: About
+
+status-page:
+  title: Status Page
+  description: Manage your status pages
+  edit-button: Edit
+  empty:
+    title: You don't have any status pages yet
+    button: Create Your First Status Page
+  edit-status-page-form:
+    toast: Status page updated successfully
+    submit: Save Changes
+  create-status-page-form:
+    title: Status Page Creator
+    button: Create Status Page
+    description: Design and configure your status page
+    toast: Status page created successfully
+    submit: Create Status Page
+    back: Go Back
+    reset: Reset
+    editor:
+      title: Configuration
+      button: Editor
+    preview:
+      title: Live Preview
+      button: Preview
+    validation:
+      name:
+        required: Title is required
+        max: Title must be less than 100 characters
+      footer:
+        max: Footer must be less than 200 characters
+      slug:
+        required: Slug is required
+        max: Slug must be less than 50 characters
+        regex: Slug can only contain lowercase letters, numbers, and hyphens
+        refine: Slug cannot start or end with a hyphen
+      monitor:
+        required: Please select at least one monitor
+      file:
+        size: File size should not exceed 50MB
+    name:
+      label: Page Title
+      placeholder: Enter a name for your status page
+    slug:
+      label: Status Page Slug
+      placeholder: Enter a Slug for your status page
+      message: Your status page will be available at
+    logo:
+      label: Logo
+      placeholder: Upload Logo
+    footer:
+      label: Footer Text
+      placeholder: Enter footer text (optional)
+    layout:
+      title: Layout Settings
+      overall-status:
+        label: Show Overall Status
+        message: Show aggregated status at the top
+      full-width:
+        label: Full Width
+        message: Use full width layout
+    monitors:
+      title: Monitors
+      empty: No monitors found. Create monitors first to add them to your status page.
+      status-overview:
+        label: Status Overviews
+        placeholder: Add monitor as overview
+      status-timeline:
+        label: Status Timelines
+        placeholder: Add monitor as timeline
+  delete-dialog:
+    title: Are you sure?
+    description: This action cannot be undone. This will permanently delete your status page.
+    toast: Status page removed successfully
+    cancel: Cancel
+    submit: Confirm
+    button: Delete
