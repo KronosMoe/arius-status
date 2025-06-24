@@ -22,6 +22,25 @@ dashboard:
       active-monitors: มอนิเตอร์ที่ใช้งานอยู่
       paused-monitors: มอนิเตอร์ที่หยุดชั่วคราว
       total-agents: เอเจนต์ทั้งหมด
+  filter:
+    title: ตัวกรอง
+    agent:
+      label: เอเจนต์
+      default: ทั้งหมด
+      placeholder: เลือกเอเจนต์
+    status:
+      label: สถานะ
+      default: ทั้งหมด
+      placeholder: เลือกสถานะ
+    type:
+      label: ประเภท
+      default: ทั้งหมด
+      placeholder: เลือกประเภท
+    show: มอนิเตอร์ที่พบ {{count}} จาก {{total}}
+    clear:
+      message: ล้างตัวกรองเพื่อแสดงมอนิเตอร์ทั้งหมด
+      button: ล้างทั้งหมด
+    active: ตัวกรองกําลังใช้งาน
   tabs:
     monitors: มอนิเตอร์
     agents: เอเจนต์

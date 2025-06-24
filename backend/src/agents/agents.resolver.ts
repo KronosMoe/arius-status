@@ -13,8 +13,8 @@ export class AgentsResolver {
 
   @Query(() => Agent)
   @UseGuards(GqlAuthGuard)
-  async getAgentById(@Args('id') agentId: string) {
-    return await this.agentsService.getAgentById(agentId)
+  async getAgentById(@Args('id') agentId: string, @Me() user: User) {
+    return await this.agentsService.getAgentById(agentId, user.id)
   }
 
   @Query(() => [Agent])

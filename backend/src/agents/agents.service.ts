@@ -3,6 +3,7 @@ import {
   Injectable,
   Logger,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { CreateAgentInput } from './dto/create-agent.input'
@@ -15,13 +16,19 @@ export class AgentsService {
 
   constructor(private readonly prisma: PrismaService) {}
 
-  async getAgentById(agentId: string) {
+  async getAgentById(agentId: string, userId: string) {
     const agent = await this.prisma.agents.findUnique({
       where: { id: agentId },
     })
 
     if (!agent) {
       throw new NotFoundException('Agent not found')
+    }
+
+    if (agent.userId !== userId) {
+      throw new UnauthorizedException(
+        'You are not authorized to access this agent',
+      )
     }
 
     return agent

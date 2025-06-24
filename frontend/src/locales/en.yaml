@@ -22,6 +22,25 @@ dashboard:
       active-monitors: Active Monitors
       paused-monitors: Paused Monitors
       total-agents: Total Agents
+  filter:
+    title: Filters
+    agent:
+      label: Agent
+      default: All Agents
+      placeholder: Select agent
+    status:
+      label: Status
+      default: All Status
+      placeholder: Select status
+    type:
+      label: Type
+      default: All Types
+      placeholder: Select type
+    show: Showing {{count}} of {{total}} monitors
+    clear:
+      message: Clear filters to see all monitors
+      button: Clear all
+    active: Filters active
   tabs:
     monitors: Monitors
     agents: Agents
