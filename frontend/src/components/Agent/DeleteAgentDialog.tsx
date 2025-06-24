@@ -8,26 +8,29 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import { DASHBOARD_PATH } from '@/constants/routes'
 import { DELETE_AGENT_MUTATION } from '@/gql/agents'
 import { useMutation } from '@apollo/client'
 import { Trash } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 
 type Props = {
   agentId: string
-  refetch: () => void
 }
 
-export default function DeleteAgentDialog({ agentId, refetch }: Props) {
+export default function DeleteAgentDialog({ agentId }: Props) {
   const { t } = useTranslation()
+  const navigate = useNavigate()
+
   const [open, setOpen] = useState(false)
 
   const [deleteAgent, { loading: isDeleting }] = useMutation(DELETE_AGENT_MUTATION, {
     onCompleted: () => {
       toast.success(t('agent.delete.toast'))
-      refetch()
+      navigate(DASHBOARD_PATH, { replace: true })
     },
     onError: (error) => toast.error(error.message),
   })

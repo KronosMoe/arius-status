@@ -1,7 +1,13 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common'
+import {
+  BadRequestException,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { CreateAgentInput } from './dto/create-agent.input'
 import { generateToken } from 'src/libs/token'
+import axios from 'axios'
 
 @Injectable()
 export class AgentsService {
@@ -9,8 +15,26 @@ export class AgentsService {
 
   constructor(private readonly prisma: PrismaService) {}
 
+  async getAgentById(agentId: string) {
+    const agent = await this.prisma.agents.findUnique({
+      where: { id: agentId },
+    })
+
+    if (!agent) {
+      throw new NotFoundException('Agent not found')
+    }
+
+    return agent
+  }
+
   async findAgentsByUserId(userId: string) {
-    return await this.prisma.agents.findMany({ where: { userId } })
+    const agents = await this.prisma.agents.findMany({ where: { userId } })
+
+    if (!agents) {
+      throw new NotFoundException('Agent not found')
+    }
+
+    return agents
   }
 
   async createAgent(createAgentInput: CreateAgentInput, userId: string) {
@@ -53,5 +77,30 @@ export class AgentsService {
     const agent = await this.prisma.agents.delete({ where: { id: agentId } })
     this.logger.log(`Agent ${agentId} deleted`)
     return agent
+  }
+
+  async getAgentLatestTag(): Promise<string | null> {
+    const url =
+      'https://registry.hub.docker.com/v2/repositories/mirailisc/arius-status-agent/tags?page_size=100'
+    const { data } = await axios.get(url)
+
+    const tags = data.results
+      .filter((tag: any) => tag.name !== 'latest')
+      .map((tag: any) => ({
+        name: tag.name,
+        tag_last_pushed: tag.tag_last_pushed,
+      }))
+
+    if (tags.length === 0) {
+      return null
+    }
+
+    tags.sort(
+      (a: any, b: any) =>
+        new Date(b.tag_last_pushed).getTime() -
+        new Date(a.tag_last_pushed).getTime(),
+    )
+
+    return tags[0].name
   }
 }

@@ -108,6 +108,18 @@ monitor:
     submit: บันทึก
 
 agent:
+  info:
+    created: สร้างเมื่อ
+    installation:
+      title: การติดตั้งเอเจนต์
+      description: เลือกวิธีการติดตั้งเอเจนต์ที่คุณต้องการ
+      docker:
+        message: ใช้คำสั่ง Docker นี้สําหรับการติดตั้งเอเจนต์
+      docker-compose:
+        message: คัดลอกคำสั่งนี้และติดตั้งเอเจนต์ด้วย Docker Compose
+    copy:
+      success: คัดลอกสําเร็จ
+      error: ไม่สามารถคัดลอกได้
   delete:
     button: ลบ
     cancel: ยกเลิก

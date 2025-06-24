@@ -11,10 +11,21 @@ import { GqlAuthGuard } from 'src/auth/guards/gql-auth.guard'
 export class AgentsResolver {
   constructor(private readonly agentsService: AgentsService) {}
 
+  @Query(() => Agent)
+  @UseGuards(GqlAuthGuard)
+  async getAgentById(@Args('id') agentId: string) {
+    return await this.agentsService.getAgentById(agentId)
+  }
+
   @Query(() => [Agent])
   @UseGuards(GqlAuthGuard)
   async findAgentsByUserId(@Me() user: User) {
     return await this.agentsService.findAgentsByUserId(user.id)
+  }
+
+  @Query(() => String)
+  async getAgentLatestTag() {
+    return await this.agentsService.getAgentLatestTag()
   }
 
   @Mutation(() => Agent)

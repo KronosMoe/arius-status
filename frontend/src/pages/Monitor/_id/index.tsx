@@ -19,6 +19,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
 import { useTranslation } from 'react-i18next'
+import NotFound from '@/pages/NotFound'
 
 const timeRanges = [
   { label: '1h', value: 1 * 60 * 60 * 1000 },
@@ -56,7 +57,9 @@ export default function MonitorInfo() {
     if (monitorError) toast.error(monitorError.message)
   }, [monitorError])
 
-  if (monitorLoading || !monitor) return <Loading />
+  if (monitorLoading) return <Loading />
+
+  if (!monitor) return <NotFound />
 
   const getStatusConfig = (status: string) => {
     switch (status) {

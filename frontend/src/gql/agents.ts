@@ -12,6 +12,24 @@ export const AGENTS_QUERY = gql`
   }
 `
 
+export const GET_AGENT_BY_ID_QUERY = gql`
+  query GetAgentById($id: String!) {
+    getAgentById(id: $id) {
+      id
+      isOnline
+      name
+      token
+      createdAt
+    }
+  }
+`
+
+export const GET_AGENT_LATEST_IMAGE_TAG_QUERY = gql`
+  query GetAgentLatestTag {
+    getAgentLatestTag
+  }
+`
+
 export const CREATE_AGENT_MUTATION = gql`
   mutation CreateAgent($createAgentInput: CreateAgentInput!) {
     createAgent(createAgentInput: $createAgentInput) {

@@ -3,9 +3,11 @@ import Home from '@/pages/Home'
 import { AuthProvider } from '@/components/util/providers/auth-provider'
 import { Toaster } from 'sonner'
 import {
+  AGENT_INFO_PATH,
   BASE_PATH,
   DASHBOARD_PATH,
   MONITOR_INFO_PATH,
+  NOT_FOUND_PATH,
   PRIVACY_POLICY_PATH,
   SETTING_PATH,
   SIGN_IN_PATH,
@@ -30,6 +32,8 @@ import StatusPage from '@/pages/StatusPage/_id'
 import StatusEditor from '@/pages/StatusPage/edit'
 import Navbar from '@/components/util/Navbar'
 import PrivacyPolicy from './pages/PrivacyPolicy'
+import AgentInfo from './pages/Agent/_id'
+import NotFound from './pages/NotFound'
 
 function App() {
   const location = useLocation()
@@ -61,10 +65,13 @@ function App() {
 
             <Route path={STATUS_PAGE_FULL_PATH} element={<StatusPage />} />
 
+            <Route path={NOT_FOUND_PATH} element={<NotFound />} />
+
             <Route element={<Protected />}>
               <Route path={DASHBOARD_PATH} element={<Dashboard />} />
               <Route path={SETTING_PATH} element={<Setting />} />
               <Route path={MONITOR_INFO_PATH} element={<MonitorInfo />} />
+              <Route path={AGENT_INFO_PATH} element={<AgentInfo />} />
               <Route path={STATUS_PAGE_PATH} element={<StatusPages />} />
               <Route path={STATUS_PAGE_CREATION_PATH} element={<StatusCreation />} />
               <Route path={STATUS_PAGE_EDIT_PATH} element={<StatusEditor />} />

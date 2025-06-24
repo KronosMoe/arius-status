@@ -4,6 +4,7 @@ import StatusCard from '@/components/StatusPage/components/StatusCard'
 import StatusLine from '@/components/StatusPage/components/StatusLine'
 import Loading from '@/components/util/Loading'
 import { GET_STATUS_BY_SLUG } from '@/gql/status-page'
+import NotFound from '@/pages/NotFound'
 import { IStatusPageExtended } from '@/types/status-page'
 import { useQuery } from '@apollo/client'
 import { useEffect, useState } from 'react'
@@ -31,8 +32,10 @@ export default function StatusPage() {
     }
   }, [data])
 
-  if (loading || !statusPage) return <Loading />
+  if (loading) return <Loading />
 
+  if (!statusPage) return <NotFound />
+  
   const selectedIds = statusPage.selectedMonitors.map((monitor) => monitor.monitorId)
 
   return (

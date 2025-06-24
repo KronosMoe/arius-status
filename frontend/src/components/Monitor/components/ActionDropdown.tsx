@@ -59,7 +59,6 @@ export default function ActionDropdown({ monitor, refetch }: Props) {
     })
     toast.success(t('monitor.action.delete.toast'))
     navigate(DASHBOARD_PATH, { replace: true })
-    navigate(0)
     setOpenDeleteDialog(false)
   }
 

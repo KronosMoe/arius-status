@@ -121,7 +121,9 @@ type Query {
   findMonitorsByUserId: [Monitor!]!
   findMonitorById(id: String!): MonitorAgent!
   getNotificationSettingsByUserId: [Notification!]!
+  getAgentById(id: String!): Agent!
   findAgentsByUserId: [Agent!]!
+  getAgentLatestTag: String!
   getStatusByMonitorId(monitorId: String!, barCount: Float! = 60): [Status!]!
   getLatestStatusByMonitorId(monitorId: String!): Status!
   getOverallStatus(monitorIds: [String!]!): String!

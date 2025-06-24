@@ -108,6 +108,18 @@ monitor:
     submit: Save
 
 agent:
+  info:
+    created: Created
+    installation:
+      title: Agent Installation
+      description: Choose your preferred installation method
+      docker:
+        message: Use this command to run the agent as a Docker container
+      docker-compose:
+        message: Alternative deployment using Docker Compose
+    copy:
+      success: Copied to clipboard
+      error: Failed to copy to clipboard
   delete:
     button: Delete
     cancel: Cancel
