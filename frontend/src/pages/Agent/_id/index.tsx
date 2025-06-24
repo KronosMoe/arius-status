@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Copy, Calendar, Key, Hash } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
@@ -49,6 +49,12 @@ export default function Agent() {
       toast.error(t('agent.info.copy.error'))
     }
   }
+
+  useEffect(() => {
+    if (data?.getAgentById) {
+      document.title = `${data?.getAgentById.name} | Arius Statuspage`
+    }
+  }, [data])
 
   if (loading || latestTagLoading) return <Loading />
 

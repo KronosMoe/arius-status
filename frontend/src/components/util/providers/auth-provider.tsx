@@ -10,11 +10,11 @@ import { SupportedLanguages, TSupportedLanguages } from '@/lib/i18n.ts'
 import { Auth } from '@/types/auth'
 import Loading from '../Loading'
 import { BASE_PATH } from '@/constants/routes'
-
-const LANGUAGE_KEY = 'language'
-const THEME_KEY = 'theme'
+import { LANGUAGE_KEY, THEME_KEY } from '@/constants/localStorage'
+import { useCookiePreferences } from '@/hooks/useCookiePreferences'
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const { canUsePreferences } = useCookiePreferences()
   const [auth, setAuth] = useState<Auth | null>(null)
   const [loading, setLoading] = useState(true)
   const [hasFetchedMe, setHasFetchedMe] = useState(false)
@@ -26,7 +26,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const applyTheme = (theme: string) => {
     const safeTheme: 'light' | 'dark' = isValidTheme(theme) ? theme : 'light'
     document.documentElement.classList.toggle('dark', safeTheme === 'dark')
-    localStorage.setItem(THEME_KEY, safeTheme)
+    if (canUsePreferences) {
+      localStorage.setItem(THEME_KEY, safeTheme)
+    }
   }
 
   const applyLanguage = (lang: string) => {
@@ -34,7 +36,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       ? (lang as TSupportedLanguages)
       : 'en'
     i18n.changeLanguage(fallbackLang)
-    localStorage.setItem(LANGUAGE_KEY, fallbackLang)
+
+    if (canUsePreferences) {
+      localStorage.setItem(LANGUAGE_KEY, fallbackLang)
+    }
   }
 
   const setFallbackLanguageAndTheme = () => {

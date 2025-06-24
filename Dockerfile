@@ -15,6 +15,9 @@ COPY frontend ./frontend
 ARG VITE_APP_VERSION
 ENV VITE_APP_VERSION=$VITE_APP_VERSION
 
+ARG VITE_GA_MEASUREMENT_ID
+ENV VITE_GA_MEASUREMENT_ID=$VITE_GA_MEASUREMENT_ID
+
 RUN pnpm install --frozen-lockfile --filter frontend --workspace-root
 RUN pnpm --filter frontend run i18n:build
 RUN pnpm --filter frontend run build

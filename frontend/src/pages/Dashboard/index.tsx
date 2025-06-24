@@ -84,53 +84,56 @@ export default function Dashboard() {
   const pausedMonitors = sortedMonitors.filter((monitor) => monitor.status === 'PAUSED').length
 
   return (
-    <DashboardShell>
-      <DashboardHeader
-        title={t('dashboard.header.title')}
-        description={t('dashboard.header.description')}
-        action={
-          <Button onClick={refreshData} disabled={isRefreshing || isLoading} variant="outline" size="sm">
-            <RefreshCw className={`mr-2 h-4 w-4 ${isRefreshing || isPolling ? 'animate-spin' : ''}`} />
-            {t('dashboard.header.button.refresh')}
-          </Button>
-        }
-        stats={[
-          { label: t('dashboard.header.stats.total-monitors'), value: monitors.length },
-          { label: t('dashboard.header.stats.active-monitors'), value: activeMonitors },
-          { label: t('dashboard.header.stats.paused-monitors'), value: pausedMonitors },
-          { label: t('dashboard.header.stats.total-agents'), value: agents.length },
-        ]}
-        isLoading={isLoading}
-      />
-
-      {isError && !isLoading && (
-        <Alert variant="destructive" className="mb-6">
-          <AlertCircle className="h-4 w-4" />
-          <AlertTitle>{t('dashboard.error.title')}</AlertTitle>
-          <AlertDescription className="flex flex-col gap-2">
-            <p>{t('dashboard.error.message')}</p>
-            <Button variant="outline" size="sm" className="w-fit" onClick={refreshData}>
-              {t('dashboard.error.button')}
+    <>
+      <title>Dashboard | Arius Statuspage</title>
+      <DashboardShell>
+        <DashboardHeader
+          title={t('dashboard.header.title')}
+          description={t('dashboard.header.description')}
+          action={
+            <Button onClick={refreshData} disabled={isRefreshing || isLoading} variant="outline" size="sm">
+              <RefreshCw className={`mr-2 h-4 w-4 ${isRefreshing || isPolling ? 'animate-spin' : ''}`} />
+              {t('dashboard.header.button.refresh')}
             </Button>
-          </AlertDescription>
-        </Alert>
-      )}
+          }
+          stats={[
+            { label: t('dashboard.header.stats.total-monitors'), value: monitors.length },
+            { label: t('dashboard.header.stats.active-monitors'), value: activeMonitors },
+            { label: t('dashboard.header.stats.paused-monitors'), value: pausedMonitors },
+            { label: t('dashboard.header.stats.total-agents'), value: agents.length },
+          ]}
+          isLoading={isLoading}
+        />
 
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <DashboardTabs activeTab={activeTab} onChange={setActiveTab} isLoading={isLoading}>
-          <TabsContent value="monitors" className="mt-6">
-            <MonitorsTab
-              monitors={sortedMonitors}
-              agents={agents}
-              isLoading={monitorLoading}
-              refetch={refetchMonitors}
-            />
-          </TabsContent>
-          <TabsContent value="agents" className="mt-6">
-            <AgentsTab agents={sortedAgents} isLoading={agentLoading} refetch={refetchAgents} />
-          </TabsContent>
-        </DashboardTabs>
-      </Tabs>
-    </DashboardShell>
+        {isError && !isLoading && (
+          <Alert variant="destructive" className="mb-6">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>{t('dashboard.error.title')}</AlertTitle>
+            <AlertDescription className="flex flex-col gap-2">
+              <p>{t('dashboard.error.message')}</p>
+              <Button variant="outline" size="sm" className="w-fit" onClick={refreshData}>
+                {t('dashboard.error.button')}
+              </Button>
+            </AlertDescription>
+          </Alert>
+        )}
+
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <DashboardTabs activeTab={activeTab} onChange={setActiveTab} isLoading={isLoading}>
+            <TabsContent value="monitors" className="mt-6">
+              <MonitorsTab
+                monitors={sortedMonitors}
+                agents={agents}
+                isLoading={monitorLoading}
+                refetch={refetchMonitors}
+              />
+            </TabsContent>
+            <TabsContent value="agents" className="mt-6">
+              <AgentsTab agents={sortedAgents} isLoading={agentLoading} refetch={refetchAgents} />
+            </TabsContent>
+          </DashboardTabs>
+        </Tabs>
+      </DashboardShell>
+    </>
   )
 }

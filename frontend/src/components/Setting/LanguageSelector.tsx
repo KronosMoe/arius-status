@@ -7,6 +7,8 @@ import { UPDATE_LANGUAGE_MUTATION } from '@/gql/settings'
 import { useCallback } from 'react'
 import { useAuth } from '@/hooks/useAuth'
 import { toast } from 'sonner'
+import { LANGUAGE_KEY } from '@/constants/localStorage'
+import { useCookiePreferences } from '@/hooks/useCookiePreferences'
 
 type Props = {
   settings: ISetting
@@ -14,6 +16,7 @@ type Props = {
 }
 
 export default function LanguageSelector({ settings, setSettings }: Props) {
+  const { canUsePreferences } = useCookiePreferences()
   const { isAuthenticated } = useAuth()
   const { t, i18n } = useTranslation()
   const [updateLanguage] = useMutation(UPDATE_LANGUAGE_MUTATION, {
@@ -29,7 +32,11 @@ export default function LanguageSelector({ settings, setSettings }: Props) {
     async (lang: string) => {
       if (i18n.language !== lang) {
         i18n.changeLanguage(lang)
-        localStorage.setItem('language', lang)
+        
+        if (canUsePreferences) {
+          localStorage.setItem(LANGUAGE_KEY, lang)
+        }
+
         setSettings((prev) => ({ ...prev, language: lang }))
 
         if (isAuthenticated) {
@@ -37,7 +44,7 @@ export default function LanguageSelector({ settings, setSettings }: Props) {
         }
       }
     },
-    [i18n, setSettings, updateLanguage, isAuthenticated],
+    [i18n, setSettings, updateLanguage, isAuthenticated, canUsePreferences],
   )
 
   return (

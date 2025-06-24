@@ -34,6 +34,7 @@ import Navbar from '@/components/util/Navbar'
 import PrivacyPolicy from './pages/PrivacyPolicy'
 import AgentInfo from './pages/Agent/_id'
 import NotFound from './pages/NotFound'
+import AnalyticsProvider from './components/util/providers/AnalyticsProvider'
 
 function App() {
   const location = useLocation()
@@ -53,31 +54,33 @@ function App() {
   return (
     <DndProvider backend={HTML5Backend}>
       <AuthProvider>
-        <TooltipProvider>
-          {navbarRender()}
-          <Toaster />
-          <Routes>
-            <Route path={BASE_PATH} element={<Home />} />
-            <Route path={PRIVACY_POLICY_PATH} element={<PrivacyPolicy />} />
+        <AnalyticsProvider>
+          <TooltipProvider>
+            {navbarRender()}
+            <Toaster />
+            <Routes>
+              <Route path={BASE_PATH} element={<Home />} />
+              <Route path={PRIVACY_POLICY_PATH} element={<PrivacyPolicy />} />
 
-            <Route path={SIGN_IN_PATH} element={<SignIn />} />
-            <Route path={SIGN_UP_PATH} element={<SignUp />} />
+              <Route path={SIGN_IN_PATH} element={<SignIn />} />
+              <Route path={SIGN_UP_PATH} element={<SignUp />} />
 
-            <Route path={STATUS_PAGE_FULL_PATH} element={<StatusPage />} />
+              <Route path={STATUS_PAGE_FULL_PATH} element={<StatusPage />} />
 
-            <Route path={NOT_FOUND_PATH} element={<NotFound />} />
+              <Route path={NOT_FOUND_PATH} element={<NotFound />} />
 
-            <Route element={<Protected />}>
-              <Route path={DASHBOARD_PATH} element={<Dashboard />} />
-              <Route path={SETTING_PATH} element={<Setting />} />
-              <Route path={MONITOR_INFO_PATH} element={<MonitorInfo />} />
-              <Route path={AGENT_INFO_PATH} element={<AgentInfo />} />
-              <Route path={STATUS_PAGE_PATH} element={<StatusPages />} />
-              <Route path={STATUS_PAGE_CREATION_PATH} element={<StatusCreation />} />
-              <Route path={STATUS_PAGE_EDIT_PATH} element={<StatusEditor />} />
-            </Route>
-          </Routes>
-        </TooltipProvider>
+              <Route element={<Protected />}>
+                <Route path={DASHBOARD_PATH} element={<Dashboard />} />
+                <Route path={SETTING_PATH} element={<Setting />} />
+                <Route path={MONITOR_INFO_PATH} element={<MonitorInfo />} />
+                <Route path={AGENT_INFO_PATH} element={<AgentInfo />} />
+                <Route path={STATUS_PAGE_PATH} element={<StatusPages />} />
+                <Route path={STATUS_PAGE_CREATION_PATH} element={<StatusCreation />} />
+                <Route path={STATUS_PAGE_EDIT_PATH} element={<StatusEditor />} />
+              </Route>
+            </Routes>
+          </TooltipProvider>
+        </AnalyticsProvider>
       </AuthProvider>
     </DndProvider>
   )

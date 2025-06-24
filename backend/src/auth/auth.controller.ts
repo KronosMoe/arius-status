@@ -60,11 +60,11 @@ export class AuthController {
         userAgent,
       )
 
-      res.cookie('ACCESS_TOKEN', token, {
+      res.cookie(ACCESS_TOKEN, token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
-        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        maxAge: 7 * 24 * 60 * 60 * 1000,
       })
 
       return res.redirect(
@@ -147,7 +147,7 @@ export class AuthController {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
-        maxAge: 604800000,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
       })
 
       return res.redirect(

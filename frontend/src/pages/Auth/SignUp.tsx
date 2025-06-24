@@ -63,6 +63,7 @@ export default function SignUp() {
 
   return (
     <div className="flex h-screen items-center justify-center">
+      <title>Sign Up | Arius Statuspage</title>
       <Card className="w-96">
         <CardHeader>
           <h1 className="text-3xl font-bold">Sign Up</h1>

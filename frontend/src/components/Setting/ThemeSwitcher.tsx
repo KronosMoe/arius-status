@@ -6,6 +6,7 @@ import { useMutation } from '@apollo/client'
 import { useAuth } from '@/hooks/useAuth'
 import { toast } from 'sonner'
 import { useTranslation } from 'react-i18next'
+import { useCookiePreferences } from '@/hooks/useCookiePreferences'
 
 type Props = {
   settings: ISetting
@@ -13,6 +14,7 @@ type Props = {
 }
 
 export default function ThemeSwitcher({ settings, setSettings }: Props) {
+  const { canUsePreferences } = useCookiePreferences()
   const { t } = useTranslation()
   const { isAuthenticated } = useAuth()
   const [updateTheme] = useMutation(UPDATE_THEME_MUTATION, {
@@ -27,13 +29,17 @@ export default function ThemeSwitcher({ settings, setSettings }: Props) {
   const setTheme = useCallback(
     async (newTheme: 'light' | 'dark') => {
       document.documentElement.classList.toggle('dark', newTheme === 'dark')
-      localStorage.setItem('theme', newTheme)
+      
+      if (canUsePreferences) {
+        localStorage.setItem('theme', newTheme)
+      }
+
       setSettings((prev) => ({ ...prev, theme: newTheme }))
       if (isAuthenticated) {
         await updateTheme({ variables: { theme: newTheme } })
       }
     },
-    [setSettings, updateTheme, isAuthenticated],
+    [setSettings, updateTheme, isAuthenticated, canUsePreferences],
   )
 
   return (

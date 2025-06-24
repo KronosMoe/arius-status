@@ -8,12 +8,15 @@ import { FiDatabase } from 'react-icons/fi'
 import Footer from '@/components/Home/Footer'
 import MonitorTypeCard from '@/components/Home/MonitorTypeCard'
 import FeatureCard from '@/components/Home/FeatureCard'
+import CookieConsent from '@/components/Home/CookieConsent'
 
 export default function Home() {
   const { isAuthenticated } = useAuth()
 
   return (
     <div className="flex min-h-screen w-full flex-col px-4 xl:m-auto xl:w-[1280px]">
+      <title>Arius Statuspage</title>
+      <CookieConsent/>
       {/* Hero Section */}
       <main className="mt-24 flex-grow text-center">
         <h1 className="text-5xl font-extrabold tracking-tight">

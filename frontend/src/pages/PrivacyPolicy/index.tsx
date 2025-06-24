@@ -20,6 +20,7 @@ export default function PrivacyPolicy() {
 
   return (
     <div className="min-h-screen">
+      <title>Privacy Policy | Arius Statuspage</title>
       <div className="container mx-auto px-4 py-12 max-w-7xl">
         <div className="grid lg:grid-cols-4 gap-8">
           {/* Table of Contents - Sidebar */}

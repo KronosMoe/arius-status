@@ -3,7 +3,7 @@ import type React from 'react'
 import { useEffect, useState } from 'react'
 import { useQuery } from '@apollo/client'
 import { toast } from 'sonner'
-import { Settings, Palette, Bell, Smartphone, Globe } from 'lucide-react'
+import { Settings, Palette, Bell, Smartphone, Globe, Cookie } from 'lucide-react'
 
 import Credit from '@/components/Setting/Credit'
 import DeviceManager from '@/components/Setting/DeviceManager'
@@ -16,6 +16,9 @@ import type { ISetting } from '@/types/setting'
 import { Skeleton } from '@/components/ui/skeleton'
 import LanguageSelector from '@/components/Setting/LanguageSelector'
 import { useTranslation } from 'react-i18next'
+import { useCookiePreferences } from '@/hooks/useCookiePreferences'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import CookieSettings from '@/components/Setting/CookieSettings'
 
 interface SettingsSectionProps {
   icon: React.ReactNode
@@ -65,6 +68,7 @@ function SettingsSkeleton() {
 }
 
 export default function Setting() {
+  const { canUsePreferences } = useCookiePreferences()
   const { t } = useTranslation()
   const { auth } = useAuth()
 
@@ -102,8 +106,20 @@ export default function Setting() {
     )
   }
 
+  const Forbidden = () => {
+    return (
+      <Alert variant="destructive">
+        <AlertTitle>Forbidden!</AlertTitle>
+        <AlertDescription>
+          You do not accept to use our preference cookie. Please accept this cookie to use this feature.
+        </AlertDescription>
+      </Alert>
+    )
+  }
+
   return (
     <div className="w-full px-4 py-8 xl:m-auto xl:w-[1280px]">
+      <title>Settings | Arius Statuspage</title>
       <div className="mb-8">
         <div className="mb-2 flex items-center gap-3">
           <Settings className="h-8 w-8" />
@@ -117,14 +133,21 @@ export default function Setting() {
           title={t('settings.appearance.title')}
           description={t('settings.appearance.description')}
         >
-          <ThemeSwitcher settings={settings} setSettings={setSettings} />
+          {canUsePreferences ? <ThemeSwitcher settings={settings} setSettings={setSettings} /> : <Forbidden />}
         </SettingsSection>
         <SettingsSection
           icon={<Globe className="h-5 w-5" />}
           title={t('settings.language.title')}
           description={t('settings.language.description')}
         >
-          <LanguageSelector settings={settings} setSettings={setSettings} />
+          {canUsePreferences ? <LanguageSelector settings={settings} setSettings={setSettings} /> : <Forbidden />}
+        </SettingsSection>
+        <SettingsSection
+          icon={<Cookie className="h-5 w-5" />}
+          title="Cookies"
+          description="Manage your cookie preferences"
+        >
+          <CookieSettings />
         </SettingsSection>
         <SettingsSection
           icon={<Bell className="h-5 w-5" />}

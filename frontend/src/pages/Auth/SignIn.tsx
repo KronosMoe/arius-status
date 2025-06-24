@@ -59,6 +59,7 @@ export default function SignIn() {
 
   return (
     <div className="flex h-screen items-center justify-center">
+      <title>Sign In | Arius Statuspage</title>
       <Card className="w-96">
         <CardHeader>
           <h1 className="text-3xl font-bold">Sign In</h1>

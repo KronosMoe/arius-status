@@ -11,12 +11,7 @@ import { useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
 import { useTranslation } from 'react-i18next'
 import NotFound from '@/pages/NotFound'
@@ -56,6 +51,12 @@ export default function MonitorInfo() {
   useEffect(() => {
     if (monitorError) toast.error(monitorError.message)
   }, [monitorError])
+
+  useEffect(() => {
+    if (monitor) {
+      document.title = `${monitor.name} | Arius Statuspage`
+    }
+  }, [monitor])
 
   if (monitorLoading) return <Loading />
 

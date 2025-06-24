@@ -28,6 +28,12 @@ export default function StatusEditor() {
     }
   }, [data])
 
+  useEffect(() => {
+    if (statusPage) {
+      document.title = `Editing ${statusPage.name} | Arius Statuspage`
+    }
+  }, [statusPage])
+
   if (loading || !statusPage) return <Loading />
 
   return (

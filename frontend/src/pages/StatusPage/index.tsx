@@ -33,6 +33,7 @@ export default function StatusPages() {
 
   return (
     <div className="w-full px-4 xl:m-auto xl:w-[1280px]">
+      <title>Status Pages | Arius Statuspage</title>
       <div className="mt-10 mb-20">
         <div className="my-4 flex flex-col items-center justify-between gap-4 sm:flex-row">
           <div className="text-center sm:text-left">
