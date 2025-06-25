@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN corepack enable && corepack prepare pnpm@10.0.0 --activate
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY frontend ./frontend
+COPY apps/frontend ./apps/frontend
 
 ARG VITE_APP_VERSION
 ENV VITE_APP_VERSION=$VITE_APP_VERSION
@@ -34,12 +34,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN corepack enable && corepack prepare pnpm@10.0.0 --activate
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY backend ./backend
+COPY apps/backend ./apps/backend
+COPY packages/db ./packages/db
 
-RUN pnpm install --frozen-lockfile --filter backend --workspace-root
+RUN pnpm install --frozen-lockfile
+RUN pnpm --filter @package/db run generate
+RUN pnpm --filter @package/db run build
 
-WORKDIR /app/backend
-RUN pnpm run prisma:generate && pnpm run build
+WORKDIR /app/apps/backend
+RUN pnpm run build
 
 # --- Final Runtime Stage ---
 FROM node:24-slim AS final
@@ -52,25 +55,21 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 RUN corepack enable && corepack prepare pnpm@10.0.0 --activate
 
-# Copy root package files for pnpm workspace context
+# Copy workspace files
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY apps/backend/package.json ./apps/backend/package.json
+COPY packages/db/package.json ./packages/db/package.json
+COPY packages/db/prisma ./packages/db/prisma
 
-# Copy backend runtime essentials
-COPY backend/package.json ./backend/package.json
-COPY --from=backend-build /app/backend/dist ./backend/dist
-COPY --from=backend-build /app/backend/prisma ./backend/prisma
+# Copy built backend and frontend
+COPY --from=backend-build /app/apps/backend/dist ./apps/backend/dist
+COPY --from=frontend-build /app/apps/frontend/dist ./apps/backend/public
+COPY --from=backend-build /app/packages/db/dist ./packages/db/dist
 
-# Copy the correct node_modules from backend-build stage
-COPY --from=backend-build /app/backend/node_modules ./backend/node_modules
-COPY --from=backend-build /app/node_modules ./node_modules
-
-# Copy built frontend
-COPY --from=frontend-build /app/frontend/dist ./backend/public
-
-# Install production dependencies in final stage
-RUN pnpm install --frozen-lockfile --filter backend --workspace-root
+RUN pnpm install --frozen-lockfile
+RUN pnpm --filter @package/db run generate
+RUN pnpm prune --prod
 
 ENV NODE_ENV=production
 
-# Start the server
-CMD ["node", "backend/dist/main"]
+CMD ["node", "apps/backend/dist/main"]

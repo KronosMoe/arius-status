@@ -5,5 +5,12 @@
   "keywords": [],
   "author": "Mirailisc",
   "license": "ISC",
-  "private": true
+  "scripts": {
+    "frontend:dev": "pnpm --filter frontend run dev",
+    "backend:dev": "pnpm --filter backend run start:dev",
+    "frontend:build": "pnpm --filter frontend run build",
+    "backend:build": "pnpm --filter backend run build",
+    "frontend:start": "pnpm --filter frontend run preview",
+    "backend:start": "pnpm --filter backend run start"
+  }
 }
