@@ -3,10 +3,14 @@ import { AuthService } from './auth.service'
 import { Request, Response } from 'express'
 import axios from 'axios'
 import { ACCESS_TOKEN } from 'src/constants/cookies'
+import { ConfigService } from '@nestjs/config'
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly configService: ConfigService,
+  ) {}
 
   @Get('google/callback')
   async googleCallback(@Req() req: Request, @Res() res: Response) {
@@ -21,9 +25,9 @@ export class AuthController {
         'https://oauth2.googleapis.com/token',
         {
           code,
-          client_id: process.env.GOOGLE_CLIENT_ID,
-          client_secret: process.env.GOOGLE_CLIENT_SECRET,
-          redirect_uri: `${process.env.BACKEND_URL}/auth/google/callback`,
+          client_id: this.configService.get<string>('GOOGLE_CLIENT_ID'),
+          client_secret: this.configService.get<string>('GOOGLE_CLIENT_SECRET'),
+          redirect_uri: `${this.configService.get<string>('BACKEND_URL')}/auth/google/callback`,
           grant_type: 'authorization_code',
         },
         {
@@ -93,8 +97,8 @@ export class AuthController {
     const tokenResponse = await axios.post(
       'https://github.com/login/oauth/access_token',
       {
-        client_id: process.env.GITHUB_CLIENT_ID,
-        client_secret: process.env.GITHUB_CLIENT_SECRET,
+        client_id: this.configService.get<string>('GITHUB_CLIENT_ID'),
+        client_secret: this.configService.get<string>('GITHUB_CLIENT_SECRET'),
         code,
       },
       {

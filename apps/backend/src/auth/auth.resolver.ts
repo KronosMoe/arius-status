@@ -9,10 +9,14 @@ import { Me } from './decorators/me.decorator'
 import { Response } from 'express'
 import { ACCESS_TOKEN } from 'src/constants/cookies'
 import { Auth } from './entities/auth.entity'
+import { ConfigService } from '@nestjs/config'
 
 @Resolver()
 export class AuthResolver {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly configService: ConfigService,
+  ) {}
 
   @Mutation(() => String)
   async register(@Args('input') input: RegisterInput): Promise<string> {
@@ -57,8 +61,8 @@ export class AuthResolver {
 
   @Query(() => String)
   getGithubOAuthUrl(): string {
-    const clientId = process.env.GITHUB_CLIENT_ID
-    const redirectUri = `${process.env.BACKEND_URL}/auth/github/callback`
+    const clientId = this.configService.get<string>('GITHUB_CLIENT_ID')
+    const redirectUri = `${this.configService.get<string>('BACKEND_URL')}/auth/github/callback`
     const scope = 'user:email'
 
     const githubUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}`
@@ -72,8 +76,8 @@ export class AuthResolver {
   getGoogleOAuthUrl(): string {
     const rootUrl = 'https://accounts.google.com/o/oauth2/v2/auth'
     const options = {
-      redirect_uri: `${process.env.BACKEND_URL}/auth/google/callback`,
-      client_id: process.env.GOOGLE_CLIENT_ID,
+      redirect_uri: `${this.configService.get<string>('BACKEND_URL')}/auth/google/callback`,
+      client_id: this.configService.get<string>('GOOGLE_CLIENT_ID'),
       access_type: 'offline',
       response_type: 'code',
       prompt: 'consent',

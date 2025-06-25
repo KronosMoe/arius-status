@@ -1,17 +1,23 @@
 import { Module } from '@nestjs/common'
 import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq'
+import { ConfigModule, ConfigService } from '@nestjs/config'
 
 @Module({
   imports: [
-    RabbitMQModule.forRoot({
-      exchanges: [
-        {
-          name: 'monitor.exchange',
-          type: 'topic',
-        },
-      ],
-      uri: process.env.AMQP_URL || 'amqp://localhost:5672',
-      connectionInitOptions: { wait: false },
+    ConfigModule,
+    RabbitMQModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        exchanges: [
+          {
+            name: 'monitor.exchange',
+            type: 'topic',
+          },
+        ],
+        uri: configService.get<string>('AMQP_URL'),
+        connectionInitOptions: { wait: false },
+      }),
     }),
   ],
   exports: [RabbitMQModule],
