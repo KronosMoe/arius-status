@@ -112,6 +112,9 @@ jobs:
       - name: Run Prisma Generate
         run: cd packages/db && pnpm run generate
 
+      - name: Build Prisma
+        run: cd packages/db && pnpm run build
+
       - name: Run Backend Build
         run: cd apps/backend && pnpm run build
 
