@@ -42,7 +42,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: Dockerfile
+          file: microservices/notify/Dockerfile
           push: ${{ github.ref == 'refs/heads/main' }}
           tags: ${{ secrets.DOCKER_REGISTRY }}/arius-status-notify-api:${{ env.sha_short }},${{ secrets.DOCKER_REGISTRY }}/arius-status-notify-api:latest
 
