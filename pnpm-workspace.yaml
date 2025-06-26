@@ -2,4 +2,4 @@ packages:
   - agent
   - apps/*
   - packages/*
-  - services/*
+  - microservices/*

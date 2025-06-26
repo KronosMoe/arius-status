@@ -30,7 +30,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run ESLint
-        run: cd services/notify && pnpm run lint
+        run: cd microservices/notify && pnpm run lint
 
   notify-build:
     name: Build Notify Service
@@ -62,7 +62,7 @@ jobs:
         run: cd packages/db && pnpm run build
 
       - name: Run Backend Build
-        run: cd services/notify && pnpm run build
+        run: cd microservices/notify && pnpm run build
 
   docker-build-app:
     name: Build Docker Image (App)
@@ -90,4 +90,4 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build --no-cache -f services/notify/Dockerfile -t ${{ secrets.IMAGE_NAME }} .
+          docker build --no-cache -f microservices/notify/Dockerfile -t ${{ secrets.IMAGE_NAME }} .

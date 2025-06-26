@@ -9,14 +9,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN corepack enable && corepack prepare pnpm@10.0.0 --activate
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY services/notify ./services/notify
+COPY microservices/notify ./microservices/notify
 COPY packages/db ./packages/db
 
 RUN pnpm install --frozen-lockfile
 RUN pnpm --filter @package/db run generate
 RUN pnpm --filter @package/db run build
 
-WORKDIR /app/services/notify
+WORKDIR /app/microservices/notify
 RUN pnpm run build
 
 FROM node:24-slim AS final
@@ -30,11 +30,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN corepack enable && corepack prepare pnpm@10.0.0 --activate
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY services/notify/package.json ./services/notify/package.json
+COPY microservices/notify/package.json ./microservices/notify/package.json
 COPY packages/db/package.json ./packages/db/package.json
 COPY packages/db/prisma ./packages/db/prisma
 
-COPY --from=backend-build /app/services/notify/dist ./services/notify/dist
+COPY --from=backend-build /app/microservices/notify/dist ./microservices/notify/dist
 COPY --from=backend-build /app/packages/db/dist ./packages/db/dist
 
 RUN pnpm install --frozen-lockfile
@@ -43,4 +43,4 @@ RUN pnpm prune --prod
 
 ENV NODE_ENV=production
 
-CMD ["node", "services/notify/dist/main"]
+CMD ["node", "microservices/notify/dist/main"]

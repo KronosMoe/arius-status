@@ -2,7 +2,7 @@ services:
   notify-service:
     build:
       context: .
-      dockerfile: services/notify/Dockerfile
+      dockerfile: microservices/notify/Dockerfile
     environment:
       - AMQP_URL
       - DATABASE_URL
