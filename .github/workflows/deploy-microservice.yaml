@@ -72,9 +72,9 @@ jobs:
         run: |
           git config --global user.name "${{ github.actor }}"
           git config --global user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
-          sed -i "s#appVersion.*#appVersion: ${{ env.sha_short }}#g" arius-status-notify-api/Chart.yaml
+          sed -i "s#appVersion.*#appVersion: ${{ env.sha_short }}#g" arius-status-microservices/Chart.yaml
           git add -A
-          git commit -am "update arius-status-notify-api image to version ${{ env.sha_short }}"
+          git commit -am "update arius-status-microservices image to version ${{ env.sha_short }}"
 
       - name: Push updates
         run: git push origin main
