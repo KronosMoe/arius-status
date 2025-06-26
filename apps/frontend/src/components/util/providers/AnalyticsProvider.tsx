@@ -1,6 +1,6 @@
 import { useCookiePreferences } from '@/hooks/useCookiePreferences'
 import type React from 'react'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import ReactGA from 'react-ga4'
 import { useLocation } from 'react-router-dom'
 
@@ -10,17 +10,20 @@ export default function AnalyticsProvider({ children }: { children: React.ReactN
   const { canUseAnalytics, isLoaded } = useCookiePreferences()
   const location = useLocation()
 
-  useEffect(() => {
-    if (isLoaded && canUseAnalytics) {
-      ReactGA.send({ hitType: 'pageview', page: location.pathname + location.search })
-    }
-  }, [canUseAnalytics, isLoaded, location])
+  const [isGAInitialized, setIsGAInitialized] = useState(false)
 
   useEffect(() => {
-    if (isLoaded && canUseAnalytics) {
+    if (isLoaded && canUseAnalytics && !isGAInitialized) {
       ReactGA.initialize(GA_MEASUREMENT_ID)
+      setIsGAInitialized(true)
     }
-  }, [canUseAnalytics, isLoaded])
+  }, [canUseAnalytics, isLoaded, isGAInitialized])
+
+  useEffect(() => {
+    if (isGAInitialized) {
+      ReactGA.send({ hitType: 'pageview', page: location.pathname + location.search })
+    }
+  }, [location, isGAInitialized])
 
   return <>{children}</>
 }

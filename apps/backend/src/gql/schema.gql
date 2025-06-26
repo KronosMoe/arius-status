@@ -14,6 +14,22 @@ type Auth {
   settings: Setting!
 }
 
+type Notification {
+  id: String!
+  title: String!
+  method: String!
+  message: String!
+  createdAt: DateTime!
+  isDefault: Boolean!
+  webhookUrl: String
+  content: String
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type Agent {
   id: String!
   name: String!
@@ -21,11 +37,6 @@ type Agent {
   isOnline: Boolean!
   createdAt: DateTime!
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 type Monitor {
   id: String!
@@ -48,17 +59,6 @@ type MonitorAgent {
   interval: Int!
   createdAt: DateTime!
   agent: Agent!
-}
-
-type Notification {
-  id: String!
-  title: String!
-  method: String!
-  message: String!
-  createdAt: DateTime!
-  isDefault: Boolean!
-  webhookUrl: String
-  content: String
 }
 
 type Status {
@@ -118,9 +118,9 @@ type Query {
   me: Auth
   getGithubOAuthUrl: String!
   getGoogleOAuthUrl: String!
+  getNotificationSettingsByUserId: [Notification!]!
   findMonitorsByUserId: [Monitor!]!
   findMonitorById(id: String!): MonitorAgent!
-  getNotificationSettingsByUserId: [Notification!]!
   getAgentById(id: String!): Agent!
   findAgentsByUserId: [Agent!]!
   getAgentLatestTag: String!
@@ -139,14 +139,14 @@ type Mutation {
   register(input: RegisterInput!): String!
   login(input: LoginInput!): String!
   logout: Boolean!
+  createNotificationSetting(createNotificationInput: CreateNotificationInput!): Notification!
+  updateNotificationSetting(updateNotificationInput: UpdateNotificationInput!, id: String!): Notification!
+  deleteNotificationSetting(id: String!): Notification!
   pauseMonitorById(id: String!): MonitorAgent!
   resumeMonitorById(id: String!): MonitorAgent!
   deleteMonitorById(id: String!): Monitor!
   updateMonitorById(id: String!, updateMonitorInput: UpdateMonitorInput!): Monitor!
   createMonitor(createMonitorInput: CreateMonitorInput!): Monitor!
-  createNotificationSetting(createNotificationInput: CreateNotificationInput!): Notification!
-  updateNotificationSetting(updateNotificationInput: UpdateNotificationInput!, id: String!): Notification!
-  deleteNotificationSetting(id: String!): Notification!
   renameAgentById(id: String!, name: String!): Agent!
   createAgent(createAgentInput: CreateAgentInput!): Agent!
   deleteAgentById(id: String!): Agent!
@@ -171,21 +171,6 @@ input LoginInput {
   platform: String!
 }
 
-input UpdateMonitorInput {
-  name: String!
-  address: String!
-  type: String!
-  interval: Float!
-}
-
-input CreateMonitorInput {
-  name: String!
-  address: String!
-  type: String!
-  interval: Float!
-  agentId: String!
-}
-
 input CreateNotificationInput {
   title: String!
   method: String!
@@ -201,6 +186,21 @@ input UpdateNotificationInput {
   webhookUrl: String
   content: String
   isDefault: Boolean!
+}
+
+input UpdateMonitorInput {
+  name: String!
+  address: String!
+  type: String!
+  interval: Float!
+}
+
+input CreateMonitorInput {
+  name: String!
+  address: String!
+  type: String!
+  interval: Float!
+  agentId: String!
 }
 
 input CreateAgentInput {

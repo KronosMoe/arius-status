@@ -8,12 +8,14 @@ import { addMilliseconds } from 'date-fns'
 import { LoginInput } from './dto/login.input'
 import { Auth } from './entities/auth.entity'
 import { User } from 'src/users/entities/user.entity'
+import { NotificationService } from 'src/notification/notification.service'
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UsersService,
     private readonly prisma: PrismaService,
+    private readonly notificationService: NotificationService,
   ) {}
 
   async register(createUserInput: RegisterInput) {
@@ -69,6 +71,7 @@ export class AuthService {
         deviceIP: ip,
       },
     })
+    await this.notificationService.sendNewSessionEmail(user.email, ip)
 
     return { token, user }
   }
@@ -79,7 +82,7 @@ export class AuthService {
       include: { user: true },
     })
 
-    if (session.expires.getTime() < Date.now()) {
+    if (!session || session.expires.getTime() < Date.now()) {
       return null
     }
 
@@ -133,7 +136,12 @@ export class AuthService {
     return user
   }
 
-  async createSession(userId: string, ip: string, platform: string) {
+  async createSession(
+    userId: string,
+    ip: string,
+    platform: string,
+    email: string,
+  ) {
     const existing = await this.prisma.sessions.findFirst({
       where: {
         userId,
@@ -153,6 +161,7 @@ export class AuthService {
     await this.prisma.sessions.create({
       data: { userId, deviceIP: ip, platform, token, expires },
     })
+    await this.notificationService.sendNewSessionEmail(email, ip)
 
     return token
   }

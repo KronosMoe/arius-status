@@ -57,7 +57,7 @@ export default function CreateNotificationForm({ refetch }: Props) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: '',
-      method: 'Email',
+      method: 'Discord',
       message: 'Hello, from Arius Statuspage',
     },
   })
@@ -139,7 +139,7 @@ export default function CreateNotificationForm({ refetch }: Props) {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="Email">Email</SelectItem>
+                      {/* <SelectItem value="Email">Email</SelectItem> */}
                       <SelectItem value="Discord">Discord</SelectItem>
                     </SelectContent>
                   </Select>

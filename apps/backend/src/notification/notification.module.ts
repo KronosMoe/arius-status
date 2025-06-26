@@ -1,18 +1,20 @@
-import { Module } from '@nestjs/common'
+// notification.module.ts
+import { forwardRef, Module } from '@nestjs/common'
 import { NotificationService } from './notification.service'
-import { AuthModule } from 'src/auth/auth.module'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { NotificationResolver } from './notification.resolver'
 import { ClientsModule, Transport } from '@nestjs/microservices'
 import { ConfigModule, ConfigService } from '@nestjs/config'
+import { AuthModule } from 'src/auth/auth.module'
 
 @Module({
   imports: [
-    AuthModule,
+    forwardRef(() => AuthModule),
     ClientsModule.registerAsync([
       {
         name: 'NOTIFY_SERVICE',
         imports: [ConfigModule],
+        inject: [ConfigService],
         useFactory: (configService: ConfigService) => ({
           transport: Transport.RMQ,
           options: {
@@ -23,7 +25,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
             },
           },
         }),
-        inject: [ConfigService],
       },
     ]),
   ],

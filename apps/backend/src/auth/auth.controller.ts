@@ -62,6 +62,7 @@ export class AuthController {
         user.id,
         req.ip,
         userAgent,
+        email,
       )
 
       res.cookie(ACCESS_TOKEN, token, {
@@ -145,6 +146,7 @@ export class AuthController {
         user.id,
         req.ip,
         userAgent,
+        primaryEmail,
       )
 
       res.cookie(ACCESS_TOKEN, token, {

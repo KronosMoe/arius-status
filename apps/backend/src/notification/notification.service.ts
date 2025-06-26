@@ -88,4 +88,11 @@ export class NotificationService {
       isDown,
     })
   }
+
+  async sendNewSessionEmail(email: string, ip: string) {
+    this.notifyService.emit('sendNewSessionEmail', {
+      to: email,
+      context: { email, ip },
+    })
+  }
 }
