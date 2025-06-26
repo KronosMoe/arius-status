@@ -11,11 +11,9 @@ import { AgentsModule } from './agents/agents.module'
 import { MonitorsModule } from './monitors/monitors.module'
 import { StatusModule } from './status/status.module'
 import { EventEmitterModule } from '@nestjs/event-emitter'
-import { NotificationService } from './notification/notification.service'
 import { NotificationModule } from './notification/notification.module'
 import { HttpModule } from '@nestjs/axios'
 import { SettingsModule } from './settings/settings.module'
-import { PrismaService } from './prisma/prisma.service'
 import { GatewayModule } from './gateway/gateway.module'
 import { StatusPageModule } from './status-page/status-page.module'
 import { AppController } from './app.controller'
@@ -45,6 +43,6 @@ import { AuthController } from './auth/auth.controller'
     StatusPageModule,
   ],
   controllers: [AuthController, AppController],
-  providers: [NotificationService, PrismaService],
+  providers: [],
 })
 export class AppModule {}

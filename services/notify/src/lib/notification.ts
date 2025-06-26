@@ -1,7 +1,6 @@
-import { Agent } from 'src/agents/entities/agent.entity'
-import { Monitor } from 'src/monitors/entities/monitor.entity'
+import { Agents, Monitors } from '@prisma/client'
 
-export function getDiscordMonitorEmbed(monitor: Monitor, isDown = false) {
+export function getDiscordMonitorEmbed(monitor: Monitors, isDown = false) {
   return [
     {
       title: `Your service ${monitor.name} is ${isDown ? 'down' : 'up'}`,
@@ -14,7 +13,7 @@ export function getDiscordMonitorEmbed(monitor: Monitor, isDown = false) {
   ]
 }
 
-export function getDiscordAgentEmbed(agent: Agent, isDown = false) {
+export function getDiscordAgentEmbed(agent: Agents, isDown = false) {
   return [
     {
       title: `Your agent ${agent.name} is ${isDown ? 'down' : 'up'}`,

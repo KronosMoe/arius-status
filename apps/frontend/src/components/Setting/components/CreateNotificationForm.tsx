@@ -196,7 +196,7 @@ export default function CreateNotificationForm({ refetch }: Props) {
                   {t('settings.notification.create-notification-form.webhook-test.button')}
                 </Button>
               )}
-              <Button variant='outline' onClick={() => setOpen(false)}>
+              <Button type="button" variant='outline' onClick={() => setOpen(false)}>
                 {t('settings.notification.create-notification-form.cancel')}
               </Button>
               <Button type="submit" disabled={loading}>

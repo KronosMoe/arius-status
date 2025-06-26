@@ -1,4 +1,14 @@
 services:
+  notify-service:
+    build:
+      context: .
+      dockerfile: services/notify/Dockerfile
+    environment:
+      - AMQP_URL
+      - DATABASE_URL
+    networks:
+      - app
+
   app:
     build:
       context: .
