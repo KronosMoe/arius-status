@@ -1,12 +1,12 @@
 import { Controller } from '@nestjs/common'
 import { EmailService } from './email.service'
-import { MessagePattern } from '@nestjs/microservices'
+import { EventPattern } from '@nestjs/microservices'
 
 @Controller()
 export class EmailController {
   constructor(private readonly emailService: EmailService) {}
 
-  @MessagePattern('sendNewSessionEmail')
+  @EventPattern('sendNewSessionEmail')
   async sendNewSessionEmail(payload: {
     to: string
     context: { email: string; ip: string }

@@ -1,6 +1,6 @@
 import { Controller } from '@nestjs/common'
 import { NotificationService } from './notification.service'
-import { MessagePattern } from '@nestjs/microservices'
+import { EventPattern, MessagePattern } from '@nestjs/microservices'
 import { Agents, Monitors, Notifications } from '@prisma/client'
 import { CreateNotificationInput } from './dto/create-notification.input'
 import { UpdateNotificationInput } from './dto/update-notification.input'
@@ -47,7 +47,7 @@ export class NotificationController {
     return await this.notificationService.deleteNotificationSetting(payload.id)
   }
 
-  @MessagePattern({ cmd: 'sendMonitorNotification' })
+  @EventPattern({ cmd: 'sendMonitorNotification' })
   async sendMonitorNotification(payload: {
     monitor: Monitors
     isDown: boolean
@@ -58,7 +58,7 @@ export class NotificationController {
     )
   }
 
-  @MessagePattern({ cmd: 'sendAgentNotification' })
+  @EventPattern({ cmd: 'sendAgentNotification' })
   async sendAgentNotification(payload: {
     agent: Agents
     userId: string
