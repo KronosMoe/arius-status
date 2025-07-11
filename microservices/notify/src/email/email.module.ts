@@ -22,6 +22,9 @@ import { join } from 'path'
             secure: true,
             auth: { user, pass },
             authMethod: 'LOGIN',
+            pool: true,
+            maxConnections: 5,
+            rateLimit: 10,
           },
           defaults: {
             from: `Arius StatusPage <${user}>`,
