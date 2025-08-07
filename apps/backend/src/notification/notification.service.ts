@@ -75,24 +75,33 @@ export class NotificationService {
     monitor: Monitor & { userId: string },
     isDown = false,
   ) {
-    this.notifyService.emit('sendMonitorNotification', {
-      monitor,
-      isDown,
-    })
+    this.notifyService.emit(
+      { cmd: 'sendMonitorNotification' },
+      {
+        monitor,
+        isDown,
+      },
+    )
   }
 
   async sendAgentNotification(agent: Agent, userId: string, isDown = false) {
-    this.notifyService.emit('sendAgentNotification', {
-      agent,
-      userId,
-      isDown,
-    })
+    this.notifyService.emit(
+      { cmd: 'sendAgentNotification' },
+      {
+        agent,
+        userId,
+        isDown,
+      },
+    )
   }
 
   async sendNewSessionEmail(email: string, ip: string) {
-    this.notifyService.emit('sendNewSessionEmail', {
-      to: email,
-      context: { email, ip },
-    })
+    this.notifyService.emit(
+      { cmd: 'sendNewSessionEmail' },
+      {
+        to: email,
+        context: { email, ip },
+      },
+    )
   }
 }
