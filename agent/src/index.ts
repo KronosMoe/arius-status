@@ -16,8 +16,8 @@ checkConnectivity(appConfigDefault.SERVER_URL)
     const socket = io(appConfigDefault.SERVER_URL, {
       path: appConfigDefault.SOCKET_IO_PATH,
       auth: { token: appConfigDefault.AGENT_TOKEN },
-      reconnectionAttempts: 5,
-      reconnectionDelay: 1000,
+      reconnectionDelay: 2000,
+      reconnectionAttempts: Infinity,
     });
 
     socket.on("connect", () => {
