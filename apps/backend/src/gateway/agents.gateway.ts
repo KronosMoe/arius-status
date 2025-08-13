@@ -72,10 +72,16 @@ export class AgentsGateway implements OnGatewayConnection, OnGatewayDisconnect {
     if (agentId) {
       this.logger.log(`Agent disconnected: ${agentId}`)
 
-      await this.prisma.agents.update({
+      const agent = await this.prisma.agents.update({
         where: { id: agentId },
         data: { isOnline: false },
       })
+
+      await this.notificationService.sendAgentNotification(
+        agent,
+        agent.userId,
+        true,
+      )
     }
   }
 

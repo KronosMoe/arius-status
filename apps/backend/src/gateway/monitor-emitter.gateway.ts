@@ -2,7 +2,6 @@ import { Injectable, Logger } from '@nestjs/common'
 import { RabbitSubscribe } from '@golevelup/nestjs-rabbitmq'
 import { AgentsGateway } from 'src/gateway/agents.gateway'
 import { PrismaService } from 'src/prisma/prisma.service'
-import { NotificationService } from 'src/notification/notification.service'
 
 @Injectable()
 export class MonitorWebSocketEmitter {
@@ -11,7 +10,6 @@ export class MonitorWebSocketEmitter {
   constructor(
     private agentsGateway: AgentsGateway,
     private prisma: PrismaService,
-    private notificationService: NotificationService,
   ) {}
 
   @RabbitSubscribe({
@@ -31,15 +29,11 @@ export class MonitorWebSocketEmitter {
       return
     }
 
-    const [agent, monitor, latestStatus] = await Promise.all([
+    const [agent, monitor] = await Promise.all([
       this.prisma.agents.findUnique({ where: { id: agentId } }),
       this.prisma.monitors.findUnique({
         where: { id: monitorId },
-        select: { userId: true, status: true },
-      }),
-      this.prisma.statusResults.findFirst({
-        where: { monitorId },
-        orderBy: { createdAt: 'desc' },
+        select: { status: true },
       }),
     ])
 
@@ -48,21 +42,10 @@ export class MonitorWebSocketEmitter {
       return
     }
 
-    const isLatestStatusUp = latestStatus && latestStatus.responseTime !== -1
-
     if (!agent.isOnline) {
-      if (isLatestStatusUp) {
-        this.logger.warn(
-          `Agent ${agentId} is offline and latest status is UP. Sending notification.`,
-        )
+      this.logger.warn(`Agent ${agentId} is offline. Marking monitor as DOWN.`)
 
-        await this.notificationService.sendAgentNotification(
-          agent,
-          agent.userId,
-          true,
-        )
-      }
-
+      // Save a DOWN status result
       await this.prisma.statusResults.create({
         data: {
           monitorId,
@@ -71,14 +54,18 @@ export class MonitorWebSocketEmitter {
         },
       })
 
+      // Update monitor status if needed
       if (monitor?.status !== 'DOWN') {
         await this.prisma.monitors.update({
           where: { id: monitorId },
           data: { status: 'DOWN' },
         })
       }
+
+      return // Stop here, no command is sent
     }
 
+    // If agent is online, send the command
     const socketServer = this.agentsGateway.server
     if (!socketServer) {
       this.logger.error('Socket server not initialized')
