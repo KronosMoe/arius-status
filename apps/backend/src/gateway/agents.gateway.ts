@@ -14,9 +14,10 @@ import { PrismaService } from 'src/prisma/prisma.service'
 
 @WebSocketGateway({
   path: '/api/agents',
-  cors: {
-    origin: '*',
-  },
+  cors: { origin: '*' },
+  transports: ['websocket'],
+  pingInterval: 25000,
+  pingTimeout: 60000,
 })
 export class AgentsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
