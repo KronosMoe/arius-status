@@ -23,9 +23,7 @@ async function waitForConnectivity(
       return true;
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
-      logger.warn(
-        `Connectivity check failed (attempt ${attempt}): ${message}`
-      );
+      logger.warn(`Connectivity check failed (attempt ${attempt}): ${message}`);
       if (attempt >= retries && retries !== Infinity) {
         throw new Error("Connectivity failed after retries");
       }
@@ -43,8 +41,12 @@ async function startAgent(): Promise<void> {
     const socket: Socket = io(appConfigDefault.SERVER_URL, {
       path: appConfigDefault.SOCKET_IO_PATH,
       auth: { token: appConfigDefault.AGENT_TOKEN },
+      transports: ['websocket'],
+      reconnection: true,
       reconnectionDelay: 2000,
       reconnectionAttempts: Infinity,
+      pingInterval: 10000,
+      pingTimeout: 30000,
     });
 
     socket.on("connect", () => {
