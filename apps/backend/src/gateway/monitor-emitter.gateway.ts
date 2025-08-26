@@ -6,6 +6,7 @@ import { PrismaService } from 'src/prisma/prisma.service'
 @Injectable()
 export class MonitorWebSocketEmitter {
   private logger = new Logger(MonitorWebSocketEmitter.name)
+  private offlineAgents = new Set<string>()
 
   constructor(
     private agentsGateway: AgentsGateway,
@@ -43,9 +44,13 @@ export class MonitorWebSocketEmitter {
     }
 
     if (!agent.isOnline) {
-      this.logger.warn(`Agent ${agentId} is offline. Marking monitor as DOWN.`)
+      if (!this.offlineAgents.has(agentId)) {
+        this.offlineAgents.add(agentId)
+        this.logger.warn(
+          `Agent ${agentId} is offline. Marking its monitors as DOWN.`,
+        )
+      }
 
-      // Save a DOWN status result
       await this.prisma.statusResults.create({
         data: {
           monitorId,
@@ -54,7 +59,6 @@ export class MonitorWebSocketEmitter {
         },
       })
 
-      // Update monitor status if needed
       if (monitor?.status !== 'DOWN') {
         await this.prisma.monitors.update({
           where: { id: monitorId },
@@ -62,10 +66,14 @@ export class MonitorWebSocketEmitter {
         })
       }
 
-      return // Stop here, no command is sent
+      return
     }
 
-    // If agent is online, send the command
+    if (this.offlineAgents.has(agentId)) {
+      this.offlineAgents.delete(agentId)
+      this.logger.log(`Agent ${agentId} is back online.`)
+    }
+
     const socketServer = this.agentsGateway.server
     if (!socketServer) {
       this.logger.error('Socket server not initialized')
