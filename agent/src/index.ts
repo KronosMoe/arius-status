@@ -45,9 +45,8 @@ async function startAgent(): Promise<void> {
       reconnection: true,
       reconnectionDelay: 2000,
       reconnectionAttempts: Infinity,
-      pingInterval: 10000,
-      pingTimeout: 30000,
     });
+
 
     socket.on("connect", () => {
       logger.info("✅ Connected to server");
