@@ -62,7 +62,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          repository: KronosMoe/kronos-helm
+          repository: KronosMoe/arius-fleet
           ref: "main"
           token: ${{ secrets.token }}
 
@@ -75,9 +75,17 @@ jobs:
         run: |
           git config --global user.name "${{ github.actor }}"
           git config --global user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
-          sed -i "s#appVersion.*#appVersion: ${{ env.sha_short }}#g" ${{ secrets.IMAGE_NAME }}/Chart.yaml
+
+      - name: Update Charts
+        run: |
+          # Navigate to the charts directory where the folders actually live
+          cd charts 
+
+          sed -i "s#appVersion.*#appVersion: ${{ env.sha_short }}#g" arius-statuspage/Chart.yaml
+
+          cd ..
           git add -A
-          git commit -am "update ${{ secrets.IMAGE_NAME }} image to version ${{ env.sha_short }}"
+          git commit -am "update arius-statuspage image to version ${{ env.sha_short }}"
 
       - name: Push updates
         run: git push origin main
