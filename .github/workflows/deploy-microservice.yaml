@@ -59,7 +59,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          repository: KronosMoe/kronos-helm
+          repository: KronosMoe/arius-fleet
           ref: "main"
           token: ${{ secrets.token }}
 
